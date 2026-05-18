@@ -72,11 +72,13 @@ function buildSocialsList(vcard) {
 	for (const def of SOCIAL_ICON_MAP) {
 		if (def.key === 'whatsapp') {
 			// WhatsApp : checkbox whatsapp_enabled + phone_mobile présent
+			// Format wa.me : indicatif pays + numéro local SANS le 0 de tête
 			if (socials.whatsapp_enabled === true && vcard.phone_mobile) {
-				const fullMobile = joinPhone(vcard.phone_mobile_country, vcard.phone_mobile);
+				const countryDigits = onlyDigits(vcard.phone_mobile_country);
+				const localDigits = onlyDigits(vcard.phone_mobile).replace(/^0+/, '');
 				list.push({
 					...def,
-					url: `https://wa.me/${onlyDigits(fullMobile)}`,
+					url: `https://wa.me/${countryDigits}${localDigits}`,
 				});
 			}
 		} else if (socials[def.key]) {

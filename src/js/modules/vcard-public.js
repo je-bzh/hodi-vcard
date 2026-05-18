@@ -126,8 +126,10 @@ function render(vcard) {
 	toggleSocial('pinterest', socials.pinterest);
 
 	// WhatsApp : géré séparément via checkbox + numéro mobile
+	// Format wa.me : indicatif pays + numéro local SANS le 0 de tête, sans espaces.
+	// Ex: +33 0651051611 → 33651051611 (pas 330651051611).
 	if (socials.whatsapp_enabled === true && vcard.phone_mobile) {
-		const waNumber = onlyDigits(fullMobile);
+		const waNumber = buildWaNumber(vcard.phone_mobile_country, vcard.phone_mobile);
 		toggleSocial('whatsapp', `https://wa.me/${waNumber}`);
 	} else {
 		toggleSocial('whatsapp', null);
@@ -319,6 +321,18 @@ function joinPhone(country, number) {
 
 function onlyDigits(s) {
 	return (s || '').replace(/\D/g, '');
+}
+
+/**
+ * Construit le numéro pour les liens wa.me (format international sans 0).
+ *   buildWaNumber('+33', '0651051611')  → '33651051611'
+ *   buildWaNumber('+262', '0692123456') → '262692123456'
+ */
+function buildWaNumber(country, local) {
+	const countryDigits = onlyDigits(country);
+	// Strip ALL leading zeros from the local number (cas FR/AF où "06..." est saisi)
+	const localDigits = onlyDigits(local).replace(/^0+/, '');
+	return countryDigits + localDigits;
 }
 
 function mapsUrl(address) {
