@@ -1,0 +1,259 @@
+/* ------------------------------------------------------------ *\
+	Image cropper
+\* ------------------------------------------------------------ */
+
+.image-cropper {
+	text-align: center;
+	color: #c3c4c9;
+	font-size: 1.5rem;
+	border-radius: 8px;
+	background: #f2f2f7;
+	text-align: center;
+	padding: 5.1rem 5rem 4.9rem;
+	font-size: 1.5rem;
+	letter-spacing: -0.03em;
+	position: relative;
+
+	&:has(.image-cropper__image) {
+		min-height: 40.6rem;
+		margin-bottom: 2.5rem;
+	}
+
+	.image-cropper__image {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+	}
+
+	img {
+		margin-bottom: 1.5rem;
+	}
+
+	h6 {
+		font-size: 1.8rem;
+		letter-spacing: -0.02em;
+		font-weight: 600;
+		margin-bottom: 2.8rem;
+	}
+
+	.cr-boundary {
+		height: 40rem;
+	}
+
+	.btn {
+		min-width: 25rem;
+	}
+
+	.image-cropper__upload {
+		position: relative;
+		max-width: max-content;
+		margin: 0 auto;
+
+		input {
+			opacity: 0;
+			position: absolute;
+			top: 0;
+			left: 0;
+		}
+	}
+
+	p {
+		margin-top: 4.3rem;
+	}
+
+	.image-cropper__hint {
+		margin-top: 2.4rem;
+		font-size: 1.2rem;
+		color: rgba(41, 27, 58, 0.55);
+		letter-spacing: -0.01em;
+	}
+}
+
+/* ------------------------------------------------------------ *\
+	Source picker : tabs Upload / Unsplash
+\* ------------------------------------------------------------ */
+.image-source-tabs {
+	display: flex;
+	gap: 0.8rem;
+	background: #fff;
+	border-radius: 9px;
+	padding: 0.4rem;
+	margin: 0 auto 2.4rem;
+	max-width: 36rem;
+	border: 1px solid rgba(41, 27, 58, 0.08);
+}
+
+.image-source-tab {
+	flex: 1;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.8rem;
+	border: 0;
+	background: transparent;
+	color: rgba(41, 27, 58, 0.55);
+	padding: 0.9rem 1.2rem;
+	border-radius: 6px;
+	font-size: 1.3rem;
+	font-weight: 600;
+	letter-spacing: -0.01em;
+	cursor: pointer;
+	transition: background var(--t-duration), color var(--t-duration);
+
+	&:hover {
+		color: rgba(41, 27, 58, 0.85);
+	}
+
+	&.is-active {
+		background: #291b3a;
+		color: var(--c-white);
+	}
+
+	&.is-disabled {
+		opacity: 0.4;
+		cursor: not-allowed;
+		pointer-events: none;
+	}
+
+	svg {
+		flex: 0 0 1.8rem;
+		margin-bottom: 0;
+	}
+}
+
+.image-source-pane {
+	display: none;
+
+	&.is-active {
+		display: block;
+	}
+}
+
+/* ------------------------------------------------------------ *\
+	Unsplash search & results
+\* ------------------------------------------------------------ */
+.image-source-search {
+	position: relative;
+	max-width: 42rem;
+	margin: 0 auto 2rem;
+}
+
+.image-source-search__icon {
+	position: absolute;
+	top: 50%;
+	left: 1.4rem;
+	transform: translateY(-50%);
+	color: rgba(41, 27, 58, 0.45);
+	pointer-events: none;
+}
+
+.image-source-search input[type="search"] {
+	width: 100%;
+	padding: 1.2rem 1.6rem 1.2rem 4rem;
+	border: 1px solid rgba(41, 27, 58, 0.15);
+	border-radius: 8px;
+	background: #fff;
+	font-size: 1.4rem;
+	letter-spacing: -0.01em;
+	outline: none;
+	color: var(--c-base);
+
+	&:focus {
+		border-color: rgba(13, 129, 254, 0.55);
+		box-shadow: 0 0 0 3px rgba(13, 129, 254, 0.12);
+	}
+}
+
+.image-source-results {
+	min-height: 24rem;
+	max-height: 36rem;
+	overflow-y: auto;
+	border-radius: 8px;
+	background: rgba(41, 27, 58, 0.03);
+	padding: 1.2rem;
+}
+
+.image-source-empty {
+	text-align: center;
+	color: rgba(41, 27, 58, 0.55);
+	font-size: 1.3rem;
+	padding: 4rem 2rem;
+	margin: 0;
+}
+
+.image-source-error {
+	color: #c93434;
+}
+
+.image-source-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 0.8rem;
+
+	@include breakpoint-down(mobile) {
+		grid-template-columns: repeat(2, 1fr);
+	}
+
+	// Landscape : moins de colonnes (cells plus larges)
+	&.image-source-grid--landscape {
+		grid-template-columns: repeat(2, 1fr);
+
+		@include breakpoint-down(mobile) {
+			grid-template-columns: 1fr;
+		}
+	}
+}
+
+/* Aspect-ratio des cells selon l'orientation demandée à Unsplash */
+.image-source-grid--portrait .image-source-cell { aspect-ratio: 9 / 12; }
+.image-source-grid--landscape .image-source-cell { aspect-ratio: 16 / 10; }
+.image-source-grid--squarish .image-source-cell  { aspect-ratio: 1 / 1; }
+
+.image-source-cell {
+	position: relative;
+	display: block;
+	width: 100%;
+	aspect-ratio: 9 / 12; // fallback si pas de classe d'orientation
+	overflow: hidden;
+	border-radius: 6px;
+	border: 0;
+	padding: 0;
+	cursor: pointer;
+	background: rgba(41, 27, 58, 0.06);
+	transition: transform var(--t-duration), box-shadow var(--t-duration);
+
+	&:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 0.8rem 1.8rem rgba(0, 0, 0, 0.18);
+	}
+
+	&.is-loading {
+		opacity: 0.6;
+		pointer-events: none;
+	}
+
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		display: block;
+		margin: 0;
+	}
+}
+
+.image-source-cell__credit {
+	position: absolute;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	padding: 0.6rem 0.8rem;
+	background: linear-gradient(to bottom, transparent, rgba(0, 0, 0, 0.7));
+	color: #fff;
+	font-size: 1rem;
+	letter-spacing: -0.005em;
+	text-align: left;
+	line-height: 1.2;
+	pointer-events: none;
+}

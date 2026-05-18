@@ -1,0 +1,106 @@
+/* ------------------------------------------------------------ *\
+	Tiles images
+\* ------------------------------------------------------------ */
+
+.tiles-images {
+	background-color: var(--c-white);
+	border-radius: 1.2rem;
+	overflow: hidden;
+	font-size: 1.5rem;
+	letter-spacing: -0.02em;
+	color: var(--c-base);
+	padding: 3.5rem 4.4rem 5rem;
+
+	@include breakpoint-down(mobile) {
+		padding: 1.5rem 2rem;
+	}
+
+	.grid-flex {
+		--grid-gutter: 2.1rem;
+
+		@include breakpoint-down(mobile) {
+			--grid-gutter: 0;
+			margin: -1rem -0.5rem;
+		}
+
+		.grid__col {
+			@include breakpoint-down(mobile) {
+				padding: 1rem 0.5rem;
+				max-width: 50%;
+				flex: 0 0 50%;
+			}
+		}
+	}
+
+	p {
+		margin-bottom: 3.2rem;
+	}
+}
+
+.tile-image {
+	background-color: #f2f2f7;
+	border-radius: 0.8rem;
+	overflow: hidden;
+	height: 100%;
+	position: relative;
+	min-height: 30rem;
+
+	.js-crop-image {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
+
+	.tile__overlay {
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		text-align: center;
+		transform: translate(-50%, -50%);
+		text-decoration: none; // override le underline global sur les <a>
+
+		h6 {
+			font-size: 1.5rem;
+			color: #c3c4c9;
+			letter-spacing: -0.02em;
+			text-transform: uppercase;
+			margin-top: 1rem;
+			text-decoration: none;
+		}
+
+		&:hover h6,
+		&:focus h6 {
+			text-decoration: none;
+		}
+	}
+
+	/* Tile verrouillée (wallpaper Hodi par défaut) : pas de bouton suppression,
+	   mais un petit cadenas en coin pour indiquer le statut verrouillé. */
+	.tile-image--locked {
+		.tile__actions {
+			justify-content: flex-start;
+		}
+	}
+
+	.tile__actions {
+		position: absolute;
+		bottom: 0;
+		left: 0;
+		width: 100%;
+		padding: 0.8rem 0.9rem;
+		display: flex;
+		justify-content: space-between;
+		list-style: none;
+		align-items: center;
+
+		a {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			width: 4rem;
+			height: 4rem;
+			background-color: #f2f2f7;
+			border-radius: 0.6rem;
+		}
+	}
+}

@@ -1,0 +1,113 @@
+{
+	"Media Query Desktop": {
+		"prefix": "desktop",
+		"body": [
+			"@include breakpoint-down(small-desktop) {\n\t$1\n}"
+		],
+		"scope": "css, scss"
+	},
+
+	"Media Query Tablet": {
+		"prefix": "tablet",
+		"body": [
+			"@include breakpoint-down(tablet) {\n\t$1\n}"
+		],
+		"scope": "css, scss"
+	},
+
+	"Media Query Mobile": {
+		"prefix": "mobile",
+		"body": [
+			"@include breakpoint-down(mobile) {\n\t$1\n}"
+		],
+		"scope": "css, scss"
+	},
+
+	"Media Query Mobile Medium": {
+		"prefix": "mobilem",
+		"body": [
+			"@include breakpoint-down(mobile-medium) {\n\t$1\n}"
+		],
+		"scope": "css, scss"
+	},
+
+	"Media Query Mobile Small": {
+		"prefix": "mobiles",
+		"body": [
+			"@include breakpoint-down(mobile-small) {\n\t$1\n}"
+		],
+		"scope": "css, scss"
+	},
+
+	"Media Query Mobile (No SCSS)": {
+		"prefix": "mediam",
+		"body": [
+			"@media (max-width: 767px) {\n\t${1}\n}"
+		],
+		"scope": "css, scss"
+	},
+
+	"Media Query Tablet (No SCSS)": {
+		"prefix": "mediat",
+		"body": [
+			"@media (max-width: 1023px) {\n\t${1}\n}"
+		],
+		"scope": "css, scss"
+	},
+
+	"External dependencies": {
+		"scope": "javascript, javascriptreact",
+		"prefix": "/e",
+		"body": [
+			"/**",
+			" * External dependencies.",
+			" */",
+		],
+        "description": "External dependencies"
+	},
+
+	"Internal dependencies": {
+		"scope": "javascript, javascriptreact",
+		"prefix": "/i",
+		"body": [
+			"/**",
+			" * Internal dependencies.",
+			" */",
+		],
+        "description": "Internal dependencies"
+	},
+
+	"Comment": {
+		"prefix": "cm",
+		"body": [
+			"// ${1}"
+		],
+		"scope": "css, scss"
+	},
+
+	"CSS Section Comment" : {
+		"scope": "css,scss",
+		"prefix": "sc",
+		"body": [
+			"// ==========================================================================",
+			"// $1",
+			"// ==========================================================================",
+			"",
+			"$0"
+		],
+		"description": "Section comment"
+	},
+
+	"CSS Sub-section Comment" : {
+		"scope": "css,scss",
+		"prefix": "ssc",
+		"body": [
+			"//",
+			"// $1",
+			"// ==========================================================================",
+			"",
+			"$0"
+		],
+		"description": "Sub-section comment"
+	}
+}

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="fr" data-auth-required data-page="signature-mail">
+{{> head }}
+<body class="body-night">
+	<div class="wrapper">
+		{{> header }}
+
+		<div class="main">
+			<section class="section-tiles">
+				<div class="shell shell--small">
+					<div class="filters">
+						<a href="#" class="btn js-toggle-filters">
+							<span></span>
+
+							<img src="public/assets/images/temp/ico-chevron.png" alt="">
+						</a>
+
+						<ul class="list-filters js-filters">
+							<li>
+								<a href="mes-infos.html" class="btn" data-i18n="tabs.my_info">My information</a>
+							</li>
+
+							<li>
+								<a href="mes-fonds.html" class="btn" data-i18n="tabs.my_wallpapers">My wallpapers</a>
+							</li>
+
+							<li class="is-active">
+								<a href="signature-mail.html" class="btn" data-i18n="tabs.my_signature">My email signature</a>
+							</li>
+						</ul><!-- /.list-filters -->
+					</div><!-- /.filters -->
+
+					<div class="card-avatar">
+						<div class="card__head">
+							<p>Intégrez votre signature mail avec un lien vers votre vCard Hodi :</p>
+						</div><!-- /.card__head -->
+
+						<!-- Preview de la signature : peuplée dynamiquement par signature-mail.js -->
+						<div class="card__body" id="signature-preview">
+							<div class="card__image">
+								<img src="public/assets/images/svg/ico-placeholder.svg" alt="" class="js-sig-avatar">
+								<ul class="card__socials js-sig-socials"></ul>
+							</div><!-- /.card__image -->
+
+							<div class="card__content">
+								<h6 class="js-sig-name">—</h6>
+								<p class="js-sig-role-company">—</p>
+
+								<p class="js-sig-contact">—</p>
+
+								<div class="card__entry">
+									<p>
+										<a href="#" class="js-sig-vcard-link" target="_blank" rel="noopener">
+											<img src="public/assets/images/svg/ico-user.svg" alt="">
+											Ajouter à mes contacts
+										</a>
+									</p>
+								</div><!-- /.card__entry -->
+							</div><!-- /.card__content -->
+						</div><!-- /.card__body -->
+					</div><!-- /.card-avatar -->
+
+					<!-- Zone de feedback (succès copie) -->
+					<div class="form__feedback js-sig-feedback" hidden></div>
+
+					<div class="section__actions">
+						<a href="#" class="btn btn--block btn--aqua js-sig-copy">Copier le code HTML de ma signature</a>
+					</div><!-- /.section__actions -->
+
+					<!-- Zone (cachée) où la signature HTML est rendue : utilisée par le bouton "Copier" -->
+					<div id="signature-html-source" style="position:absolute; left:-9999px; top:-9999px;"></div>
+				</div><!-- /.shell -->
+			</section><!-- /.section-tiles -->
+		</div><!-- /.main -->
+
+		{{> footer }}
+	</div><!-- /.wrapper -->
+
+	{{> scripts }}
+</body>
+</html>

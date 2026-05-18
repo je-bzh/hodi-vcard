@@ -1,0 +1,27 @@
+/* ------------------------------------------------------------ *\
+	List filters
+\* ------------------------------------------------------------ */
+
+.list-filters {
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	margin: -0.9rem;
+	padding: 0.9rem 0 3.3rem;
+
+	li {
+		max-width: calc(100% / 3);
+		flex: 0 0 calc(100% / 3);
+		padding: 0.9rem;
+	}
+
+	.btn {
+		min-width: 100%;
+		width: 100%;
+		background-color: #291b3a;
+	}
+
+	.is-active .btn {
+		background-color: #d54c82;
+	}
+}

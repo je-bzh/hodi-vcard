@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="fr" data-auth-required data-page="mes-fonds">
+{{> head }}
+<body class="body-night">
+	<div class="wrapper">
+		{{> header }}
+
+		<div class="main">
+			<section class="section-tiles">
+				<div class="shell shell--small">
+					<div class="filters">
+						<a href="#" class="btn js-toggle-filters">
+							<span></span>
+							
+							<img src="public/assets/images/temp/ico-chevron.png" alt="">
+						</a>
+
+						<ul class="list-filters js-filters">
+							<li>
+								<a href="mes-infos.html" class="btn" data-i18n="tabs.my_info">My information</a>
+							</li>
+	
+							<li class="is-active">
+								<a href="#" class="btn" data-i18n="tabs.my_wallpapers">My wallpapers</a>
+							</li>
+	
+							<li>
+								<a href="signature-mail.html" class="btn" data-i18n="tabs.my_signature">My email signature</a>
+							</li>
+						</ul><!-- /.list-filters -->
+					</div><!-- /.filters -->
+
+					<div class="tiles-images">
+						<p>Créez et personnalisez vos fonds d'écran verrouillé pour votre smartphone :</p>
+
+						<!-- Grille peuplée dynamiquement par wallpapers.js :
+							 - 1er slot = wallpaper Hodi par défaut (verrouillé, non supprimable)
+							 - 3 slots suivants = wallpapers perso ou "+ Ajouter" -->
+						<div class="grid-flex"></div>
+					</div><!-- /.tiles -->
+				</div><!-- /.shell -->
+			</section><!-- /.section-form -->
+		</div><!-- /.main -->
+
+		{{> popup-cropper }}
+
+
+		{{> footer }}
+	</div><!-- /.wrapper -->
+
+	{{> scripts }}
+</body>
+</html>

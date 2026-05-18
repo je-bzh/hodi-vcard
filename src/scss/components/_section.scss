@@ -1,0 +1,98 @@
+/* ------------------------------------------------------------ *\
+	Section
+\* ------------------------------------------------------------ */
+
+.section {
+	padding: 7.2rem 0 3rem;
+
+	@include breakpoint-down(mobile) {
+		padding: 3.8rem 0 3rem;
+	}
+
+	.section__head {
+		text-align: center;
+		margin-bottom: 3.6rem;
+
+		h6 {
+			text-transform: uppercase;
+			letter-spacing: -0.03em;
+			color: #ed6c47;
+			font-weight: 500;
+			margin-bottom: 0.8rem;
+
+			@include breakpoint-down(mobile) {
+				margin-bottom: 1.9rem;
+			}
+		}
+
+		h2 {
+			font-weight: 800;
+			letter-spacing: -0.007em;
+
+			@include breakpoint-down(mobile) {
+				line-height: 1.13;
+			}
+
+			br {
+				display: none;
+
+				@include breakpoint-down(mobile) {
+					display: block;
+				}
+			}
+		}
+	}
+
+	.section__image {
+		max-width: 31.4rem;
+		margin: 0 auto 6.2rem;
+		position: relative;
+
+		@include breakpoint-down(mobile) {
+			max-width: 24.4rem;
+			margin-bottom: 5.1rem;
+		}
+
+		&:before {
+			content: '';
+			position: absolute;
+			top: 2.1rem;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 86%;
+			height: 92%;
+			border-radius: 8px;
+			background-color: #291b3a;
+		}
+
+		img {
+			position: relative;
+			border-radius: 8px;
+			transform: rotate(0deg);
+		}
+	}
+}
+
+.section--tiles {
+	padding: 4.7rem 0;
+
+	@include breakpoint-down(mobile) {
+		padding: 2.2rem 0 2.2rem;
+	}
+
+	.section__head {
+		margin-bottom: 4.4rem;
+
+		@include breakpoint-down(mobile) {
+			margin-bottom: 4.6rem;
+		}
+
+		h6 {
+			color: var(--c-white);
+			font-weight: 500;
+			letter-spacing: 0;
+			font-size: 1.4rem;
+			letter-spacing: 0;
+		}
+	}
+}

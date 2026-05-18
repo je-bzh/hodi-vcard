@@ -1,0 +1,41 @@
+/* ------------------------------------------------------------ *\
+	List btns
+\* ------------------------------------------------------------ */
+
+.list-btns {
+	padding-left: 0;
+	list-style: none;
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	margin: -0.8rem;
+
+	@include breakpoint-down(mobile) {
+		display: block;
+		margin: 0;
+		max-width: 88%;
+		margin: 0 auto;
+		width: 100%;
+	}
+
+	li {
+		padding: 0.8rem;
+
+		@include breakpoint-down(mobile) {
+			padding: 0;
+			width: 100%;
+		}
+	}
+
+	.btn {
+		@include breakpoint-down(mobile) {
+			width: 100%;
+		}
+	}
+
+	li + li {
+		@include breakpoint-down(mobile) {
+			margin-top: 2.6rem;
+		}
+	}
+}

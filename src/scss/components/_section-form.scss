@@ -1,0 +1,143 @@
+/* ------------------------------------------------------------ *\
+	Section form
+\* ------------------------------------------------------------ */
+
+.section-form {
+	padding: 4.3rem 0 3.6rem;
+
+	.section__head {
+		text-align: center;
+		margin-bottom: 3.6rem;
+		letter-spacing: -0.027em;
+		color: #ed6c47;
+		font-weight: 500;
+		margin-bottom: 5.1rem;
+
+		h2 {
+			font-weight: 800;
+			color: var(--c-white);
+			margin-bottom: 1rem;
+		}
+	}
+
+	.section__form {
+		background-color: #f2f2f7;
+		border-radius: 1.2rem;
+		padding: 16.6rem 0 5.5rem;
+		overflow: hidden;
+		position: relative;
+		// Force GPU compositing → corrige les artefacts sub-pixel
+		// dans les coins arrondis quand un enfant absolu déborde
+		isolation: isolate;
+		transform: translateZ(0);
+	}
+
+	.section__background {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 16.6rem;
+		background-color: #e5e2ec;
+		// Coins arrondis explicites en haut pour matcher .section__form
+		border-radius: 1.2rem 1.2rem 0 0;
+		overflow: hidden;
+
+		img {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.btn-edit {
+			position: absolute;
+			top: 2.3rem;
+			right: 2.3rem;
+			z-index: 3;
+
+			img {
+				position: relative;
+				width: auto;
+				height: auto;
+				object-fit: contain;
+			}
+		}
+	}
+
+	.section__avatar {
+		width: 17.4rem;
+		height: 17.4rem;
+		border: 1px solid rgba(41, 27, 58, 0.12);
+		background-color: var(--c-white);
+		border-radius: 50%;
+		position: relative;
+		margin: -8.2rem auto 3rem;
+
+		@include breakpoint-down(mobile) {
+			width: 13rem;
+			height: 13rem;
+			margin-top: -6.5rem;
+		}
+
+		img {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+		}
+
+		.section__avatar-image {
+			position: relative;
+			height: 100%;
+			border-radius: 50%;
+			overflow: hidden;
+
+			// Le placeholder (silhouette) reste sous la photo.
+			// La photo (.js-image-to-edit) est au-dessus dès qu'elle a un src.
+			.js-avatar-placeholder {
+				z-index: 1;
+			}
+
+			.js-image-to-edit {
+				z-index: 2;
+				background-color: var(--c-white); // évite que le placeholder transparaisse pendant le load
+			}
+
+			// Si la photo n'a pas de src, on la masque pour laisser voir le placeholder
+			.js-image-to-edit:not([src]),
+			.js-image-to-edit[src=""] {
+				display: none;
+			}
+		}
+
+		.btn-edit {
+			position: absolute;
+			bottom: 0.5rem;
+			right: 0.3rem;
+		}
+	}
+
+	.section__actions {
+		margin-top: 5rem;
+
+		.btn {
+			background-color: #0d81fe;
+			width: 100%;
+			font-weight: 600;
+			letter-spacing: -0.02em;
+		}
+
+		.form__error {
+			font-size: 1.6rem;
+			text-decoration: none;
+			letter-spacing: -0.017em;
+			display: block;
+			max-width: max-content;
+			margin: 3.7rem auto 0;
+			color: #ff080c;
+		}
+	}
+}

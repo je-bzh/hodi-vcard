@@ -1,0 +1,56 @@
+/* ------------------------------------------------------------ *\
+	Section info
+\* ------------------------------------------------------------ */
+
+.section-info {
+	background-color: #f2f2f7;
+	padding: 4.3rem 0 4rem;
+
+	.list-cards {
+		list-style: none;
+
+		li + li {
+			margin-top: 1.9rem;
+		}
+
+		li {
+			background-color: var(--c-white);
+			font-size: 1.8rem;
+			border-radius: 9px;
+			letter-spacing: -0.01em;
+			padding: 2rem 2.8rem 1.8rem;
+
+			a {
+				text-decoration: none;
+				color: #397ff6;
+			}
+		}
+
+		h6 {
+			font-weight: 400;
+			margin-bottom: 0.1rem;
+			font-size: 1.8rem;
+
+			svg {
+				margin-right: 1.2rem;
+			}
+		}
+	}
+
+	.section__actions {
+		text-align: center;
+		font-size: 1.5rem;
+		letter-spacing: -0.01em;
+		color: #291b3a4d;
+		margin-top: 3.3rem;
+
+		a {
+			text-decoration: none;
+		}
+	}
+}
+
+.logo-container {
+	padding: 5.2rem 0 5.7rem;
+	text-align: center;
+}

@@ -1,0 +1,111 @@
+/* ------------------------------------------------------------ *\
+	Card avatar
+\* ------------------------------------------------------------ */
+
+.card-avatar {
+	background-color: var(--c-white);
+	border-radius: 1.2rem;
+	color: var(--c-base);
+	padding: 3.5rem 4.2rem 4.4rem;
+
+	@include breakpoint-down(mobile) {
+		padding: 1.5rem 2rem;
+	}
+
+	.card__head {
+		font-size: 1.5rem;
+		font-weight: 400;
+		padding-left: 0.3rem;
+		letter-spacing: -0.019em;
+		margin-bottom: 2.9rem;
+	}
+
+	.card__body {
+		border-radius: 8px;
+		background: #f2f2f7;
+		display: flex;
+		flex-wrap: wrap;
+		padding: 2.1rem 2.8rem 3.6rem;
+
+		@include breakpoint-down(mobile) {
+			display: block;
+			padding: 1rem 1.5rem;
+		}
+
+		.card__image {
+			max-width: 8.5rem;
+			flex: 0 0 8.5rem;
+
+			@include breakpoint-down(mobile) {
+				margin: 0 auto;
+			}
+
+			.js-sig-avatar {
+				width: 8.5rem;
+				height: 8.5rem;
+				border-radius: 50%;
+				object-fit: cover;
+				display: block;
+				background: #fff;
+			}
+		}
+
+		.card__content {
+			max-width: calc(100% - 8.5rem);
+			flex: 0 0 calc(100% - 8.5rem);
+			padding: 1.2rem 0 0 2.4rem;
+			font-family: 'Arial';
+			font-size: 1.4rem;
+			letter-spacing: -0.016em;
+
+			@include breakpoint-down(mobile) {
+				max-width: 100%;
+				padding: 2rem 0 0;
+				text-align: center;
+			}
+
+			h6 {
+				letter-spacing: -0.016em;
+				font-size: 1.5rem;
+				margin-bottom: -1px;
+			}
+
+			> p:has(a) {
+				font-size: 1.5rem;
+			}
+
+			p {
+				a {
+					color: #0d81fe;
+				}
+			}
+		}
+
+		.card__entry {
+			margin-top: 2.8rem;
+
+			p {
+				font-size: 1.3rem;
+
+				img {
+					margin: -2px 0.7rem 0 0;
+				}
+
+				a {
+					color: inherit;
+				}
+			}
+		}
+
+		.card__socials {
+			display: flex;
+			list-style: none;
+			justify-content: center;
+			margin-top: 1.1rem;
+
+			li + li {
+				margin-left: 0.9rem;
+			}
+		}
+	}
+}

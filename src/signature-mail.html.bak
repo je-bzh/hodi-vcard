@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr" data-auth-required>
+{{> head }}
+<body>
+	<div class="wrapper">
+		{{> header }}
+
+		<div class="main">
+			<section class="section-tiles">
+				<div class="shell shell--small">
+					<div class="filters">
+						<a href="#" class="btn js-toggle-filters">
+							<span></span>
+							
+							<img src="public/assets/images/temp/ico-chevron.png" alt="">
+						</a>
+
+						<ul class="list-filters js-filters">
+							<li>
+								<a href="mes-infos.html" class="btn" data-i18n="tabs.my_info">My information</a>
+							</li>
+	
+							<li>
+								<a href="#" class="btn">Mes fonds d’écran</a>
+							</li>
+	
+							<li class="is-active">
+								<a href="#" class="btn">Ma signature mail</a>
+							</li>
+						</ul><!-- /.list-filters -->
+					</div><!-- /.filters -->
+
+					<div class="card-avatar">
+						<div class="card__head">
+							<p>Intégrez votre signature mail avec un lien vers votre vcard Hodi :</p>
+						</div><!-- /.card__head -->
+
+						<div class="card__body">
+							<div class="card__image">
+								<picture>
+									<source media="(max-width:767px)" srcset="public/assets/images/svg/ico-avatar.svg">
+									<img src="public/assets/images/svg/ico-avatar.svg" alt="">
+								</picture>
+
+								<ul class="card__socials">
+									<li>
+										<a href="#">
+											<img src="public/assets/images/svg/ico-soc-c-1.svg" alt="">
+										</a>
+									</li>
+
+									<li>
+										<a href="#">
+											<img src="public/assets/images/svg/ico-soc-c-2.svg" alt="">
+										</a>
+									</li>
+
+									<li>
+										<a href="#">
+											<img src="public/assets/images/svg/ico-soc-c-3.svg" alt="">
+										</a>
+									</li>
+								</ul><!-- /.card__socials -->
+							</div><!-- /.card__image -->
+
+							<div class="card__content">
+								<h6>Julien Tessier</h6>
+
+								<p>CEO, directeur technique</p>
+
+								<p>Tel. +33 6 00 00 00 - <a href="http://www.hodi.host">www.hodi.host</a></p>
+
+								<div class="card__entry">
+									<p>
+										<a href="#">
+											<img src="public/assets/images/svg/ico-user.svg" alt="">
+
+											Ajouter à mes contacts
+										</a>
+									</p>
+								</div><!-- /.card__entry -->
+							</div><!-- /.card__content -->
+						</div><!-- /.card__body -->
+					</div><!-- /.card-avatar -->
+
+					<div class="section__actions">
+						<a href="#" class="btn btn--block btn--aqua">Copier le code HTML de ma signature</a><!-- /.btn -->
+
+						<a href="#" class="link">Comment paramétrer ma signature email personnalisée ?</a><!-- /.link -->
+					</div><!-- /.section__actions -->
+				</div><!-- /.shell -->
+			</section><!-- /.section-form -->
+		</div><!-- /.main -->
+
+
+		{{> footer }}
+	</div><!-- /.wrapper -->
+
+	{{> scripts }}
+</body>
+</html>

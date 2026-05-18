@@ -1,0 +1,27 @@
+// ==========================================================================
+// Form email
+// ==========================================================================
+
+.form-email {
+	.field {
+		appearance: none;
+		letter-spacing: -0.01em;
+		font-family: var(--ff-base);
+		border-radius: 4rem;
+		line-height: 1;
+		padding: 1.3rem 2.2rem;
+		text-align: left;
+		background-color: var(--c-white);
+		border-radius: 6rem;
+		font-size: 1.5rem;
+		color: var(--c-base);
+		min-width: 32.1rem;
+		outline: none;
+		border: none;
+
+		@include breakpoint-down(mobile) {
+			min-width: 100%;
+			font-size: 1.6rem;
+		}
+	}
+}

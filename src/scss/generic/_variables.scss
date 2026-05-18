@@ -1,0 +1,22 @@
+// ==========================================================================
+// Variables
+// ==========================================================================
+
+:root {
+	--fz-html: 62.5%;
+	--fz-base: 1.6rem;
+	--fw-base: 400;
+	--lh-base: 1.2;
+	--ff-base: 'Inter', Helvetica, Arial, sans-serif;
+	--ff-monrope: 'Manrope', Helvetica, Arial, sans-serif;
+	--c-base: #000;
+	--c-white: #fff;
+	--t-duration: 0.3s;
+}
+
+$breakpoints: (
+	mobile-small: 374px,
+	mobile: 767px,
+	tablet: 1023px,
+	small-desktop: 1199px,
+);

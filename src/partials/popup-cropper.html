@@ -1,0 +1,86 @@
+<!--
+	Popup cropper partagé entre :
+	  - mes-infos.html (cover + avatar)
+	  - mes-fonds.html (wallpaper)
+
+	Le titre, la viewport Croppie et le label du bouton de sauvegarde sont
+	définis dynamiquement par image-crop.js en fonction du contexte détecté.
+
+	Deux sources d'image :
+	  1. Upload depuis le disque (file input)
+	  2. Recherche dans la banque d'images Unsplash (API publique)
+
+	Une fois l'image choisie (peu importe la source), elle passe dans Croppie
+	pour le crop / zoom, puis on appelle saveCroppedImageToTile.
+-->
+<div class="popups popups--cropper not-visible" id="popup-choice">
+	<div class="popups__inner">
+		<div class="popup">
+			<div class="popup__head">
+				<h4>Nouvelle image</h4>
+
+				<a href="#popup-choice" class="popup__close js-toggle-popup">
+					<img src="public/assets/images/svg/ico-close.svg" alt="">
+				</a><!-- /.popup__close -->
+			</div><!-- /.popup__head -->
+
+			<div class="image-cropper">
+				<!-- Tabs pour choisir la source de l'image -->
+				<div class="image-source-tabs js-source-tabs">
+					<button type="button" class="image-source-tab is-active js-source-tab" data-source="upload">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+						<span>Mon ordinateur</span>
+					</button>
+					<button type="button" class="image-source-tab js-source-tab" data-source="unsplash">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+						<span>Banque d'images</span>
+					</button>
+				</div><!-- /.image-source-tabs -->
+
+				<!-- Pane 1 : upload depuis le disque -->
+				<div class="image-source-pane is-active" data-pane="upload">
+					<img class="image-cropper-icon" src="public/assets/images/svg/ico-image-cropper.svg" alt="">
+
+					<h6>Glissez votre image ici ou…</h6>
+
+					<div class="image-cropper__upload">
+						<input type="file" id="upload-image" class="btn btn--aqua" accept="image/*">
+						<span class="btn btn--aqua">Parcourir</span>
+					</div>
+
+					<p class="image-cropper__hint">Maximum 2 Mo, fichier JPG ou PNG</p>
+				</div><!-- /.image-source-pane -->
+
+				<!-- Pane 2 : recherche Unsplash -->
+				<div class="image-source-pane" data-pane="unsplash">
+					<div class="image-source-search">
+						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="image-source-search__icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+						<input type="search" class="js-unsplash-query" placeholder="Plage, forêt, ville, abstrait…" autocomplete="off">
+					</div>
+
+					<div class="image-source-results js-unsplash-results">
+						<!-- Vignettes injectées par image-source.js -->
+						<p class="image-source-empty js-unsplash-empty">Tapez un mot-clé pour rechercher des images libres de droits sur Unsplash.</p>
+					</div>
+
+					<p class="image-cropper__hint">Photos libres de droits — crédit photographe automatique</p>
+				</div><!-- /.image-source-pane -->
+
+				<!-- Zone Croppie : s'active dès qu'une image est sélectionnée (upload ou Unsplash) -->
+				<div class="js-croppie"></div>
+
+				<div class="zoom-actions">
+					<button id="zoom-in-button" type="button">
+						<img src="public/assets/images/svg/zoom-in.svg" alt="">
+					</button>
+
+					<button id="zoom-out-button" type="button">
+						<img src="public/assets/images/svg/zoom-out.svg" alt="">
+					</button>
+				</div>
+			</div><!-- /.image-cropper -->
+
+			<a href="#" class="btn btn--block btn--aqua btn--is-hidden" id="crop-button">Enregistrer l'image</a>
+		</div><!-- /.popup -->
+	</div><!-- /.popups__inner -->
+</div><!-- /.popups -->

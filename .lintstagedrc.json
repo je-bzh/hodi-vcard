@@ -1,0 +1,7 @@
+{
+    "src/scss/**/*.{css,scss}": "npx prettier --write",
+    "src/js/**/*.{js,jsx}": [
+        "npx prettier --write",
+        "npx eslint --fix-dry-run"
+    ]
+}

@@ -1,0 +1,41 @@
+{
+  "name": "hodi-vcard",
+  "version": "0.1.0",
+  "description": "Hodi vCard — carte de visite dématérialisée (déployée sur www.hodi.live/vcard).",
+  "license": "UNLICENSED",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": "^20.0.0 || >=22.0.0"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "prepare": "husky install",
+    "preview": "vite preview",
+    "tinify": "test -n \"$TINIFY_API_KEY\" || (echo 'Erreur : exporte TINIFY_API_KEY avant de lancer ce script.' && exit 1) && cd src/public/assets/images/ && find . -type f \\( -name '*.png' -o -name '*.jpg' -o -name '*.jpeg' \\) -print0 | xargs -0 -I {} tinify-cli -k \"$TINIFY_API_KEY\" {}"
+  },
+  "devDependencies": {
+    "eslint": "9.19.0",
+    "eslint-config-prettier": "10.0.1",
+    "glob": "^11.0.1",
+    "husky": "9.1.7",
+    "lint-staged": "15.4.3",
+    "prettier": "3.4.2",
+    "rollup": "^4.34.2",
+    "rollup-plugin-external-globals": "^0.13.0",
+    "sass-embedded": "^1.83.4",
+    "tinify-cli": "^1.1.0",
+    "vite": "^6.0.11",
+    "vite-plugin-external": "^4.3.1",
+    "vite-plugin-handlebars": "^2.0.0",
+    "vite-plugin-list-directory-contents": "^1.4.5",
+    "vite-plugin-sass-glob-import": "^5.0.0",
+    "vite-plugin-watch-and-run": "^1.7.3"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.105.4",
+    "croppie": "^2.6.5",
+    "qrcode": "^1.5.4"
+  }
+}

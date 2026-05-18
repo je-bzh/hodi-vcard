@@ -1,0 +1,156 @@
+/* ------------------------------------------------------------ *\
+	Section Hero (home)
+\* ------------------------------------------------------------ */
+
+.section--hero {
+	// Longhands obligatoires : .section { padding: ... } est compilé APRÈS et
+	// écraserait un shorthand sur .section--hero (même spécificité).
+	padding-top: 6rem;
+	padding-bottom: 1.5rem;
+	padding-left: 0;
+	padding-right: 0;
+	color: var(--c-white);
+	text-align: center;
+
+	@include breakpoint-down(mobile) {
+		padding-top: 3.6rem;
+		padding-bottom: 1rem;
+	}
+
+	/* ----- Pastilles ----- */
+	.hero__badges {
+		list-style: none;
+		display: flex;
+		justify-content: center;
+		gap: 1.2rem;
+		flex-wrap: wrap;
+		margin: 0 0 3.6rem;
+		padding: 0;
+
+		@include breakpoint-down(mobile) {
+			gap: 0.8rem;
+			margin-bottom: 2.4rem;
+		}
+	}
+
+	.hero__badges li {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: 1px solid #C44B95;
+		border-radius: 6px;
+		height: 2.6rem;          // capsule = 26px
+		padding: 0 1.4rem;        // horizontal seulement, hauteur figée
+		font-family: 'Inter', Helvetica, Arial, sans-serif;
+		font-size: 1.4rem;        // 14px
+		font-weight: 500;          // Medium
+		letter-spacing: 0.02em;    // approche resserrée (~0.3px à 14px)
+		text-transform: uppercase;
+		color: #C44B95;
+		line-height: 1;
+
+		@include breakpoint-down(mobile) {
+			font-size: 1.2rem;
+			height: 2.4rem;
+			padding: 0 1.1rem;
+		}
+	}
+
+	/* ----- Accroche ----- */
+	.hero__title {
+		font-size: clamp(3rem, 6vw, 5.4rem);
+		font-weight: 800;
+		line-height: 1.05;
+		letter-spacing: -0.02em;
+		color: var(--c-white);
+		max-width: 90rem;
+		margin: 0 auto 4.5rem;
+
+		@include breakpoint-down(mobile) {
+			font-size: 2.6rem;
+			margin-bottom: 3rem;
+		}
+	}
+
+	/* ----- Image polaroid : structure ORIGINALE du template ----- */
+	.hero__image {
+		max-width: 34rem;
+		// margin-bottom = espace AU-DESSUS du CTA (sous le polaroid)
+		// Doit matcher .section--hero padding-bottom pour CTA équidistant
+		margin: 0 auto 5.5rem;
+		position: relative;
+
+		@include breakpoint-down(mobile) {
+			max-width: 26rem;
+			margin-bottom: 4rem;
+		}
+
+		&::before {
+			content: '';
+			position: absolute;
+			top: 2.1rem;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 86%;
+			height: 92%;
+			border-radius: 0.8rem;
+			background-color: #291b3a;
+		}
+
+		picture {
+			position: relative;
+			z-index: 1;
+			display: block;
+		}
+
+		img {
+			width: 100%;
+			height: auto;
+			display: block;
+			border-radius: 0.8rem;
+			position: relative;
+		}
+	}
+
+	/* ----- CTA ----- */
+	.hero__cta {
+		list-style: none;
+		display: flex;
+		justify-content: center;
+		margin: 0;
+		padding: 0;
+	}
+}
+
+/* ------------------------------------------------------------ *\
+	Pitch (sous le hero, sur fond aubergine)
+\* ------------------------------------------------------------ */
+.section--pitch {
+	padding-top: 0;
+	padding-bottom: 6rem;
+	padding-left: 0;
+	padding-right: 0;
+	margin-top: -4rem; // remonte le texte de 40px (20px + 20px)
+	color: var(--c-white);
+	text-align: center;
+
+	@include breakpoint-down(mobile) {
+		padding-top: 0;
+		padding-bottom: 4rem;
+		margin-top: -3rem;
+	}
+
+	.pitch {
+		font-size: 1.6rem;
+		line-height: 1.55;
+		max-width: 128rem;       // bien plus large pour 3 lignes (était 96rem)
+		margin: 0 auto;
+		color: rgba(255, 255, 255, 0.75);
+		letter-spacing: -0.005em;
+
+		@include breakpoint-down(mobile) {
+			font-size: 1.4rem;
+			max-width: 100%;
+		}
+	}
+}

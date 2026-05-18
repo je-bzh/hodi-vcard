@@ -1,0 +1,61 @@
+/* ------------------------------------------------------------ *\
+	Socials
+\* ------------------------------------------------------------ */
+
+.socials {
+	ul {
+		list-style: none;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-wrap: nowrap; // jamais de retour à la ligne, peu importe le nombre d'icônes
+		gap: 1.2rem;
+		margin: 0;
+		padding: 0;
+		// Si trop d'icônes (rare, jusqu'à 9), on autorise un scroll horizontal
+		// invisible pour rester lisible sans casser la ligne.
+		overflow-x: auto;
+		scrollbar-width: none; // Firefox
+		-ms-overflow-style: none; // IE/Edge legacy
+
+		&::-webkit-scrollbar {
+			display: none; // Chrome/Safari
+		}
+
+		@include breakpoint-down(mobile) {
+			gap: 0.8rem;
+		}
+
+		li {
+			flex: 0 0 auto; // pas de shrink, taille fixe pour rester ronds
+
+			a {
+				width: 5rem;
+				height: 5rem;
+				border-radius: 50%;
+				background-color: #f2f2f7;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+
+				@include breakpoint-down(mobile) {
+					width: 4rem;
+					height: 4rem;
+				}
+
+				img,
+				svg {
+					max-width: 60%;
+					max-height: 60%;
+					width: auto;
+					height: auto;
+
+					@include breakpoint-down(mobile) {
+						max-width: 55%;
+						max-height: 55%;
+					}
+				}
+			}
+		}
+	}
+}

@@ -1,0 +1,15 @@
+/* ------------------------------------------------------------ *\
+	Btn edit
+\* ------------------------------------------------------------ */
+
+.btn-edit {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #0d81fe;
+	border-radius: 50%;
+	width: 4rem;
+	height: 4rem;
+	// Doit toujours passer au-dessus de l'image uploadée (.js-image-to-edit a z-index: 2)
+	z-index: 3;
+}

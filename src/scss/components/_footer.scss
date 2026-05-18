@@ -1,0 +1,36 @@
+/* ------------------------------------------------------------ *\
+	Footer
+\* ------------------------------------------------------------ */
+
+.footer {
+	padding: 3.6rem 0 6rem; // +30px d'air en bas
+	text-align: center;
+	/* Fond aubergine pour rester collé au bas de page sans bande blanche */
+	background: #291b3a;
+
+	@include breakpoint-down(mobile) {
+		padding: 2.8rem 0 5rem;
+	}
+}
+
+.footer__logo {
+	display: inline-block;
+	opacity: 0.85;
+	transition: opacity var(--t-duration);
+
+	&:hover {
+		@media (hover: hover) and (pointer: fine) {
+			opacity: 1;
+		}
+	}
+
+	img {
+		display: block;
+		width: 24rem;
+		height: auto;
+
+		@include breakpoint-down(mobile) {
+			width: 18rem;
+		}
+	}
+}

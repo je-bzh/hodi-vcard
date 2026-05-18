@@ -1,0 +1,20 @@
+/* ------------------------------------------------------------ *\
+	Section tiles
+\* ------------------------------------------------------------ */
+
+.section-tiles {
+	padding: 4.2rem 0;
+
+	.section__actions {
+		margin-top: 4.4rem;
+		text-align: center;
+
+		.link {
+			display: inline-block;
+			margin-top: 5rem;
+			font-size: 1.4rem;
+			text-decoration: none;
+			letter-spacing: -0.02em;
+		}
+	}
+}

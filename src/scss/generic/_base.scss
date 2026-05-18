@@ -1,0 +1,132 @@
+// ==========================================================================
+// Base
+// ==========================================================================
+
+html {
+	font-size: var(--fz-html);
+}
+
+body {
+	min-width: 320px;
+	font-family: var(--ff-base);
+	font-weight: var(--fw-base);
+	font-size: var(--fz-base);
+	line-height: var(--lh-base);
+	color: var(--c-base);
+	background: var(--c-white); /* default : page blanche (vcard publique, mes-infos) */
+}
+
+/* Fond aubergine + gradient : appliqué uniquement sur les pages avec un body décoré
+   (home, formulaires authentifiés). La page vcard publique reste blanche. */
+.body-home,
+.body-night {
+	background: #291b3a;
+
+	.wrapper {
+		background: radial-gradient(37.77% 37.76% at 49.24% 29.37%, #784c99 2.5%, #3b2258 49%, #291b3a 100%);
+	}
+
+	.main {
+		color: var(--c-white);
+	}
+}
+
+a {
+	color: inherit;
+	text-decoration: underline;
+
+	@media (hover: hover) {
+		&:where(:hover, :focus-visible) {
+			text-decoration: none;
+		}
+	}
+
+	&[href^='tel'] {
+		text-decoration: none;
+	}
+}
+
+.level-1,
+h1,
+.level-2,
+h2,
+.level-3,
+h3,
+.level-4,
+h4,
+.level-5,
+h5,
+.level-6,
+h6 {
+	margin-bottom: calc(var(--lh-base) * 0.5em);
+}
+
+.level-1,
+h1 {
+}
+
+.level-2,
+h2 {
+	font-size: 4rem;
+
+	@include breakpoint-down(tablet) {
+		font-size: 3.5rem;
+	}
+
+	@include breakpoint-down(mobile) {
+		font-size: 3rem;
+	}
+}
+
+.level-3,
+h3 {
+}
+
+.level-4,
+h4 {
+	font-size: 2.4rem;
+
+	@include breakpoint-down(mobile) {
+		font-size: 1.8rem;
+	}
+}
+
+.level-5,
+h5 {
+}
+
+.level-6,
+h6 {
+	font-size: 1.6rem;
+}
+
+p,
+ul,
+ol,
+dl,
+hr,
+table,
+blockquote {
+	margin-bottom: calc(var(--lh-base) * 0.5em);
+}
+
+h1[class],
+h2[class],
+h3[class],
+h4[class],
+h5[class],
+h6[class],
+h1:last-child,
+h2:last-child,
+h3:last-child,
+h4:last-child,
+h5:last-child,
+h6:last-child,
+p:last-child,
+ul:last-child,
+ol:last-child,
+dl:last-child,
+table:last-child,
+blockquote:last-child {
+	margin-bottom: 0;
+}

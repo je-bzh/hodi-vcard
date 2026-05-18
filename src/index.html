@@ -1,0 +1,63 @@
+<!doctype html>
+<html lang="fr">
+	{{> head }}
+	<body class="body-home">
+		<div class="wrapper">
+			{{> header }}
+
+			<div class="main">
+				<section class="section section--hero">
+					<div class="shell">
+
+						<!-- Badges -->
+						<ul class="hero__badges">
+							<li data-i18n="hero.badge_no_paper">No paper</li>
+							<li data-i18n="hero.badge_no_card">No physical card</li>
+							<li data-i18n="hero.badge_no_app">No app</li>
+						</ul>
+
+						<!-- Headline -->
+						<h2 class="hero__title">
+							<span data-i18n="hero.title_line1">Your virtual business card.</span><br>
+							<span data-i18n="hero.title_line2">Hosted in Africa.</span>
+						</h2>
+
+						<!-- Image hero originale du template (630×761) dans la découpe polaroid -->
+						<div class="hero__image">
+							<picture>
+								<img src="public/assets/images/temp/section-img-1.png" alt="" width="630" height="761">
+							</picture>
+						</div>
+
+						<!-- Primary CTA -->
+						<ul class="list-btns hero__cta">
+							<li>
+								<a href="mes-infos.html" class="btn btn--gradient btn--hero" data-i18n="hero.cta">Create my Hodi vCard</a>
+							</li>
+						</ul>
+
+					</div>
+					<!-- /.shell -->
+				</section>
+				<!-- /.section--hero -->
+
+				<section class="section section--pitch">
+					<div class="shell">
+						<p class="pitch" data-i18n-html="hero.pitch">
+							Hodi offers you your virtual business card, hosted on its pan-African cloud.<br>
+							Your data is encrypted, securely stored, and never used for commercial purposes.
+						</p>
+					</div>
+				</section>
+				<!-- /.section--pitch -->
+
+			</div>
+			<!-- /.main -->
+
+			{{> footer }}
+		</div>
+		<!-- /.wrapper -->
+
+		{{> scripts }}
+	</body>
+</html>
