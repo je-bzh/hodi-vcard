@@ -1,0 +1,18 @@
+# .htaccess pour www.hodi.live/vcard/
+DirectoryIndex index.html
+
+RewriteEngine On
+# Si le fichier demandé n'existe pas → on sert index.html (fallback type SPA)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^.*$ index.html [L]
+
+# Cache long sur les assets statiques
+<FilesMatch "\.(css|js|svg|png|jpg|jpeg|gif|woff2?|ico)$">
+    Header set Cache-Control "max-age=31536000, public"
+</FilesMatch>
+
+# HTML : pas de cache (pour que les nouvelles versions soient prises immédiatement)
+<FilesMatch "\.html$">
+    Header set Cache-Control "no-cache, must-revalidate"
+</FilesMatch>
