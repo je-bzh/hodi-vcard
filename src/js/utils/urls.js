@@ -12,12 +12,21 @@ const BASE_URL = import.meta.env.BASE_URL || '/';
 
 /**
  * Construit l'URL publique d'une vCard à partir de son slug.
- *   - Dev   : http://127.0.0.1:5173/ma-vcard.html?slug=jerome
- *   - Prod  : https://www.hodi.live/vcard/ma-vcard.html?slug=jerome
+ *   - Prod  : https://www.hodi.live/vcard/jerome  (pretty URL, via rewrite Apache)
+ *   - Dev   : http://127.0.0.1:5173/ma-vcard.html?slug=jerome (pas de rewrite en dev)
+ *
+ * On détecte le contexte : en prod (BASE_URL = '/vcard/'), on génère l'URL propre.
+ * En dev (BASE_URL = '/'), on garde le format query string car Vite dev server
+ * ne fait pas de rewrite (équivalent de la règle .htaccess).
  */
 export function buildVcardUrl(slug) {
-	// BASE_URL termine toujours par '/' donc on concatène directement.
-	return `${window.location.origin}${BASE_URL}ma-vcard.html?slug=${encodeURIComponent(slug)}`;
+	const cleanSlug = encodeURIComponent(slug);
+	// En prod : pretty URL. En dev : query string (Vite ne rewrite pas)
+	const isProd = BASE_URL !== '/' && BASE_URL !== '';
+	if (isProd) {
+		return `${window.location.origin}${BASE_URL}${cleanSlug}`;
+	}
+	return `${window.location.origin}${BASE_URL}ma-vcard.html?slug=${cleanSlug}`;
 }
 
 /**

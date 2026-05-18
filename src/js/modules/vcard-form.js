@@ -519,7 +519,8 @@ async function finalizeCreate(pending) {
 		showFeedback('success', `✓ vCard créée ! Redirection vers votre carte publique…`);
 
 		setTimeout(() => {
-			window.location.replace(`${BASE_URL}ma-vcard.html?slug=${created.slug}`);
+			// Pretty URL en prod, query string en dev
+			window.location.replace(buildVcardUrl(created.slug));
 		}, 1200);
 	} catch (err) {
 		console.error('[vcard-form] finalizeCreate exception', err);

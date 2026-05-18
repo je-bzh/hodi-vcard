@@ -23,7 +23,7 @@ if ($('html').attr('data-page') === 'ma-vcard') {
 }
 
 async function bootstrap() {
-	const slug = new URLSearchParams(window.location.search).get('slug');
+	const slug = getSlugFromUrl();
 
 	if (!slug) {
 		renderEmptyState();
@@ -277,6 +277,30 @@ async function generateQrCode(url) {
 // ---------------------------------------------------------------------------
 function joinName(vcard) {
 	return [vcard.first_name, vcard.last_name].filter(Boolean).join(' ');
+}
+
+/**
+ * Récupère le slug depuis l'URL en gérant les 2 formats :
+ *   - Pretty URL : /vcard/jerome  → "jerome" (lu depuis le path)
+ *   - Legacy    : /vcard/ma-vcard.html?slug=jerome → "jerome" (lu depuis query)
+ *
+ * Permet la rétro-compatibilité avec d'anciens liens partagés en `?slug=`.
+ */
+function getSlugFromUrl() {
+	// Tente d'abord la pretty URL : segment final du pathname
+	const path = window.location.pathname || '';
+	const BASE = (import.meta.env.BASE_URL || '/');
+	let afterBase = path;
+	if (path.startsWith(BASE)) afterBase = path.slice(BASE.length);
+	afterBase = afterBase.replace(/^\/+/, '').replace(/\/+$/, '');
+
+	// Si ce qui reste après la base est un slug-like (pas .html, pas vide), on le prend
+	if (afterBase && !afterBase.endsWith('.html') && !afterBase.includes('/')) {
+		return afterBase;
+	}
+
+	// Sinon fallback sur le query string
+	return new URLSearchParams(window.location.search).get('slug');
 }
 
 /**
