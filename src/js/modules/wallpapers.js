@@ -179,9 +179,11 @@ async function composeDefaultHodiWallpaper(qrUrl) {
 	const ctx = canvas.getContext('2d');
 
 	// 1. Tente de charger le PNG officiel Hodi (priorité)
+	// On passe par assetUrl() qui gère le préfixe base /vcard/ en prod et
+	// strippe automatiquement le préfixe public/ (cf. utils/urls.js).
 	let bgLoaded = false;
 	try {
-		const bg = await loadImage('/public/assets/images/wallpaper-hodi-bg.png');
+		const bg = await loadImage(assetUrl('public/assets/images/wallpaper-hodi-bg.png'));
 		// Crop "cover" si ratios différents
 		const bgRatio = bg.naturalWidth / bg.naturalHeight;
 		const canvasRatio = W / H;
