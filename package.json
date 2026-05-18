@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "deploy": "./deploy.sh",
     "prepare": "husky install",
     "preview": "vite preview",
     "tinify": "test -n \"$TINIFY_API_KEY\" || (echo 'Erreur : exporte TINIFY_API_KEY avant de lancer ce script.' && exit 1) && cd src/public/assets/images/ && find . -type f \\( -name '*.png' -o -name '*.jpg' -o -name '*.jpeg' \\) -print0 | xargs -0 -I {} tinify-cli -k \"$TINIFY_API_KEY\" {}"

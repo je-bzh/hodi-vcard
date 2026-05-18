@@ -30,3 +30,12 @@ drone.json
 .env
 .env.local
 .env.*.local
+
+# Deploy credentials (SSH host/user/path)
+.deploy.env
+.deploy.env.*
+*.save
+
+# Deploy artefacts
+hodi-vcard-deploy.zip
+vcard-htaccess.txt
