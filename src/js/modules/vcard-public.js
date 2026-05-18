@@ -78,7 +78,18 @@ function render(vcard) {
 
 	// Images
 	setImg('cover_url', vcard.cover_url || assetUrl('public/assets/images/temp/bg-form.png'));
-	setImg('avatar_url', vcard.avatar_url || assetUrl('public/assets/images/svg/ico-placeholder.svg'));
+
+	// Avatar : si photo → on l'affiche. Sinon → rond bleu avec initiales prénom+nom.
+	const $avatarImg = $('[data-bind="avatar_url"]');
+	const $avatarInitials = $('.js-avatar-initials');
+	if (vcard.avatar_url) {
+		$avatarImg.attr('src', vcard.avatar_url).show();
+		$avatarInitials.hide();
+	} else {
+		const initials = computeInitials(vcard);
+		$avatarImg.hide();
+		$avatarInitials.text(initials).show();
+	}
 
 	// QR code dynamique → pointe vers l'URL publique de cette vcard
 	// Génération client-side : pas de Storage, pas de DB. Quand la vcard est
@@ -266,6 +277,15 @@ async function generateQrCode(url) {
 // ---------------------------------------------------------------------------
 function joinName(vcard) {
 	return [vcard.first_name, vcard.last_name].filter(Boolean).join(' ');
+}
+
+/**
+ * Initiales prénom+nom (ex : "Jerome Le Grognec" → "JL"). Fallback "?".
+ */
+function computeInitials(vcard) {
+	const first = ((vcard.first_name || '').trim().charAt(0) || '').toUpperCase();
+	const last = ((vcard.last_name || '').trim().charAt(0) || '').toUpperCase();
+	return (first + last) || '?';
 }
 
 function joinPhone(country, number) {

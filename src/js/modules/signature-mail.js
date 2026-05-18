@@ -94,7 +94,15 @@ function renderPreview(vcard, vcardUrl, socials) {
 	const fullName = joinName(vcard) || 'Votre nom';
 	const roleCompany = [vcard.role, vcard.company].filter(Boolean).join(', ');
 
-	$('.js-sig-avatar').attr('src', vcard.avatar_url || assetUrl('public/assets/images/svg/ico-placeholder.svg'));
+	// Avatar : si photo → on l'affiche. Sinon → rond bleu avec initiales prénom+nom.
+	if (vcard.avatar_url) {
+		$('.js-sig-avatar').attr('src', vcard.avatar_url).show();
+		$('.js-sig-avatar-fallback').hide();
+	} else {
+		$('.js-sig-avatar').hide();
+		$('.js-sig-avatar-fallback').text(getInitials(vcard)).show();
+	}
+
 	$('.js-sig-name').text(fullName);
 	$('.js-sig-role-company').text(roleCompany || '—');
 	$('.js-sig-contact').html(buildContactLineHtml(vcard));
@@ -154,11 +162,16 @@ function buildSignatureHtml(vcard, vcardUrl, socials) {
 	}
 	const contactLine = contactBits.join(' - ');
 
-	// Avatar rond (border-radius: 50%) — supporté par Gmail web et la plupart
-	// des clients modernes. Les vieilles versions Outlook le rendront carré.
+	// Avatar : image rond si disponible, sinon cellule bleue avec initiales.
+	// Compatible Gmail / Outlook / Apple Mail (table-cell + bg-color).
+	const initials = getInitials(vcard);
 	const avatarImg = avatarUrl
 		? `<img src="${escapeAttr(avatarUrl)}" width="80" height="80" alt="" style="display:block; border-radius:50%; border:0;">`
-		: '';
+		: `<table cellpadding="0" cellspacing="0" border="0" style="border-collapse:collapse;">
+			<tr>
+				<td width="80" height="80" align="center" valign="middle" style="width:80px; height:80px; background:#0d81fe; color:#ffffff; border-radius:50%; font-family:Arial,Helvetica,sans-serif; font-weight:700; font-size:30px; text-align:center; vertical-align:middle; line-height:80px;">${escapeHtml(initials)}</td>
+			</tr>
+		</table>`;
 
 	// Icônes sociales sous l'avatar — table cellule à cellule pour Outlook
 	const socialIconsHtml = socials.length
@@ -290,6 +303,16 @@ function showFeedback(type, htmlMessage) {
 // ---------------------------------------------------------------------------
 function joinName(vcard) {
 	return [vcard.first_name, vcard.last_name].filter(Boolean).join(' ');
+}
+
+/**
+ * Renvoie les initiales (prénom + nom). Ex : "Jerome Le Grognec" → "JL".
+ * Pour un seul nom : "Jerome" → "J". Fallback "?" si vide.
+ */
+function getInitials(vcard) {
+	const first = ((vcard.first_name || '').trim().charAt(0) || '').toUpperCase();
+	const last = ((vcard.last_name || '').trim().charAt(0) || '').toUpperCase();
+	return (first + last) || '?';
 }
 
 function joinPhone(country, number) {
