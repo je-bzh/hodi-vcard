@@ -36,7 +36,14 @@ const TRANSLATIONS = {
 		'hero.title_line1': 'Your virtual business card.',
 		'hero.title_line2': 'Hosted in Africa.',
 		'hero.cta': 'Create my Hodi vCard',
+		'hero.retrieve_link': 'I already have a vCard — recover my access',
 		'hero.pitch': 'Hodi offers you your virtual business card, hosted on its pan-African cloud.<br>Your data is encrypted, securely stored, and never used for commercial purposes.',
+
+		// --- Retrieve popup ---
+		'retrieve.title': 'Recover my Hodi vCard',
+		'retrieve.intro': "Enter the email associated with your Hodi vCard. We'll send you a single-use link to access and edit it.",
+		'retrieve.email_placeholder': 'your@email.com',
+		'retrieve.send_btn': 'Send recovery link',
 
 		// --- Tabs admin ---
 		'tabs.my_info': 'My information',
@@ -164,7 +171,14 @@ const TRANSLATIONS = {
 		'hero.title_line1': 'Votre carte de visite virtuelle.',
 		'hero.title_line2': 'Hébergée en Afrique.',
 		'hero.cta': 'Créer ma vCard Hodi',
+		'hero.retrieve_link': "J'ai déjà une vCard — retrouver mon accès",
 		'hero.pitch': 'Hodi vous offre votre carte de visite virtuelle, hébergée sur son cloud panafricain.<br>Vos données sont chiffrées, stockées de manière sécurisée et ne sont pas exploitées commercialement.',
+
+		// --- Retrieve popup ---
+		'retrieve.title': 'Retrouver ma vCard Hodi',
+		'retrieve.intro': "Saisissez l'email associé à votre vCard Hodi. Vous recevrez un lien à usage unique pour y accéder et la modifier.",
+		'retrieve.email_placeholder': 'votre@email.com',
+		'retrieve.send_btn': 'Envoyer le lien de récupération',
 
 		// --- Tabs admin ---
 		'tabs.my_info': 'Mes informations',

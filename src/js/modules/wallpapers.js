@@ -23,7 +23,7 @@
  */
 
 import { supabase } from '/js/utils/supabase.js';
-import { buildVcardUrl } from '/js/utils/urls.js';
+import { buildVcardUrl, assetUrl } from '/js/utils/urls.js';
 import QRCode from 'qrcode';
 
 const BUCKET = 'vcard-images';
@@ -107,7 +107,7 @@ function renderTile(wallpaper) {
 	const deleteButton = isDefault ? '' : `
 		<li>
 			<a href="#" class="js-delete-wallpaper" aria-label="Supprimer">
-				<img src="public/assets/images/svg/ico-remove-1.svg" alt="Supprimer">
+				<img src="${assetUrl('public/assets/images/svg/ico-remove-1.svg')}" alt="Supprimer">
 			</a>
 		</li>`;
 	return `
@@ -117,7 +117,7 @@ function renderTile(wallpaper) {
 				<ul class="tile__actions">
 					<li>
 						<a href="${escapeAttr(wallpaper.image_url)}" download="hodi-wallpaper-${shortId}.png" target="_blank" rel="noopener" aria-label="Télécharger">
-							<img src="public/assets/images/svg/ico-upload-1.svg" alt="Télécharger">
+							<img src="${assetUrl('public/assets/images/svg/ico-upload-1.svg')}" alt="Télécharger">
 						</a>
 					</li>
 					${deleteButton}
@@ -135,7 +135,7 @@ function renderAddTile() {
 			<div class="tile-image js-tile js-add-wallpaper">
 				<img src="" alt="" class="js-crop-image" style="display:none;">
 				<a href="#popup-choice" class="js-toggle-popup tile__overlay">
-					<img src="public/assets/images/svg/ico-tile.svg" alt="">
+					<img src="${assetUrl('public/assets/images/svg/ico-tile.svg')}" alt="">
 					<h6>Ajouter</h6>
 				</a>
 			</div>

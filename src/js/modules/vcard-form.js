@@ -20,7 +20,7 @@
  */
 
 import { supabase } from '/js/utils/supabase.js';
-import { buildVcardUrl } from '/js/utils/urls.js';
+import { buildVcardUrl, assetUrl } from '/js/utils/urls.js';
 import { createDefaultHodiWallpaperFor } from './wallpapers.js';
 
 const BASE_URL = import.meta.env.BASE_URL || '/';
@@ -647,7 +647,7 @@ async function onCheckSlug(e) {
 // ---------------------------------------------------------------------------
 // Images cover & avatar
 // ---------------------------------------------------------------------------
-const COVER_DEFAULT = 'public/assets/images/temp/form-bg.png';
+const COVER_DEFAULT = assetUrl('public/assets/images/temp/form-bg.png');
 
 function applyImages(vcard) {
 	const $cover = $('.js-cover-image');

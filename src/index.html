@@ -36,10 +36,46 @@
 							</li>
 						</ul>
 
+						<!-- Lien de récupération : ouvre le popup d'accès -->
+						<p class="hero__retrieve">
+							<a href="#popup-retrieve" class="js-open-retrieve" data-i18n="hero.retrieve_link">I already have a vCard — recover my access</a>
+						</p>
+
 					</div>
 					<!-- /.shell -->
 				</section>
 				<!-- /.section--hero -->
+
+				<!-- Popup : retrouver une vCard existante via email -->
+				<div class="popups not-visible" id="popup-retrieve" role="dialog" aria-modal="true">
+					<div class="popups__inner">
+						<div class="popup">
+							<div class="popup__head">
+								<h4 data-i18n="retrieve.title">Recover my Hodi vCard</h4>
+								<a href="#" class="popup__close js-close-retrieve" aria-label="Close">
+									<img src="public/assets/images/svg/ico-close.svg" alt="">
+								</a>
+							</div>
+							<div class="popup__body">
+								<p data-i18n="retrieve.intro">Enter the email associated with your Hodi vCard. We'll send you a single-use link to access and edit it.</p>
+
+								<div class="form__row" style="margin-top: 1.6rem;">
+									<div class="form__controls">
+										<input type="email" class="field js-retrieve-email" placeholder="your@email.com" data-i18n-placeholder="retrieve.email_placeholder" autocomplete="email">
+									</div>
+								</div>
+
+								<div class="form__feedback js-retrieve-feedback" hidden></div>
+
+								<ul class="popup__actions" style="margin-top: 1.6rem;">
+									<li>
+										<a href="#" class="btn btn--blue js-send-retrieve" data-i18n="retrieve.send_btn">Send recovery link</a>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div><!-- /.popups -->
 
 				<section class="section section--pitch">
 					<div class="shell">

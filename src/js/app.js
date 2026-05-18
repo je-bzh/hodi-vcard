@@ -18,3 +18,4 @@ import './modules/vcard-form.js';
 import './modules/vcard-public.js';
 import './modules/wallpapers.js';
 import './modules/signature-mail.js';
+import './modules/retrieve-vcard.js';

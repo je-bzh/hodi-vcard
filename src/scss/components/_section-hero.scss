@@ -120,6 +120,26 @@
 		margin: 0;
 		padding: 0;
 	}
+
+	/* ----- Lien "Retrouver ma vCard" ----- */
+	.hero__retrieve {
+		margin: 1.6rem 0 0;
+		text-align: center;
+		font-size: 1.3rem;
+		color: rgba(255, 255, 255, 0.6);
+
+		a {
+			color: inherit;
+			text-decoration: underline;
+			text-underline-offset: 3px;
+			transition: color var(--t-duration);
+
+			&:hover {
+				color: var(--c-white);
+				text-decoration: none;
+			}
+		}
+	}
 }
 
 /* ------------------------------------------------------------ *\

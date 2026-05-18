@@ -9,7 +9,7 @@
  */
 
 import { supabase } from '/js/utils/supabase.js';
-import { buildVcardUrl, absoluteAssetUrl } from '/js/utils/urls.js';
+import { buildVcardUrl, absoluteAssetUrl, assetUrl } from '/js/utils/urls.js';
 
 let currentVcard = null;
 
@@ -94,7 +94,7 @@ function renderPreview(vcard, vcardUrl, socials) {
 	const fullName = joinName(vcard) || 'Votre nom';
 	const roleCompany = [vcard.role, vcard.company].filter(Boolean).join(', ');
 
-	$('.js-sig-avatar').attr('src', vcard.avatar_url || 'public/assets/images/svg/ico-placeholder.svg');
+	$('.js-sig-avatar').attr('src', vcard.avatar_url || assetUrl('public/assets/images/svg/ico-placeholder.svg'));
 	$('.js-sig-name').text(fullName);
 	$('.js-sig-role-company').text(roleCompany || '—');
 	$('.js-sig-contact').html(buildContactLineHtml(vcard));
@@ -106,7 +106,7 @@ function renderPreview(vcard, vcardUrl, socials) {
 		$socials.append(`
 			<li>
 				<a href="${escapeAttr(s.url)}" target="_blank" rel="noopener" aria-label="${escapeAttr(s.label)}">
-					<img src="public/assets/images/svg/${s.icon}" alt="${escapeAttr(s.label)}">
+					<img src="${assetUrl('public/assets/images/svg/' + s.icon)}" alt="${escapeAttr(s.label)}">
 				</a>
 			</li>
 		`);

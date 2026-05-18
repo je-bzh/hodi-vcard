@@ -15,7 +15,7 @@
  */
 
 import { supabase } from '/js/utils/supabase.js';
-import { buildVcardUrl } from '/js/utils/urls.js';
+import { buildVcardUrl, assetUrl } from '/js/utils/urls.js';
 import QRCode from 'qrcode';
 
 if ($('html').attr('data-page') === 'ma-vcard') {
@@ -77,8 +77,8 @@ function render(vcard) {
 	setText('website_url', vcard.website_url);
 
 	// Images
-	setImg('cover_url', vcard.cover_url || 'public/assets/images/temp/bg-form.png');
-	setImg('avatar_url', vcard.avatar_url || 'public/assets/images/svg/ico-placeholder.svg');
+	setImg('cover_url', vcard.cover_url || assetUrl('public/assets/images/temp/bg-form.png'));
+	setImg('avatar_url', vcard.avatar_url || assetUrl('public/assets/images/svg/ico-placeholder.svg'));
 
 	// QR code dynamique → pointe vers l'URL publique de cette vcard
 	// Génération client-side : pas de Storage, pas de DB. Quand la vcard est

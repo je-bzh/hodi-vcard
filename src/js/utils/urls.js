@@ -21,11 +21,21 @@ export function buildVcardUrl(slug) {
 }
 
 /**
- * Construit l'URL d'un asset statique côté JS (par exemple pour le compositeur
- * canvas qui charge des PNGs/SVGs). Gère le préfixe de base automatiquement.
+ * Construit l'URL d'un asset statique côté JS (PNGs/SVGs).
+ *
+ * Strippe automatiquement le préfixe `public/` car en build Vite copie le
+ * contenu de src/public/ vers build/ sans ce préfixe.
+ *
+ * Exemples :
+ *   assetUrl('public/assets/foo.png')  → '/vcard/assets/foo.png' (prod)
+ *   assetUrl('assets/foo.png')         → '/vcard/assets/foo.png' (prod)
+ *   assetUrl('/assets/foo.png')        → '/vcard/assets/foo.png' (prod)
+ *   En dev (base = '/'), retourne '/assets/foo.png' dans les 3 cas.
  */
 export function assetUrl(relPath) {
-	const clean = relPath.replace(/^\/+/, '');
+	const clean = (relPath || '')
+		.replace(/^\/+/, '')      // strip leading slashes
+		.replace(/^public\//, ''); // strip "public/" prefix s'il existe
 	return `${BASE_URL}${clean}`;
 }
 
