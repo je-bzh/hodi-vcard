@@ -36,7 +36,7 @@
 		width: 20rem;
 		height: 20rem;
 		max-width: 20rem;
-		margin: -10rem auto 5rem;
+		margin: -10rem auto 7rem; // +20px d'espace avec le nom dessous
 		position: relative;
 		border-radius: 50%;
 		overflow: visible; // QR doit déborder par-dessous
@@ -91,7 +91,7 @@
 
 		h2 {
 			font-weight: 800;
-			letter-spacing: 0.013em;
+			letter-spacing: -0.02em; // -2% pour resserrer le nom
 			margin-bottom: 0.9rem;
 		}
 

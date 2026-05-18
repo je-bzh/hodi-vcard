@@ -30,8 +30,8 @@
 			flex: 0 0 auto; // pas de shrink, taille fixe pour rester ronds
 
 			a {
-				width: 5rem;
-				height: 5rem;
+				width: 6.5rem;  // +30% sur la taille des pastilles sociales
+				height: 6.5rem;
 				border-radius: 50%;
 				background-color: #f2f2f7;
 				display: flex;
@@ -39,8 +39,8 @@
 				align-items: center;
 
 				@include breakpoint-down(mobile) {
-					width: 4rem;
-					height: 4rem;
+					width: 5.2rem;  // +30% mobile
+					height: 5.2rem;
 				}
 
 				img,
