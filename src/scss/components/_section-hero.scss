@@ -100,13 +100,17 @@
 		video {
 			position: relative;
 			border-radius: 8px;
-			transform: rotate(0deg);
 		}
 
+		// Vidéo inclinée à -8° → effet polaroid avec la back card aubergine droite derrière
 		video {
 			margin: 1rem auto 1.8rem;
 			width: 271px;
 			aspect-ratio: 271/348;
+			object-fit: cover;
+			overflow: hidden;
+			transform: rotate(-8deg);
+			transform-origin: center;
 		}
 	}
 
