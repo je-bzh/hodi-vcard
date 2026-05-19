@@ -72,19 +72,19 @@
 		}
 	}
 
-	/* ----- Image polaroid (calé sur la CSS de l'intégrateur pour la vidéo) ----- */
+	/* ----- Image polaroid : COPIE STRICTE de la CSS de l'intégrateur ----- */
 	.hero__image {
 		max-width: 31.4rem;
-		margin: 0 auto 5.5rem;
+		margin: 0 auto 6.2rem;
 		position: relative;
 		text-align: center;
 
 		@include breakpoint-down(mobile) {
 			max-width: 24.4rem;
-			margin-bottom: 4rem;
+			margin-bottom: 5.1rem;
 		}
 
-		&::before {
+		&:before {
 			content: '';
 			position: absolute;
 			top: 2.1rem;
@@ -92,39 +92,21 @@
 			transform: translateX(-50%);
 			width: 86%;
 			height: 92%;
-			border-radius: 0.8rem;
+			border-radius: 8px;
 			background-color: #291b3a;
 		}
 
-		picture,
-		.hero__video {
+		img,
+		video {
 			position: relative;
-			z-index: 1;
-			display: block;
+			border-radius: 8px;
+			transform: rotate(0deg);
 		}
 
-		// Image : ratio natif respecté, peut être plus petite que le container
-		img {
-			position: relative;
-			z-index: 1;
-			max-width: 100%;
-			height: auto;
-			display: block;
-			margin: 0 auto;
-			border-radius: 0.8rem;
-		}
-
-		// Vidéo : taille fixe 271×348 (ratio natif de vcard_demo.mp4), centrée
-		// dans le container 31.4rem → laisse apparaître la back card aubergine
-		.hero__video {
-			width: 271px;
-			aspect-ratio: 271 / 348;
-			max-width: 100%;
-			height: auto;
+		video {
 			margin: 1rem auto 1.8rem;
-			display: block;
-			border-radius: 0.8rem;
-			position: relative;
+			width: 271px;
+			aspect-ratio: 271/348;
 		}
 	}
 
