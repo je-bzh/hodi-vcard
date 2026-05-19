@@ -138,10 +138,17 @@ function render(vcard) {
 	// Met à jour l'email cible du popup "Modifier" (pour le magic link)
 	$('#popup-modifier').attr('data-vcard-email', vcard.owner_email);
 
-	// Branche le téléchargement .vcf
-	$('.js-vcf-download').off('click').on('click', (e) => {
+	// Branche le téléchargement .vcf (async car embed PHOTO en base64)
+	$('.js-vcf-download').off('click').on('click', async (e) => {
 		e.preventDefault();
-		downloadVcf(vcard);
+		const $btn = $(e.currentTarget);
+		const originalText = $btn.find('img').next().text() || $btn.text();
+		try {
+			await downloadVcf(vcard);
+		} catch (err) {
+			console.error('[vcard-public] downloadVcf error', err);
+			alert("Erreur lors de la génération de la fiche contact. Réessayez.");
+		}
 	});
 }
 
@@ -348,29 +355,115 @@ function escapeHtml(s) {
 // ---------------------------------------------------------------------------
 // Génération .vcf à la volée côté client
 // ---------------------------------------------------------------------------
-function downloadVcf(vcard) {
+/**
+ * Format vCard 3.0 (compat iOS Contacts + Android + Outlook + Gmail).
+ *
+ * Inclut :
+ *   - N, FN (nom + nom complet)
+ *   - ORG, TITLE (société + fonction)
+ *   - TEL (mobile + fixe) au format international
+ *   - EMAIL (= owner_email, l'email rattaché au compte Hodi)
+ *   - ADR (adresse postale)
+ *   - URL (site web)
+ *   - PHOTO embed base64 (depuis avatar_url si dispo, sinon omis)
+ *   - X-SOCIALPROFILE + URL ITEMs (LinkedIn, Instagram, Facebook, etc.)
+ *   - NOTE avec lien vers la vcard publique
+ */
+async function downloadVcf(vcard) {
 	const lines = [
 		'BEGIN:VCARD',
 		'VERSION:3.0',
-		`FN:${joinName(vcard)}`,
-		`N:${vcard.last_name || ''};${vcard.first_name || ''};;;`,
 	];
 
-	if (vcard.company) lines.push(`ORG:${vcard.company}`);
-	if (vcard.role) lines.push(`TITLE:${vcard.role}`);
+	const fn = joinName(vcard);
+	if (fn) {
+		lines.push(`N:${vcfEscape(vcard.last_name)};${vcfEscape(vcard.first_name)};;;`);
+		lines.push(`FN:${vcfEscape(fn)}`);
+	}
+
+	if (vcard.company) lines.push(`ORG:${vcfEscape(vcard.company)}`);
+	if (vcard.role) lines.push(`TITLE:${vcfEscape(vcard.role)}`);
+
+	// Téléphones en format international (avec +, sans le 0 local)
 	if (vcard.phone_mobile) {
-		lines.push(`TEL;TYPE=CELL:${joinPhone(vcard.phone_mobile_country, vcard.phone_mobile)}`);
+		const cc = onlyDigits(vcard.phone_mobile_country);
+		const local = onlyDigits(vcard.phone_mobile).replace(/^0+/, '');
+		lines.push(`TEL;TYPE=CELL,VOICE:+${cc}${local}`);
 	}
 	if (vcard.phone_landline) {
-		lines.push(`TEL;TYPE=WORK:${joinPhone(vcard.phone_landline_country, vcard.phone_landline)}`);
+		const cc = onlyDigits(vcard.phone_landline_country);
+		const local = onlyDigits(vcard.phone_landline).replace(/^0+/, '');
+		lines.push(`TEL;TYPE=WORK,VOICE:+${cc}${local}`);
 	}
-	if (vcard.email_public) lines.push(`EMAIL:${vcard.email_public}`);
-	if (vcard.address) lines.push(`ADR;TYPE=WORK:;;${vcard.address};;;;`);
-	if (vcard.website_url) lines.push(`URL:${vcard.website_url}`);
+
+	// Email : on utilise owner_email (l'email du compte Hodi, seul champ email disponible)
+	if (vcard.owner_email) {
+		lines.push(`EMAIL;TYPE=INTERNET:${vcfEscape(vcard.owner_email)}`);
+	}
+
+	if (vcard.address) {
+		// Format ADR : PO Box;Extended;Street;Locality;Region;Postal Code;Country
+		// On met tout dans le champ Street pour simplicité (l'utilisateur a saisi une chaîne libre).
+		lines.push(`ADR;TYPE=WORK:;;${vcfEscape(vcard.address)};;;;`);
+	}
+
+	if (vcard.website_url) lines.push(`URL:${vcfEscape(vcard.website_url)}`);
+	if (vcard.booking_url) lines.push(`URL;TYPE=BOOKING:${vcfEscape(vcard.booking_url)}`);
+
+	// Lien personnalisé (document)
+	if (vcard.document_url && vcard.document_label) {
+		lines.push(`URL;TYPE=${vcfEscape(vcard.document_label).replace(/[\s,;]/g, '_').toUpperCase()}:${vcfEscape(vcard.document_url)}`);
+	}
+
+	// Réseaux sociaux
+	const socials = vcard.socials || {};
+	const socialMap = [
+		{ key: 'linkedin', type: 'LinkedIn' },
+		{ key: 'instagram', type: 'Instagram' },
+		{ key: 'facebook', type: 'Facebook' },
+		{ key: 'pinterest', type: 'Pinterest' },
+		{ key: 'snapchat', type: 'Snapchat' },
+		{ key: 'tiktok', type: 'TikTok' },
+		{ key: 'signal', type: 'Signal' },
+		{ key: 'telegram', type: 'Telegram' },
+	];
+	socialMap.forEach(({ key, type }) => {
+		if (socials[key]) {
+			lines.push(`X-SOCIALPROFILE;TYPE=${type}:${vcfEscape(socials[key])}`);
+		}
+	});
+
+	// WhatsApp (généré depuis phone_mobile si enabled)
+	if (socials.whatsapp_enabled === true && vcard.phone_mobile) {
+		const waUrl = `https://wa.me/${buildWaNumber(vcard.phone_mobile_country, vcard.phone_mobile)}`;
+		lines.push(`X-SOCIALPROFILE;TYPE=WhatsApp:${vcfEscape(waUrl)}`);
+	}
+
+	// Lien vers la vcard publique en NOTE (pour pouvoir retrouver la page)
+	const publicUrl = buildVcardUrl(vcard.slug);
+	lines.push(`NOTE:vCard Hodi : ${vcfEscape(publicUrl)}`);
+
+	// Photo (avatar) : on fetch et embed en base64 si dispo
+	if (vcard.avatar_url) {
+		try {
+			const base64 = await fetchImageAsBase64(vcard.avatar_url);
+			if (base64) {
+				const { mime, data } = base64;
+				const type = mime.split('/')[1].toUpperCase(); // JPEG, PNG
+				// vCard 3.0 : PHOTO;ENCODING=b;TYPE=JPEG:<base64>
+				// On fold les lignes à 75 chars max pour respecter la RFC
+				const photoLine = `PHOTO;ENCODING=b;TYPE=${type}:${data}`;
+				lines.push(foldVcfLine(photoLine));
+			}
+		} catch (err) {
+			console.warn('[vcf] PHOTO embed failed, contact will export without photo', err);
+		}
+	}
 
 	lines.push('END:VCARD');
 
-	const blob = new Blob([lines.join('\r\n')], { type: 'text/vcard;charset=utf-8' });
+	const vcfText = lines.join('\r\n') + '\r\n';
+	const blob = new Blob([vcfText], { type: 'text/vcard;charset=utf-8' });
 	const url = URL.createObjectURL(blob);
 	const a = document.createElement('a');
 	a.href = url;
@@ -379,4 +472,63 @@ function downloadVcf(vcard) {
 	a.click();
 	a.remove();
 	setTimeout(() => URL.revokeObjectURL(url), 1000);
+}
+
+/**
+ * Escape les caractères spéciaux vCard 3.0 (RFC 2426) : `\`, `,`, `;`, newline.
+ */
+function vcfEscape(s) {
+	return (s || '')
+		.replace(/\\/g, '\\\\')
+		.replace(/\n/g, '\\n')
+		.replace(/,/g, '\\,')
+		.replace(/;/g, '\\;');
+}
+
+/**
+ * RFC 2426 : les lignes vCard doivent être pliées à 75 octets max,
+ * avec continuation en commençant la ligne suivante par un espace ou tab.
+ * Critique pour PHOTO base64 qui fait des milliers de caractères.
+ */
+function foldVcfLine(line) {
+	const MAX = 75;
+	if (line.length <= MAX) return line;
+	const parts = [line.slice(0, MAX)];
+	let rest = line.slice(MAX);
+	while (rest.length > MAX - 1) {
+		parts.push(' ' + rest.slice(0, MAX - 1));
+		rest = rest.slice(MAX - 1);
+	}
+	if (rest) parts.push(' ' + rest);
+	return parts.join('\r\n');
+}
+
+/**
+ * Charge une image en base64 (pour embed PHOTO dans le .vcf).
+ * Renvoie { mime, data } ou null si échec.
+ */
+async function fetchImageAsBase64(url) {
+	try {
+		const res = await fetch(url, { mode: 'cors' });
+		if (!res.ok) return null;
+		const blob = await res.blob();
+		const mime = blob.type || 'image/jpeg';
+		const data = await blobToBase64(blob);
+		return { mime, data };
+	} catch {
+		return null;
+	}
+}
+
+function blobToBase64(blob) {
+	return new Promise((resolve, reject) => {
+		const reader = new FileReader();
+		reader.onloadend = () => {
+			const dataUrl = reader.result; // "data:image/jpeg;base64,/9j/4AAQ..."
+			const base64 = (dataUrl || '').split(',')[1] || '';
+			resolve(base64);
+		};
+		reader.onerror = reject;
+		reader.readAsDataURL(blob);
+	});
 }
