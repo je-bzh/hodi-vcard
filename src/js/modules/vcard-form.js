@@ -22,6 +22,7 @@
 import { supabase } from '/js/utils/supabase.js';
 import { buildVcardUrl, assetUrl } from '/js/utils/urls.js';
 import { createDefaultHodiWallpaperFor } from './wallpapers.js';
+import { initIntlPhone, readPhone, writePhone } from './intl-phone.js';
 
 const BASE_URL = import.meta.env.BASE_URL || '/';
 
@@ -74,6 +75,12 @@ let currentUser = null;
 // Bootstrap
 // ---------------------------------------------------------------------------
 async function bootstrap() {
+	// 0. Init intl-tel-input sur les champs téléphone (avant tout le reste pour
+	//    qu'enterEditMode/CreateMode puissent écrire dedans avec writePhone)
+	document.querySelectorAll('.js-intl-tel').forEach((input) => {
+		initIntlPhone(input, { defaultCountry: 'fr' });
+	});
+
 	// 1. Récupère la session (peut être null)
 	const { data: { session } } = await supabase.auth.getSession();
 	currentUser = session?.user || null;
@@ -221,6 +228,10 @@ function populateForm(vcard) {
 		const $field = $(`[name="${name}"]`);
 		if (!$field.length) continue;
 
+		// Les champs téléphone sont gérés via intl-tel-input (cf. plus bas)
+		if (name === 'portable' || name === 'ligne' ||
+			name === 'portable_country' || name === 'ligne_country') continue;
+
 		let value;
 		if (def.col) value = vcard[def.col];
 		else if (def.social) value = (vcard.socials || {})[def.social];
@@ -228,6 +239,12 @@ function populateForm(vcard) {
 		if (def.checkbox) $field.prop('checked', value === true);
 		else $field.val(value ?? '');
 	}
+
+	// Téléphones : on utilise writePhone pour aligner le drapeau intl-tel-input
+	const $portable = document.querySelector('[name="portable"]');
+	if ($portable) writePhone($portable, vcard.phone_mobile_country, vcard.phone_mobile);
+	const $ligne = document.querySelector('[name="ligne"]');
+	if ($ligne) writePhone($ligne, vcard.phone_landline_country, vcard.phone_landline);
 
 	// Slug verrouillé après création
 	$('input[name="url"]').prop('readonly', true)
@@ -247,6 +264,10 @@ function collectFormData() {
 	const payload = { socials: {} };
 
 	for (const [name, def] of Object.entries(FIELD_MAP)) {
+		// Téléphones gérés séparément via readPhone
+		if (name === 'portable' || name === 'ligne' ||
+			name === 'portable_country' || name === 'ligne_country') continue;
+
 		const $field = $(`[name="${name}"]`);
 		if (!$field.length) continue;
 
@@ -263,6 +284,20 @@ function collectFormData() {
 			if (def.checkbox) payload.socials[def.social] = value;
 			else if (value) payload.socials[def.social] = value;
 		}
+	}
+
+	// Téléphones via intl-tel-input
+	const $portable = document.querySelector('[name="portable"]');
+	if ($portable) {
+		const { country, national } = readPhone($portable);
+		payload.phone_mobile = national || null;
+		payload.phone_mobile_country = country || null;
+	}
+	const $ligne = document.querySelector('[name="ligne"]');
+	if ($ligne) {
+		const { country, national } = readPhone($ligne);
+		payload.phone_landline = national || null;
+		payload.phone_landline_country = country || null;
 	}
 
 	return payload;
