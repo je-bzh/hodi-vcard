@@ -72,16 +72,15 @@
 		}
 	}
 
-	/* ----- Image polaroid : structure ORIGINALE du template ----- */
+	/* ----- Image polaroid (calé sur la CSS de l'intégrateur pour la vidéo) ----- */
 	.hero__image {
-		max-width: 34rem;
-		// margin-bottom = espace AU-DESSUS du CTA (sous le polaroid)
-		// Doit matcher .section--hero padding-bottom pour CTA équidistant
+		max-width: 31.4rem;
 		margin: 0 auto 5.5rem;
 		position: relative;
+		text-align: center;
 
 		@include breakpoint-down(mobile) {
-			max-width: 26rem;
+			max-width: 24.4rem;
 			margin-bottom: 4rem;
 		}
 
@@ -104,10 +103,25 @@
 			display: block;
 		}
 
-		img,
-		.hero__video {
-			width: 100%;
+		// Image : ratio natif respecté, peut être plus petite que le container
+		img {
+			position: relative;
+			z-index: 1;
+			max-width: 100%;
 			height: auto;
+			display: block;
+			margin: 0 auto;
+			border-radius: 0.8rem;
+		}
+
+		// Vidéo : taille fixe 271×348 (ratio natif de vcard_demo.mp4), centrée
+		// dans le container 31.4rem → laisse apparaître la back card aubergine
+		.hero__video {
+			width: 271px;
+			aspect-ratio: 271 / 348;
+			max-width: 100%;
+			height: auto;
+			margin: 1rem auto 1.8rem;
 			display: block;
 			border-radius: 0.8rem;
 			position: relative;
