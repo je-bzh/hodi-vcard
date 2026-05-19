@@ -97,13 +97,15 @@
 			background-color: #291b3a;
 		}
 
-		picture {
+		picture,
+		.hero__video {
 			position: relative;
 			z-index: 1;
 			display: block;
 		}
 
-		img {
+		img,
+		.hero__video {
 			width: 100%;
 			height: auto;
 			display: block;
