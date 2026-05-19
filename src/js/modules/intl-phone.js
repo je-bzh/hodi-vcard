@@ -12,9 +12,10 @@
  * Lib : https://github.com/jackocnr/intl-tel-input (v25)
  */
 
-// v28 : import du bundle "with utils" pour avoir validation + format avancé inclus
+// v28 : import du bundle "with utils" pour validation + format avancé inclus
+// (les exports map pointent vers ./dist/js/... et ./dist/css/...)
 import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
-import 'intl-tel-input/build/css/intlTelInput.css';
+import 'intl-tel-input/styles';
 
 // Map des instances par <input> (intl-tel-input retourne une instance par init)
 const instances = new WeakMap();
