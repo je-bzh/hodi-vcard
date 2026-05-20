@@ -11,7 +11,10 @@
 		padding: 4.4rem 0 4.3rem;
 
 		@include breakpoint-down(mobile) {
-			padding: 3.4rem 1.3rem 3.3rem;
+			// Stack vertical sur mobile : lang switcher au-dessus, logo en dessous
+			flex-direction: column;
+			gap: 1.4rem;
+			padding: 2.6rem 1.3rem 1.2rem;
 		}
 	}
 
@@ -21,6 +24,15 @@
 		left: 50%;
 		transform: translate(-50%, -50%) scale(1.3); /* +30% */
 		transform-origin: center center;
+
+		@include breakpoint-down(mobile) {
+			// Sort de l'absolute, scale réduit de 20% (1.3 → 1.04)
+			position: static;
+			top: auto;
+			left: auto;
+			transform: scale(1.04);
+			order: 2;
+		}
 	}
 
 	/* Bouton "Visiter Hodi.host" — mode night, hauteur fixe pour matcher le lang switcher */
@@ -42,6 +54,11 @@
 				border-color: rgba(255, 255, 255, 0.55);
 				opacity: 1;
 			}
+		}
+
+		@include breakpoint-down(mobile) {
+			// Pas de "Visiter Hodi.host" sur mobile, seul le lang switcher reste
+			display: none;
 		}
 	}
 
@@ -86,6 +103,7 @@
 		@include breakpoint-down(mobile) {
 			height: 3.6rem;
 			padding: 0 0.8rem 0 1rem;
+			order: 1; // au-dessus du logo dans le stack vertical mobile
 		}
 	}
 
