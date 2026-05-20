@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="fr" data-page="ma-vcard">
+{{> head }}
+<body>
+	<div class="wrapper">
+		<section class="section-promote-card">
+			<div class="shell shell--xs">
+				<div class="section__background">
+					<img src="public/assets/images/temp/bg-form.png" alt="Fond de la vCard" data-bind="cover_url">
+				</div><!-- /.section__background -->
+
+				<div class="section__avatar">
+					<img src="" alt="Photo de profil" data-bind="avatar_url" style="display:none;">
+					<div class="avatar-initials js-avatar-initials">??</div>
+
+					<div class="section__qr">
+						<img src="public/assets/images/temp/qr.png" alt="QR code vers cette vCard" data-bind="qr_url">
+					</div><!-- /.section__qr -->
+				</div><!-- /.section__avatar -->
+
+				<div class="section__head">
+					<h2 data-bind="full_name">Chargement…</h2>
+
+					<p data-bind="role"></p>
+
+					<h4 data-bind="company"></h4>
+				</div><!-- /.section__head -->
+
+				<div class="socials">
+					<ul>
+						<li data-bind-social="linkedin" hidden>
+							<a href="#" target="_blank" rel="noopener" aria-label="LinkedIn" data-bind-attr="href">
+								<img src="public/assets/images/svg/soc-1.svg" alt="">
+							</a>
+						</li>
+
+						<li data-bind-social="instagram" hidden>
+							<a href="#" target="_blank" rel="noopener" aria-label="Instagram" data-bind-attr="href">
+								<img src="public/assets/images/svg/soc-2.svg" alt="">
+							</a>
+						</li>
+
+						<li data-bind-social="facebook" hidden>
+							<a href="#" target="_blank" rel="noopener" aria-label="Facebook" data-bind-attr="href">
+								<img src="public/assets/images/svg/soc-4.svg" alt="">
+							</a>
+						</li>
+
+						<li data-bind-social="whatsapp" hidden>
+							<a href="#" target="_blank" rel="noopener" aria-label="WhatsApp" data-bind-attr="href">
+								<img src="public/assets/images/svg/soc-3.svg" alt="">
+							</a>
+						</li>
+
+						<li data-bind-social="pinterest" hidden>
+							<a href="#" target="_blank" rel="noopener" aria-label="Pinterest" data-bind-attr="href">
+								<svg width="24" height="24" viewBox="0 0 24 24" fill="#E60023" xmlns="http://www.w3.org/2000/svg">
+									<path d="M12 0C5.373 0 0 5.372 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738.099.12.112.225.083.347-.09.375-.293 1.199-.334 1.366-.052.225-.171.273-.395.165-1.477-.687-2.4-2.846-2.4-4.582 0-3.732 2.713-7.16 7.821-7.16 4.106 0 7.299 2.927 7.299 6.836 0 4.081-2.573 7.367-6.144 7.367-1.199 0-2.327-.623-2.714-1.36 0 0-.595 2.262-.738 2.816-.267 1.029-.989 2.32-1.474 3.105C9.529 23.812 10.747 24 12 24c6.625 0 12-5.375 12-12 0-6.627-5.375-12-12-12z"/>
+								</svg>
+							</a>
+						</li>
+					</ul>
+				</div><!-- /.socials -->
+
+				<ul class="section__actions">
+					<li data-bind-action="website_url" hidden>
+						<a href="#" target="_blank" rel="noopener" class="btn" data-bind-attr="href">Visiter mon site web</a>
+					</li>
+
+					<li data-bind-action="booking_url" hidden>
+						<a href="#" target="_blank" rel="noopener" class="btn" data-bind-attr="href">
+							<img src="public/assets/images/svg/ico-calendar.svg" alt="">
+
+							Prendre rendez-vous
+						</a>
+					</li>
+
+					<li>
+						<a href="#" class="btn btn--blue js-vcf-download">
+							<img src="public/assets/images/svg/ico-cloud.svg" alt="">
+
+							Sauvegarder la fiche contact
+						</a>
+					</li>
+				</ul><!-- /.section__actions -->
+			</div><!-- /.shell -->
+		</section><!-- /.section-promote-card -->
+
+		<section class="section-info">
+			<div class="shell shell--small-s">
+				<ul class="list-cards">
+					<li data-bind-info="email_public" hidden>
+						<h6>Email</h6>
+						<a href="#" data-bind="email_public" data-bind-attr="href" data-bind-href-prefix="mailto:"></a>
+					</li>
+
+					<li data-bind-info="phone_mobile" hidden>
+						<h6>Portable</h6>
+						<a href="#" data-bind="phone_mobile" data-bind-attr="href" data-bind-href-prefix="tel:"></a>
+					</li>
+
+					<li data-bind-info="phone_landline" hidden>
+						<h6>Ligne fixe</h6>
+						<a href="#" data-bind="phone_landline" data-bind-attr="href" data-bind-href-prefix="tel:"></a>
+					</li>
+
+					<li data-bind-info="address" hidden>
+						<h6>Adresse</h6>
+						<a href="#" target="_blank" rel="noopener" data-bind="address" data-bind-attr="href" data-bind-href-prefix="maps"></a>
+					</li>
+
+					<li data-bind-info="website_url" hidden>
+						<h6>Site web</h6>
+						<a href="#" target="_blank" rel="noopener" data-bind="website_url" data-bind-attr="href"></a>
+					</li>
+
+					<li data-bind-info="document" hidden>
+						<h6>
+							<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#24292E" stroke-opacity="0.4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+								<path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+								<path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+							</svg>
+
+							<a href="#" target="_blank" rel="noopener" data-bind="document_label" data-bind-attr="href"></a>
+						</h6>
+					</li>
+				</ul><!-- /.list-cards -->
+
+				<div class="section__actions">
+					<a href="#modifier" class="js-open-modifier">&gt; Modifier</a>
+				</div><!-- /.section__actions -->
+			</div><!-- /.shell -->
+		</section><!-- /.section-info -->
+
+		<div class="logo-container">
+			<a href="https://hodi.host" target="_blank" rel="noopener">
+				<picture>
+					<source media="(max-width:767px)" srcset="public/assets/images/svg/logo.svg">
+					<img src="public/assets/images/svg/logo.svg" alt="Hodi">
+				</picture>
+			</a><!-- /.logo -->
+		</div><!-- /.logo-container -->
+
+		<!-- POPUP : demande de lien magique de modification -->
+		<!-- data-vcard-email est setté dynamiquement par vcard-public.js après chargement -->
+		<div class="popups not-visible" id="popup-modifier" role="dialog" aria-modal="true" aria-labelledby="popup-modifier-title">
+			<div class="popups__inner">
+				<div class="popup">
+					<div class="popup__head">
+						<h4 id="popup-modifier-title">Vous souhaitez modifier votre vCard ?</h4>
+
+						<a href="#" class="popup__close js-close-modifier" aria-label="Fermer">
+							<img src="public/assets/images/svg/ico-close.svg" alt="">
+						</a><!-- /.popup__close -->
+					</div><!-- /.popup__head -->
+
+					<div class="popup__body">
+						<h6>Cette vCard est la vôtre et vous souhaitez y apporter des modifications ?</h6>
+
+						<p>Nous générons un lien unique de modification qui vous sera envoyé sur l'adresse email associée à cette vCard :</p>
+
+						<ul class="popup__actions">
+							<li>
+								<a href="#" class="btn btn--blue js-request-edit-link">Recevoir le lien unique de modification</a>
+							</li>
+						</ul><!-- /.popup__actions -->
+					</div><!-- /.popup__body -->
+				</div><!-- /.popup -->
+			</div><!-- /.popups__inner -->
+		</div><!-- /.popups -->
+	</div><!-- /.wrapper -->
+
+	{{> scripts }}
+</body>
+</html>

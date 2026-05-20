@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="fr" data-auth-required data-page="mes-fonds">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title data-i18n="meta.title">Hodi vCard – By Hodi, the unified African cloud</title>
+	<meta name="description" data-i18n-content="meta.description" content="Your virtual business card, hosted on Hodi's pan-African cloud. Encrypted, secure, never used commercially.">
+	<meta property="og:title" data-i18n-content="meta.title" content="Hodi vCard – By Hodi, the unified African cloud">
+	<meta property="og:description" data-i18n-content="meta.description" content="Your virtual business card, hosted on Hodi's pan-African cloud. Encrypted, secure, never used commercially.">
+	<meta property="og:type" content="website">
+	<meta name="theme-color" content="#291b3a">
+
+	<link rel="icon" type="image/png" sizes="any" href="/vcard/assets/vcard_favicon.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+  <script type="module" crossorigin src="/vcard/assets/app.js"></script>
+  <link rel="stylesheet" crossorigin href="/vcard/assets/style.css">
+</head>
+<body class="body-night">
+	<div class="wrapper">
+		<header class="header">
+			<div class="shell">
+				<div class="header__inner">
+					<a href="https://hodi.host/" class="btn btn--blue" data-i18n="header.visit_hodi">
+						<img src="data:image/svg+xml,%3csvg%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.8541%206.84917L10.5208%200.1825C10.2166%20-0.0608333%209.78325%20-0.0608333%209.47909%200.1825L1.14575%206.84917C0.948252%207.0075%200.833252%207.24667%200.833252%207.49917V18.3333C0.833252%2018.7933%201.20659%2019.1667%201.66659%2019.1667H7.49992V13.3333C7.49992%2012.8733%207.87325%2012.5%208.33325%2012.5H11.6666C12.1266%2012.5%2012.4999%2012.8733%2012.4999%2013.3333V19.1667H18.3333C18.7933%2019.1667%2019.1666%2018.7933%2019.1666%2018.3333V7.49917C19.1666%207.24583%2019.0516%207.00667%2018.8541%206.84917Z'%20fill='white'/%3e%3c/svg%3e" alt="">
+						Visit Hodi.host
+					</a><!-- /.btn -->
+		
+					<a href="mes-infos.html" class="logo js-logo-link" data-i18n-aria-label="footer.logo_label" aria-label="Hodi vCard">
+						<picture>
+							<source media="(max-width:767px)" srcset="/vcard/assets/logo.svg">
+							<img src="/vcard/assets/logo.svg" alt="Hodi vCard">
+						</picture>
+					</a><!-- /.logo -->
+		
+					<label class="header__lang">
+						<span class="header__lang-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+								<circle cx="12" cy="12" r="10"/>
+								<path d="M2 12h20"/>
+								<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/>
+							</svg>
+						</span>
+						<select class="js-lang-switcher" data-i18n-aria-label="header.lang_label" aria-label="Language">
+							<!-- options injectées par lang-switcher.js -->
+						</select>
+					</label>
+				</div><!-- /.header__inner -->
+			</div><!-- /.shell -->
+		</header><!-- /.header -->
+
+		<div class="main">
+			<section class="section-tiles">
+				<div class="shell shell--small">
+					<div class="filters">
+						<a href="#" class="btn js-toggle-filters">
+							<span></span>
+							
+							<img src="/vcard/assets/ico-chevron.png" alt="">
+						</a>
+
+						<ul class="list-filters js-filters">
+							<li>
+								<a href="mes-infos.html" class="btn" data-i18n="tabs.my_info">My information</a>
+							</li>
+	
+							<li class="is-active">
+								<a href="#" class="btn" data-i18n="tabs.my_wallpapers">My wallpapers</a>
+							</li>
+	
+							<li>
+								<a href="signature-mail.html" class="btn" data-i18n="tabs.my_signature">My email signature</a>
+							</li>
+						</ul><!-- /.list-filters -->
+					</div><!-- /.filters -->
+
+					<div class="tiles-images">
+						<p>Créez et personnalisez vos fonds d'écran verrouillé pour votre smartphone :</p>
+
+						<!-- Grille peuplée dynamiquement par wallpapers.js :
+							 - 1er slot = wallpaper Hodi par défaut (verrouillé, non supprimable)
+							 - 3 slots suivants = wallpapers perso ou "+ Ajouter" -->
+						<div class="grid-flex"></div>
+					</div><!-- /.tiles -->
+				</div><!-- /.shell -->
+			</section><!-- /.section-form -->
+		</div><!-- /.main -->
+
+		<!--
+			Popup cropper partagé entre :
+			  - mes-infos.html (cover + avatar)
+			  - mes-fonds.html (wallpaper)
+		
+			Le titre, la viewport Croppie et le label du bouton de sauvegarde sont
+			définis dynamiquement par image-crop.js en fonction du contexte détecté.
+		
+			Deux sources d'image :
+			  1. Upload depuis le disque (file input)
+			  2. Recherche dans la banque d'images Unsplash (API publique)
+		
+			Une fois l'image choisie (peu importe la source), elle passe dans Croppie
+			pour le crop / zoom, puis on appelle saveCroppedImageToTile.
+		-->
+		<div class="popups popups--cropper not-visible" id="popup-choice">
+			<div class="popups__inner">
+				<div class="popup">
+					<div class="popup__head">
+						<h4>Nouvelle image</h4>
+		
+						<a href="#popup-choice" class="popup__close js-toggle-popup">
+							<img src="data:image/svg+xml,%3csvg%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M15.7%200.3C15.3%20-0.1%2014.7%20-0.1%2014.3%200.3L8%206.6L1.7%200.3C1.3%20-0.1%200.7%20-0.1%200.3%200.3C-0.1%200.7%20-0.1%201.3%200.3%201.7L6.6%208L0.3%2014.3C-0.1%2014.7%20-0.1%2015.3%200.3%2015.7C0.5%2015.9%200.7%2016%201%2016C1.3%2016%201.5%2015.9%201.7%2015.7L8%209.4L14.3%2015.7C14.5%2015.9%2014.8%2016%2015%2016C15.2%2016%2015.5%2015.9%2015.7%2015.7C16.1%2015.3%2016.1%2014.7%2015.7%2014.3L9.4%208L15.7%201.7C16.1%201.3%2016.1%200.7%2015.7%200.3Z'%20fill='%2324292E'/%3e%3c/svg%3e" alt="">
+						</a><!-- /.popup__close -->
+					</div><!-- /.popup__head -->
+		
+					<div class="image-cropper">
+						<!-- Tabs pour choisir la source de l'image -->
+						<div class="image-source-tabs js-source-tabs">
+							<button type="button" class="image-source-tab is-active js-source-tab" data-source="upload">
+								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+								<span>Mon ordinateur</span>
+							</button>
+							<button type="button" class="image-source-tab js-source-tab" data-source="unsplash">
+								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+								<span>Banque d'images</span>
+							</button>
+						</div><!-- /.image-source-tabs -->
+		
+						<!-- Pane 1 : upload depuis le disque -->
+						<div class="image-source-pane is-active" data-pane="upload">
+							<img class="image-cropper-icon" src="data:image/svg+xml,%3csvg%20width='83'%20height='83'%20viewBox='0%200%2083%2083'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20id='24px_image-add%202'%20clip-path='url(%23clip0_110_803)'%3e%3cg%20id='Group'%3e%3cpath%20id='Vector'%20d='M72.625%2055.3333H65.7084V65.7083H55.3334V72.6249H65.7084V82.9999H72.625V72.6249H83V65.7083H72.625V55.3333Z'%20fill='%2324292E'%20fill-opacity='0.18'/%3e%3cpath%20id='Vector_2'%20d='M33.7499%2028.8737C33.0202%2028.0195%2031.9274%2027.5699%2030.7965%2027.6806C29.6795%2027.7878%2028.68%2028.4311%2028.1232%2029.4098L14.2899%2053.6181C13.6778%2054.6902%2013.6812%2056.0044%2014.3003%2057.0695C14.9193%2058.1347%2016.0606%2058.7918%2017.2917%2058.7918H51.8751C53.2273%2058.7918%2054.4515%2058.0033%2055.0152%2056.779C55.5789%2055.5513%2055.3783%2054.1092%2054.4999%2053.0821L33.7499%2028.8737Z'%20fill='%2324292E'%20fill-opacity='0.18'/%3e%3cpath%20id='Vector_3'%20d='M6.91667%206.91667H72.625V48.4167H79.5417V3.45833C79.5417%201.54933%2077.9958%200%2076.0833%200H3.45833C1.54588%200%200%201.54933%200%203.45833V76.0833C0%2077.9923%201.54588%2079.5417%203.45833%2079.5417H48.4167V72.625H6.91667V6.91667Z'%20fill='%2324292E'%20fill-opacity='0.18'/%3e%3cpath%20id='Vector_4'%20d='M55.3333%2031.1251C59.1533%2031.1251%2062.25%2028.0284%2062.25%2024.2084C62.25%2020.3884%2059.1533%2017.2917%2055.3333%2017.2917C51.5133%2017.2917%2048.4166%2020.3884%2048.4166%2024.2084C48.4166%2028.0284%2051.5133%2031.1251%2055.3333%2031.1251Z'%20fill='%2324292E'%20fill-opacity='0.18'/%3e%3c/g%3e%3c/g%3e%3cdefs%3e%3cclipPath%20id='clip0_110_803'%3e%3crect%20width='83'%20height='83'%20fill='white'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="">
+		
+							<h6>Glissez votre image ici ou…</h6>
+		
+							<div class="image-cropper__upload">
+								<input type="file" id="upload-image" class="btn btn--aqua" accept="image/*">
+								<span class="btn btn--aqua">Parcourir</span>
+							</div>
+		
+							<p class="image-cropper__hint">Maximum 2 Mo, fichier JPG ou PNG</p>
+						</div><!-- /.image-source-pane -->
+		
+						<!-- Pane 2 : recherche Unsplash -->
+						<div class="image-source-pane" data-pane="unsplash">
+							<div class="image-source-search">
+								<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="image-source-search__icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+								<input type="search" class="js-unsplash-query" placeholder="Plage, forêt, ville, abstrait…" autocomplete="off">
+							</div>
+		
+							<div class="image-source-results js-unsplash-results">
+								<!-- Vignettes injectées par image-source.js -->
+								<p class="image-source-empty js-unsplash-empty">Tapez un mot-clé pour rechercher des images libres de droits sur Unsplash.</p>
+							</div>
+		
+							<p class="image-cropper__hint">Photos libres de droits — crédit photographe automatique</p>
+						</div><!-- /.image-source-pane -->
+		
+						<!-- Zone Croppie : s'active dès qu'une image est sélectionnée (upload ou Unsplash) -->
+						<div class="js-croppie"></div>
+		
+						<div class="zoom-actions">
+							<button id="zoom-in-button" type="button">
+								<img src="data:image/svg+xml,%3csvg%20width='17'%20height='17'%20viewBox='0%200%2017%2017'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M9.55396%206.0542H8.05396V4.5542C8.05396%204.42159%208.00128%204.29441%207.90751%204.20065C7.81374%204.10688%207.68656%204.0542%207.55396%204.0542H6.55396C6.42135%204.0542%206.29417%204.10688%206.2004%204.20065C6.10663%204.29441%206.05396%204.42159%206.05396%204.5542V6.0542H4.55396C4.42135%206.0542%204.29417%206.10688%204.2004%206.20065C4.10663%206.29441%204.05396%206.42159%204.05396%206.5542V7.5542C4.05396%207.68681%204.10663%207.81398%204.2004%207.90775C4.29417%208.00152%204.42135%208.0542%204.55396%208.0542H6.05396V9.5542C6.05396%209.68681%206.10663%209.81398%206.2004%209.90775C6.29417%2010.0015%206.42135%2010.0542%206.55396%2010.0542H7.55396C7.68656%2010.0542%207.81374%2010.0015%207.90751%209.90775C8.00128%209.81398%208.05396%209.68681%208.05396%209.5542V8.0542H9.55396C9.68656%208.0542%209.81374%208.00152%209.90751%207.90775C10.0013%207.81398%2010.054%207.68681%2010.054%207.5542V6.5542C10.054%206.42159%2010.0013%206.29441%209.90751%206.20065C9.81374%206.10688%209.68656%206.0542%209.55396%206.0542Z'%20fill='white'/%3e%3cpath%20d='M13.054%2010.64C13.9357%209.16929%2014.2491%207.42694%2013.9354%205.74114C13.6216%204.05534%2012.7022%202.54246%2011.3504%201.48745C9.99865%200.432431%208.30775%20-0.0918957%206.59623%200.0132248C4.8847%200.118345%203.27068%200.845657%202.05817%202.05817C0.845657%203.27068%200.118345%204.8847%200.0132248%206.59623C-0.0918957%208.30775%200.432431%209.99865%201.48745%2011.3504C2.54246%2012.7022%204.05534%2013.6216%205.74114%2013.9354C7.42694%2014.2491%209.16929%2013.9357%2010.64%2013.054L13.347%2015.761C13.5345%2015.9485%2013.7889%2016.0538%2014.054%2016.0538C14.3192%2016.0538%2014.5735%2015.9485%2014.761%2015.761L15.761%2014.761C15.9485%2014.5735%2016.0538%2014.3192%2016.0538%2014.054C16.0538%2013.7889%2015.9485%2013.5345%2015.761%2013.347L13.054%2010.64ZM7.05402%2012.054C6.06511%2012.054%205.09841%2011.7608%204.27617%2011.2114C3.45392%2010.662%202.81306%209.88107%202.43462%208.96744C2.05618%208.05381%201.95717%207.04847%202.15009%206.07857C2.34302%205.10866%202.81922%204.21775%203.51849%203.51849C4.21775%202.81922%205.10866%202.34302%206.07857%202.15009C7.04847%201.95717%208.05381%202.05618%208.96744%202.43462C9.88107%202.81306%2010.662%203.45392%2011.2114%204.27617C11.7608%205.09841%2012.054%206.06511%2012.054%207.05402C12.054%207.71063%2011.9247%208.36081%2011.6734%208.96744C11.4221%209.57406%2011.0538%2010.1253%2010.5896%2010.5896C10.1253%2011.0538%209.57406%2011.4221%208.96744%2011.6734C8.36081%2011.9247%207.71063%2012.054%207.05402%2012.054Z'%20fill='white'/%3e%3c/svg%3e" alt="">
+							</button>
+		
+							<button id="zoom-out-button" type="button">
+								<img src="data:image/svg+xml,%3csvg%20width='17'%20height='17'%20viewBox='0%200%2017%2017'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M9.55396%206.0542H4.55396C4.27781%206.0542%204.05396%206.27806%204.05396%206.5542V7.5542C4.05396%207.83034%204.27781%208.0542%204.55396%208.0542H9.55396C9.8301%208.0542%2010.054%207.83034%2010.054%207.5542V6.5542C10.054%206.27806%209.8301%206.0542%209.55396%206.0542Z'%20fill='white'/%3e%3cpath%20d='M13.054%2010.64C13.9357%209.16929%2014.2491%207.42694%2013.9354%205.74114C13.6216%204.05534%2012.7022%202.54246%2011.3504%201.48745C9.99865%200.432431%208.30775%20-0.0918957%206.59623%200.0132248C4.8847%200.118345%203.27068%200.845657%202.05817%202.05817C0.845657%203.27068%200.118345%204.8847%200.0132248%206.59623C-0.0918957%208.30775%200.432431%209.99865%201.48745%2011.3504C2.54246%2012.7022%204.05534%2013.6216%205.74114%2013.9354C7.42694%2014.2491%209.16929%2013.9357%2010.64%2013.054L13.347%2015.761C13.5345%2015.9485%2013.7889%2016.0538%2014.054%2016.0538C14.3192%2016.0538%2014.5735%2015.9485%2014.761%2015.761L15.761%2014.761C15.9485%2014.5735%2016.0538%2014.3192%2016.0538%2014.054C16.0538%2013.7889%2015.9485%2013.5345%2015.761%2013.347L13.054%2010.64ZM7.05402%2012.054C6.06511%2012.054%205.09841%2011.7608%204.27617%2011.2114C3.45392%2010.662%202.81306%209.88107%202.43462%208.96744C2.05618%208.05381%201.95717%207.04847%202.15009%206.07857C2.34302%205.10866%202.81922%204.21775%203.51849%203.51849C4.21775%202.81922%205.10866%202.34302%206.07857%202.15009C7.04847%201.95717%208.05381%202.05618%208.96744%202.43462C9.88107%202.81306%2010.662%203.45392%2011.2114%204.27617C11.7608%205.09841%2012.054%206.06511%2012.054%207.05402C12.054%207.71063%2011.9247%208.36081%2011.6734%208.96744C11.4221%209.57406%2011.0538%2010.1253%2010.5896%2010.5896C10.1253%2011.0538%209.57406%2011.4221%208.96744%2011.6734C8.36081%2011.9247%207.71063%2012.054%207.05402%2012.054Z'%20fill='white'/%3e%3c/svg%3e" alt="">
+							</button>
+						</div>
+					</div><!-- /.image-cropper -->
+		
+					<a href="#" class="btn btn--block btn--aqua btn--is-hidden" id="crop-button">Enregistrer l'image</a>
+				</div><!-- /.popup -->
+			</div><!-- /.popups__inner -->
+		</div><!-- /.popups -->
+
+
+		<footer class="footer">
+			<div class="shell">
+				<a href="https://www.hodi.host" target="_blank" rel="noopener" class="footer__logo" aria-label="Hodi — Host different.">
+					<img src="/vcard/assets/logo-hodi-footer.svg" alt="Hodi" width="240">
+				</a>
+			</div><!-- /.shell -->
+		</footer><!-- /.footer -->
+	</div><!-- /.wrapper -->
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js"></script>
+	<!-- jQuery via CDN officiel : évite que Vite tente de bundler un script non-module
+	     et permet de mutualiser le cache navigateur entre sites qui utilisent jQuery -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	</body>
+</html>

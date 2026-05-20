@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="fr" data-page="mes-infos">
+{{> head }}
+<body class="body-night">
+	<div class="wrapper">
+		{{> header }}
+
+		<div class="main">
+			<section class="section-form">
+				<div class="shell shell--small">
+					<div class="filters">
+						<a href="#" class="btn js-toggle-filters">
+							<span></span>
+							
+							<img src="public/assets/images/temp/ico-chevron.png" alt="">
+						</a>
+
+						<ul class="list-filters js-filters">
+							<li class="is-active">
+								<a href="#" class="btn" data-i18n="tabs.my_info">My information</a>
+							</li>
+
+							<li>
+								<a href="mes-fonds.html" class="btn" data-i18n="tabs.my_wallpapers">My wallpapers</a>
+							</li>
+
+							<li>
+								<a href="signature-mail.html" class="btn" data-i18n="tabs.my_signature">My email signature</a>
+							</li>
+						</ul><!-- /.list-filters -->
+					</div><!-- /.filters -->
+
+					<!-- Bandeau de réassurance (visible en CREATE, masqué en EDIT par JS) -->
+					<div class="form__intro js-form-intro" data-i18n="form.intro">
+						The data you enter here is only used to generate your vCard. It is stored securely, never used for commercial purposes, and the Hodi team has no access to it.
+					</div>
+
+					<div class="section__form">
+						<!-- Cover : fond générique tant que rien d'uploadé, remplacé par l'image utilisateur si présente -->
+						<div class="section__background js-croping">
+							<a href="#popup-choice" class="popup__close js-toggle-popup btn-edit">
+								<img src="public/assets/images/svg/ico-edit.svg" alt="">
+							</a><!-- /.section__edit -->
+
+							<div class="section__form-bg">
+								<img src="public/assets/images/temp/form-bg.png" alt="" class="js-image-to-edit js-cover-image">
+							</div><!-- /.section__form-bg -->
+						</div><!-- /.section__background -->
+
+						<!-- Avatar : placeholder silhouette tant que rien d'uploadé -->
+						<div class="section__avatar js-croping">
+							<div class="section__avatar-image">
+								<!-- Ordre important : placeholder en premier, photo croppée par-dessus (recouvre quand src est défini) -->
+								<img src="public/assets/images/svg/ico-placeholder.svg" alt="" class="js-avatar-placeholder">
+								<img src="" alt="" class="js-image-to-edit js-avatar-image">
+							</div><!-- /.section__avatar-image -->
+
+							<a href="#popup-choice" class="popup__close js-toggle-popup btn-edit">
+								<img src="public/assets/images/svg/ico-edit.svg" alt="">
+							</a><!-- /.section__edit -->
+						</div><!-- /.section__avatar -->
+
+						<div class="form">
+							<form action="" autocomplete="off">
+								<div class="form__body">
+
+									<!-- ================================================================
+										 SECTION 1 — Identité de la vCard
+										 ================================================================ -->
+									<div class="form__section">
+										<div class="form__row">
+											<label class="form__label form__label--required" for="url">
+												<span class="form__label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span>
+												<span data-i18n="form.username_label">Hodi vCard username</span>
+											</label>
+											<div class="form__controls form__controls--with-button">
+												<input type="text" class="field" name="url" id="url" placeholder="your-username" data-i18n-placeholder="form.username_placeholder" autocomplete="off" required>
+												<button type="button" class="form__btn-check js-check-slug" data-i18n="form.check_btn">Check</button>
+											</div>
+										</div><!-- /.form__row -->
+										<small class="form__slug-status js-slug-status"></small>
+
+										<div class="form__row">
+											<label class="form__label form__label--required" for="email">
+												<span class="form__label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></span><span data-i18n="form.email_label">Email</span>
+											</label>
+											<div class="form__controls">
+												<input type="email" class="field" name="email" id="email" placeholder="your@email.com" data-i18n-placeholder="form.email_placeholder" readonly>
+											</div>
+										</div><!-- /.form__row -->
+										<small class="form__hint" data-i18n="form.email_hint">This email is tied to your Hodi account and cannot be changed.</small>
+
+										<!-- Affiché uniquement en mode EDIT : URL publique de la vCard + Aperçu -->
+										<div class="form__vcard-link js-vcard-link-row" hidden>
+											<span class="form__vcard-link-label">URL de votre vCard :</span>
+											<a href="" target="_blank" rel="noopener" class="form__vcard-link-url js-vcard-link"></a>
+											<a href="" target="_blank" rel="noopener" class="form__vcard-preview-btn js-vcard-preview">
+												<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+												Aperçu
+											</a>
+										</div>
+
+										<div class="form__row">
+											<label class="form__label form__label--required" for="first-name" data-i18n="form.first_name_label">First name</label>
+											<div class="form__controls">
+												<input type="text" class="field" name="first-name" id="first-name" placeholder="Not provided" data-i18n-placeholder="form.placeholder_empty" required>
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label form__label--required" for="name" data-i18n="form.last_name_label">Last name</label>
+											<div class="form__controls">
+												<input type="text" class="field" name="name" id="name" placeholder="Not provided" data-i18n-placeholder="form.placeholder_empty" required>
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="organisme" data-i18n="form.organization_label">Organization</label>
+											<div class="form__controls">
+												<input type="text" class="field" name="organisme" id="organisme" placeholder="Not provided" data-i18n-placeholder="form.placeholder_empty">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="fonction" data-i18n="form.role_label">Role</label>
+											<div class="form__controls">
+												<input type="text" class="field" name="fonction" id="fonction" placeholder="Not provided" data-i18n-placeholder="form.placeholder_empty">
+											</div>
+										</div><!-- /.form__row -->
+									</div><!-- /.form__section -->
+
+									<!-- ================================================================
+										 SECTION 2 — Coordonnées
+										 ================================================================ -->
+									<div class="form__section">
+										<h6 class="form__section-title" data-i18n="form.section_contact">Contact details</h6>
+
+										<div class="form__row">
+											<label class="form__label" for="portable">
+												<span class="form__label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="7" y="2" width="10" height="20" rx="2"/><path d="M11 18h2"/></svg></span><span data-i18n="form.mobile_label">Mobile</span>
+											</label>
+											<div class="form__controls form__controls--phone">
+												<input type="tel" class="field js-intl-tel" name="portable" id="portable" placeholder="6 12 34 56 78" data-i18n-placeholder="form.mobile_placeholder" required>
+											</div>
+										</div><!-- /.form__row -->
+										<label class="form__sub-checkbox form__sub-checkbox--space-after">
+											<input type="checkbox" name="whatsapp_enabled" id="whatsapp_enabled">
+											<span data-i18n="form.whatsapp_checkbox">This number is also reachable on WhatsApp</span>
+										</label>
+
+										<div class="form__row">
+											<label class="form__label" for="ligne">
+												<span class="form__label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92Z"/></svg></span><span data-i18n="form.landline_label">Landline</span>
+											</label>
+											<div class="form__controls form__controls--phone">
+												<input type="tel" class="field js-intl-tel" name="ligne" id="ligne" placeholder="0 92 12 34 56" data-i18n-placeholder="form.landline_placeholder">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="adresse">
+												<span class="form__label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg></span><span data-i18n="form.address_label">Address</span>
+											</label>
+											<div class="form__controls">
+												<input type="text" class="field" name="adresse" id="adresse" placeholder="Your postal address" data-i18n-placeholder="form.address_placeholder">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="web">
+												<span class="form__label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/></svg></span><span data-i18n="form.website_label">Website</span>
+											</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="web" id="web" placeholder="https://exemple.com">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="prise">
+												<span class="form__label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></span><span data-i18n="form.booking_label">Book an appointment</span>
+											</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="prise" id="prise" placeholder="https://calendly.com/...">
+											</div>
+										</div><!-- /.form__row -->
+									</div><!-- /.form__section -->
+
+									<!-- ================================================================
+										 SECTION 3 — Réseaux sociaux
+										 ================================================================ -->
+									<div class="form__section">
+										<h6 class="form__section-title" data-i18n="form.section_socials">Social networks</h6>
+
+										<div class="form__row">
+											<label class="form__label" for="linkedin">LinkedIn</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="linkedin" id="linkedin" placeholder="https://www.linkedin.com/in/...">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="instagram">Instagram</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="instagram" id="instagram" placeholder="https://www.instagram.com/...">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="facebook">Facebook</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="facebook" id="facebook" placeholder="https://www.facebook.com/...">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="pinterest">Pinterest</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="pinterest" id="pinterest" placeholder="https://www.pinterest.com/...">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="snapchat">Snapchat</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="snapchat" id="snapchat" placeholder="https://www.snapchat.com/add/...">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="tiktok">TikTok</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="tiktok" id="tiktok" placeholder="https://www.tiktok.com/@...">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="signal">Signal</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="signal" id="signal" placeholder="https://signal.me/#...">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="telegram">Telegram</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="telegram" id="telegram" placeholder="https://t.me/...">
+											</div>
+										</div><!-- /.form__row -->
+									</div><!-- /.form__section -->
+
+									<!-- ================================================================
+										 SECTION 4 — Lien personnalisé (libre)
+										 ================================================================ -->
+									<div class="form__section">
+										<h6 class="form__section-title" data-i18n="form.section_link">Custom link (optional)</h6>
+
+										<div class="form__row">
+											<label class="form__label" for="document_label">
+												<span class="form__label-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg></span><span data-i18n="form.doc_label_label">Link label</span>
+											</label>
+											<div class="form__controls">
+												<input type="text" class="field" name="document_label" id="document_label" placeholder="My portfolio, brochure, an article…" data-i18n-placeholder="form.doc_label_placeholder">
+											</div>
+										</div><!-- /.form__row -->
+
+										<div class="form__row">
+											<label class="form__label" for="document_url" data-i18n="form.doc_url_label">URL</label>
+											<div class="form__controls">
+												<input type="url" class="field" name="document_url" id="document_url" placeholder="https://...">
+											</div>
+										</div><!-- /.form__row -->
+										<small class="form__hint">A link you want to highlight on your vCard: portfolio, PDF brochure, article…</small>
+
+									</div><!-- /.form__section -->
+								</div><!-- /.form__body -->
+							</form>
+						</div><!-- /.form -->
+					</div><!-- /.section__form -->
+
+					<!-- Zone de feedback (succès / erreur) injectée par le JS -->
+					<div class="form__feedback js-form-feedback" hidden></div>
+
+					<div class="section__actions">
+						<a href="#" class="btn js-save-vcard" data-i18n="form.save_update">Save my information</a><!-- /.btn -->
+
+						<a href="#" class="form__error js-delete-vcard" data-i18n="form.delete">Delete my vCard permanently</a><!-- /.form__error -->
+					</div><!-- /.section__actions -->
+
+				</div><!-- /.shell -->
+			</section><!-- /.section-form -->
+		</div><!-- /.main -->
+
+		{{> popup-cropper }}
+
+		{{> footer }}
+	</div><!-- /.wrapper -->
+
+	{{> scripts }}
+</body>
+</html>

@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="fr" data-auth-required data-page="signature-mail">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+	<title data-i18n="meta.title">Hodi vCard – By Hodi, the unified African cloud</title>
+	<meta name="description" data-i18n-content="meta.description" content="Your virtual business card, hosted on Hodi's pan-African cloud. Encrypted, secure, never used commercially.">
+	<meta property="og:title" data-i18n-content="meta.title" content="Hodi vCard – By Hodi, the unified African cloud">
+	<meta property="og:description" data-i18n-content="meta.description" content="Your virtual business card, hosted on Hodi's pan-African cloud. Encrypted, secure, never used commercially.">
+	<meta property="og:type" content="website">
+	<meta name="theme-color" content="#291b3a">
+
+	<link rel="icon" type="image/png" sizes="any" href="/vcard/assets/vcard_favicon.png">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap" rel="stylesheet">
+
+  <script type="module" crossorigin src="/vcard/assets/app.js"></script>
+  <link rel="stylesheet" crossorigin href="/vcard/assets/style.css">
+</head>
+<body class="body-night">
+	<div class="wrapper">
+		<header class="header">
+			<div class="shell">
+				<div class="header__inner">
+					<a href="https://hodi.host/" class="btn btn--blue" data-i18n="header.visit_hodi">
+						<img src="data:image/svg+xml,%3csvg%20width='20'%20height='20'%20viewBox='0%200%2020%2020'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cpath%20d='M18.8541%206.84917L10.5208%200.1825C10.2166%20-0.0608333%209.78325%20-0.0608333%209.47909%200.1825L1.14575%206.84917C0.948252%207.0075%200.833252%207.24667%200.833252%207.49917V18.3333C0.833252%2018.7933%201.20659%2019.1667%201.66659%2019.1667H7.49992V13.3333C7.49992%2012.8733%207.87325%2012.5%208.33325%2012.5H11.6666C12.1266%2012.5%2012.4999%2012.8733%2012.4999%2013.3333V19.1667H18.3333C18.7933%2019.1667%2019.1666%2018.7933%2019.1666%2018.3333V7.49917C19.1666%207.24583%2019.0516%207.00667%2018.8541%206.84917Z'%20fill='white'/%3e%3c/svg%3e" alt="">
+						Visit Hodi.host
+					</a><!-- /.btn -->
+		
+					<a href="mes-infos.html" class="logo js-logo-link" data-i18n-aria-label="footer.logo_label" aria-label="Hodi vCard">
+						<picture>
+							<source media="(max-width:767px)" srcset="/vcard/assets/logo.svg">
+							<img src="/vcard/assets/logo.svg" alt="Hodi vCard">
+						</picture>
+					</a><!-- /.logo -->
+		
+					<label class="header__lang">
+						<span class="header__lang-icon" aria-hidden="true">
+							<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20">
+								<circle cx="12" cy="12" r="10"/>
+								<path d="M2 12h20"/>
+								<path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10Z"/>
+							</svg>
+						</span>
+						<select class="js-lang-switcher" data-i18n-aria-label="header.lang_label" aria-label="Language">
+							<!-- options injectées par lang-switcher.js -->
+						</select>
+					</label>
+				</div><!-- /.header__inner -->
+			</div><!-- /.shell -->
+		</header><!-- /.header -->
+
+		<div class="main">
+			<section class="section-tiles">
+				<div class="shell shell--small">
+					<div class="filters">
+						<a href="#" class="btn js-toggle-filters">
+							<span></span>
+
+							<img src="/vcard/assets/ico-chevron.png" alt="">
+						</a>
+
+						<ul class="list-filters js-filters">
+							<li>
+								<a href="mes-infos.html" class="btn" data-i18n="tabs.my_info">My information</a>
+							</li>
+
+							<li>
+								<a href="mes-fonds.html" class="btn" data-i18n="tabs.my_wallpapers">My wallpapers</a>
+							</li>
+
+							<li class="is-active">
+								<a href="signature-mail.html" class="btn" data-i18n="tabs.my_signature">My email signature</a>
+							</li>
+						</ul><!-- /.list-filters -->
+					</div><!-- /.filters -->
+
+					<div class="card-avatar">
+						<div class="card__head">
+							<p>Intégrez votre signature mail avec un lien vers votre vCard Hodi :</p>
+						</div><!-- /.card__head -->
+
+						<!-- Preview de la signature : peuplée dynamiquement par signature-mail.js -->
+						<div class="card__body" id="signature-preview">
+							<div class="card__image">
+								<img src="" alt="" class="js-sig-avatar" style="display:none;">
+								<div class="avatar-initials js-sig-avatar-fallback">??</div>
+								<ul class="card__socials js-sig-socials"></ul>
+							</div><!-- /.card__image -->
+
+							<div class="card__content">
+								<h6 class="js-sig-name">—</h6>
+								<p class="js-sig-role-company">—</p>
+
+								<p class="js-sig-contact">—</p>
+
+								<div class="card__entry">
+									<p>
+										<a href="#" class="js-sig-vcard-link" target="_blank" rel="noopener">
+											<img src="data:image/svg+xml,%3csvg%20width='16'%20height='16'%20viewBox='0%200%2016%2016'%20fill='none'%20xmlns='http://www.w3.org/2000/svg'%3e%3cg%20clip-path='url(%23clip0_99_155)'%3e%3cpath%20d='M7%207C8.933%207%2010.5%205.433%2010.5%203.5C10.5%201.567%208.933%200%207%200C5.067%200%203.5%201.567%203.5%203.5C3.5%205.433%205.067%207%207%207Z'%20fill='%2324292E'%20fill-opacity='0.227451'/%3e%3cpath%20d='M10.042%2015.958C8.882%2015.742%208%2014.722%208%2013.5V12.5C8%2011.278%208.882%2010.258%2010.042%2010.042C10.089%209.788%2010.181%209.551%2010.299%209.33C9.316%208.803%208.193%208.501%207%208.5C3.136%208.504%200.004%2011.636%200%2015.5C0%2015.776%200.224%2016%200.5%2016H10.054C10.051%2015.986%2010.045%2015.972%2010.042%2015.958Z'%20fill='%2324292E'%20fill-opacity='0.227451'/%3e%3cpath%20d='M15.5%2012H14V10.5C14%2010.224%2013.776%2010%2013.5%2010H12.5C12.224%2010%2012%2010.224%2012%2010.5V12H10.5C10.224%2012%2010%2012.224%2010%2012.5V13.5C10%2013.776%2010.224%2014%2010.5%2014H12V15.5C12%2015.776%2012.224%2016%2012.5%2016H13.5C13.776%2016%2014%2015.776%2014%2015.5V14H15.5C15.776%2014%2016%2013.776%2016%2013.5V12.5C16%2012.224%2015.776%2012%2015.5%2012Z'%20fill='%2324292E'%20fill-opacity='0.227451'/%3e%3c/g%3e%3cdefs%3e%3cclipPath%20id='clip0_99_155'%3e%3crect%20width='16'%20height='16'%20fill='white'/%3e%3c/clipPath%3e%3c/defs%3e%3c/svg%3e" alt="">
+											Ajouter à mes contacts
+										</a>
+									</p>
+								</div><!-- /.card__entry -->
+							</div><!-- /.card__content -->
+						</div><!-- /.card__body -->
+					</div><!-- /.card-avatar -->
+
+					<!-- Zone de feedback (succès copie) -->
+					<div class="form__feedback js-sig-feedback" hidden></div>
+
+					<div class="section__actions">
+						<a href="#" class="btn btn--block btn--aqua js-sig-copy">Copier le code HTML de ma signature</a>
+					</div><!-- /.section__actions -->
+
+					<!-- Zone (cachée) où la signature HTML est rendue : utilisée par le bouton "Copier" -->
+					<div id="signature-html-source" style="position:absolute; left:-9999px; top:-9999px;"></div>
+				</div><!-- /.shell -->
+			</section><!-- /.section-tiles -->
+		</div><!-- /.main -->
+
+		<footer class="footer">
+			<div class="shell">
+				<a href="https://www.hodi.host" target="_blank" rel="noopener" class="footer__logo" aria-label="Hodi — Host different.">
+					<img src="/vcard/assets/logo-hodi-footer.svg" alt="Hodi" width="240">
+				</a>
+			</div><!-- /.shell -->
+		</footer><!-- /.footer -->
+	</div><!-- /.wrapper -->
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js"></script>
+	<!-- jQuery via CDN officiel : évite que Vite tente de bundler un script non-module
+	     et permet de mutualiser le cache navigateur entre sites qui utilisent jQuery -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+	</body>
+</html>
