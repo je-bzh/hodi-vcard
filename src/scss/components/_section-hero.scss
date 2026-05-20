@@ -121,6 +121,24 @@
 		justify-content: center;
 		margin: 0;
 		padding: 0;
+
+		// Override des règles mobile génériques de .list-btns (display: block / width: 100%)
+		// pour garder le bouton centré et pas full-width sur la home
+		@include breakpoint-down(mobile) {
+			display: flex;
+			justify-content: center;
+			max-width: 100%;
+			width: auto;
+
+			li {
+				padding: 0;
+				width: auto;
+			}
+
+			.btn {
+				width: auto;
+			}
+		}
 	}
 
 	/* ----- Lien "Retrouver ma vCard" ----- */
