@@ -11,14 +11,13 @@
  *   - On la passe au listener du file input via un Event synthétique
  *     → image-crop.js prend le relais comme si c'était un upload disque
  *
- * Clé API Unsplash : lue depuis VITE_UNSPLASH_ACCESS_KEY (à mettre dans .env).
- * Si absente : on désactive l'onglet Unsplash avec un message.
+ * Recherche Unsplash : proxifiée par le back-end (api/unsplash/search). La clé
+ * API reste côté serveur (config.local.php) — jamais dans le bundle JS.
+ * Si non configurée : l'onglet est désactivé (api/unsplash/enabled).
  */
 
 import { t } from '/js/utils/i18n.js';
-
-const UNSPLASH_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY || '';
-const UNSPLASH_API = 'https://api.unsplash.com/search/photos';
+import { api } from '/js/utils/api.js';
 
 // ---------------------------------------------------------------------------
 // Switch onglets upload / unsplash
@@ -26,6 +25,7 @@ const UNSPLASH_API = 'https://api.unsplash.com/search/photos';
 $(document).on('click', '.js-source-tab', function (e) {
 	e.preventDefault();
 	const $tab = $(this);
+	if ($tab.hasClass('is-disabled')) return;
 	const source = $tab.data('source');
 
 	$tab.siblings('.js-source-tab').removeClass('is-active');
@@ -84,19 +84,8 @@ function detectOrientation() {
 }
 
 async function searchUnsplash(query) {
-	if (!UNSPLASH_KEY) {
-		throw new Error(t("source.no_key"));
-	}
-	const orientation = detectOrientation();
-	const url = `${UNSPLASH_API}?query=${encodeURIComponent(query)}&per_page=24&orientation=${orientation}`;
-	const res = await fetch(url, {
-		headers: { Authorization: `Client-ID ${UNSPLASH_KEY}` },
-	});
-	if (!res.ok) {
-		throw new Error(t("source.http_error", { status: res.status }));
-	}
-	const data = await res.json();
-	return data.results || [];
+	// Proxy serveur : renvoie déjà une liste allégée { thumb, full, alt, photographer… }
+	return api.unsplash.search(query, detectOrientation());
 }
 
 function renderUnsplashResults($container, photos) {
@@ -109,17 +98,16 @@ function renderUnsplashResults($container, photos) {
 	const orientation = detectOrientation();
 	const grid = $(`<div class="image-source-grid image-source-grid--${orientation}"></div>`);
 	photos.forEach((photo) => {
-		const thumb = photo.urls.thumb;
-		const full = photo.urls.regular; // ~1080px wide, suffisant pour les crops
-		const photographerName = photo.user?.name || 'Unsplash';
-		const photographerLink = photo.user?.links?.html || 'https://unsplash.com';
+		// Liste déjà allégée par le proxy serveur.
+		const photographerName = photo.photographer || 'Unsplash';
+		const photographerLink = photo.photographer_link || 'https://unsplash.com';
 
 		const $cell = $(`
 			<button type="button" class="image-source-cell js-unsplash-pick"
-				data-full="${escapeAttr(full)}"
+				data-full="${escapeAttr(photo.full)}"
 				data-photographer="${escapeAttr(photographerName)}"
 				data-photographer-link="${escapeAttr(photographerLink)}">
-				<img src="${escapeAttr(thumb)}" alt="${escapeAttr(photo.alt_description || '')}" loading="lazy">
+				<img src="${escapeAttr(photo.thumb)}" alt="${escapeAttr(photo.alt || '')}" loading="lazy">
 				<span class="image-source-cell__credit">${escapeText(photographerName)}</span>
 			</button>
 		`);
@@ -186,13 +174,18 @@ $(document).on('click', '.js-toggle-popup', function () {
 	setTimeout(resetSourcePicker, 50);
 });
 
-// Désactive l'onglet Unsplash si la clé manque
+// Désactive l'onglet Unsplash si la banque n'est pas configurée côté serveur.
 $(function () {
-	if (!UNSPLASH_KEY) {
-		$('.js-source-tab[data-source="unsplash"]').each(function () {
-			$(this).addClass('is-disabled').attr('title', 'Configurer VITE_UNSPLASH_ACCESS_KEY dans .env pour activer la banque d\'images');
-		});
-	}
+	const $tab = $('.js-source-tab[data-source="unsplash"]');
+	if (!$tab.length) return;
+	api.unsplash.enabled()
+		.then((enabled) => {
+			if (!enabled) {
+				$tab.addClass('is-disabled')
+					.attr('title', 'Banque d\'images non configurée (VCARD_UNSPLASH_KEY côté serveur).');
+			}
+		})
+		.catch(() => { /* en cas d'erreur réseau, on laisse l'onglet cliquable */ });
 });
 
 // ---------------------------------------------------------------------------

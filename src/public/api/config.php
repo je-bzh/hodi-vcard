@@ -53,6 +53,12 @@ return (static function (): array {
 			],
 		],
 
+		// --- Banque d'images Unsplash (proxy serveur) -----------------------
+		// La clé reste côté serveur (jamais dans le bundle JS). Vide → onglet désactivé.
+		'unsplash' => [
+			'access_key' => getenv('VCARD_UNSPLASH_KEY') ?: '',
+		],
+
 		// --- Application -----------------------------------------------------
 		'app' => [
 			// URL de base publique de l'app (sert à construire les magic-links).

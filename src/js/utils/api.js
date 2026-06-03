@@ -94,4 +94,12 @@ export const api = {
 		create: (data) => call('wallpapers/create', { method: 'POST', body: data }).then((d) => d.wallpaper),
 		remove: (id) => call('wallpapers/delete', { method: 'POST', body: { id } }),
 	},
+
+	unsplash: {
+		/** La banque d'images est-elle configurée côté serveur ? */
+		enabled: () => call('unsplash/enabled').then((d) => d.enabled),
+		/** Recherche proxifiée → [{ thumb, full, alt, photographer, photographer_link }] */
+		search: (query, orientation) =>
+			call('unsplash/search', { query: { query, orientation } }).then((d) => d.results),
+	},
 };

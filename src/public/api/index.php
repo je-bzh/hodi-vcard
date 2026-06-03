@@ -109,6 +109,13 @@ try {
 		// Les fichiers uploadés vivent dans build/uploads/ et sont servis en
 		// statique par Apache (pas de route PHP) → URLs propres {base}uploads/...
 
+		// ----- UNSPLASH (proxy : la clé reste côté serveur) ------------------
+		case 'unsplash/enabled':
+			json_response(['enabled' => $config['unsplash']['access_key'] !== '']);
+
+		case 'unsplash/search':
+			handle_unsplash_search($config);
+
 		// ----- WALLPAPERS ----------------------------------------------------
 		case 'wallpapers/list':
 			handle_wallpapers_list();
@@ -387,6 +394,60 @@ function handle_upload(array $body): void
 function file_url(string $relPath): string
 {
 	return app_base_url() . 'uploads/' . str_replace('%2F', '/', rawurlencode($relPath));
+}
+
+/**
+ * Proxy de recherche Unsplash : la clé API reste côté serveur (jamais dans le
+ * bundle JS). Renvoie une liste allégée { thumb, full, alt, photographer, … }.
+ *
+ * @param array<string,mixed> $config
+ */
+function handle_unsplash_search(array $config): void
+{
+	$key = (string) ($config['unsplash']['access_key'] ?? '');
+	if ($key === '') {
+		throw new ApiError("Banque d'images non configurée.", 503);
+	}
+
+	$query = trim((string) query_param('query', ''));
+	if ($query === '') {
+		json_response(['results' => []]);
+	}
+	$orientation = (string) query_param('orientation', 'portrait');
+	if (!in_array($orientation, ['portrait', 'landscape', 'squarish'], true)) {
+		$orientation = 'portrait';
+	}
+
+	$url = 'https://api.unsplash.com/search/photos?per_page=24'
+		. '&query=' . rawurlencode(mb_substr($query, 0, 100))
+		. '&orientation=' . $orientation;
+
+	$ch = curl_init($url);
+	curl_setopt_array($ch, [
+		CURLOPT_RETURNTRANSFER => true,
+		CURLOPT_HTTPHEADER     => ['Authorization: Client-ID ' . $key, 'Accept-Version: v1'],
+		CURLOPT_TIMEOUT        => 10,
+	]);
+	$body = curl_exec($ch);
+	$code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($body === false || $code < 200 || $code >= 300) {
+		throw new ApiError("Unsplash a renvoyé une erreur ({$code}).", 502);
+	}
+
+	$data = json_decode((string) $body, true);
+	$results = [];
+	foreach (($data['results'] ?? []) as $p) {
+		$results[] = [
+			'thumb'              => $p['urls']['thumb'] ?? '',
+			'full'               => $p['urls']['regular'] ?? '',
+			'alt'                => $p['alt_description'] ?? '',
+			'photographer'       => $p['user']['name'] ?? 'Unsplash',
+			'photographer_link'  => $p['user']['links']['html'] ?? 'https://unsplash.com',
+		];
+	}
+	json_response(['results' => $results]);
 }
 
 function handle_wallpapers_list(): void
