@@ -1,87 +1,57 @@
-# Hodi vCard — Stack locale (MySQL + PHP + fichiers)
+# Hodi vCard — Setup local
 
-Cette app n'utilise plus Supabase. Elle tourne désormais sur :
+Stack : front **Vite** (HTML/SCSS/JS) + API **PHP 8.1** (`src/public/api/`) + **MySQL/MariaDB**.
+Mailer **PHPMailer**. Plus de Supabase.
 
-- **Base de données** : MySQL/MariaDB local (`hodi_vcard`)
-- **Back-end** : API PHP (cible **PHP 8.1**) sous `src/public/api/` (→ `build/api/`), servie par Apache
-- **Auth** : magic-links par email — **PHPMailer** (driver configurable : `log` / `sendmail` / `mail` / `smtp`)
-- **Stockage fichiers** : disque local `storage/uploads/`, servi par PHP via `?r=file`
-  (pas d'Alias Apache, fonctionne quel que soit le chemin de montage, survit aux redeploys)
+**Un seul build** (`npm run build`, base relative) sert aux deux montages :
+- Local → racine du domaine (`https://www.vcard.localhost/`)
+- Prod → sous-dossier (`https://www.hodi.live/vcard/`)
 
-Le front-end (HTML/SCSS/JS buildé par Vite) appelle l'API via `src/js/utils/api.js`.
+Le JS calcule sa base au runtime (`utils/urls.js → appBase()`) et l'API la déduit de la
+requête (`app_base_url()`) — rien ne hardcode `/vcard/`.
 
-## Chemin de montage
-
-**Un seul build** (`npm run build`) fonctionne aux deux endroits — la base est
-relative (Vite `base: './'`) et le JS calcule sa base absolue au runtime
-(`utils/urls.js appBase()`). Rien ne hardcode `/vcard/`.
-
-- **Local** : servi à la **racine** → `https://www.vcard.localhost/`
-- **Prod** : sous-dossier `/vcard/` → `https://www.hodi.live/vcard/`
-
-L'API déduit son URL de base automatiquement (`app_base_url()`), donc les magic-links
-et les URLs de fichiers s'adaptent au montage sans config supplémentaire.
-
----
-
-## 1. Base de données (créée avec root/root)
+## Mise en route
 
 ```bash
-mysql -uroot -proot < db/schema.sql
+# 1. Base de données + schéma (le script ne crée PAS la base)
+mysql -uroot -proot -e "CREATE DATABASE IF NOT EXISTS hodi_vcard CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci"
+mysql -uroot -proot hodi_vcard < db/schema.sql
+
+# 2. Dépendances + build
+npm install
+( cd src/public/api && composer install )   # PHPMailer → vendor/
+npm run build                                 # → build/
 ```
 
 Tables : `users`, `auth_tokens`, `sessions`, `vcards`, `wallpapers`.
 
-## 2. Dépendances back-end (PHPMailer)
+## Config locale
 
-```bash
-cd src/public/api && composer install      # crée vendor/ (PHPMailer)
-```
+`src/public/api/config.local.php` (gitignored) surcharge `config.php`. Par défaut : DB
+`127.0.0.1/hodi_vcard/root/root`, uploads dans `build/uploads/`, mail driver `log`
+(magic-links écrits dans `storage/mail.log`, aucun envoi réel), `base_url` vide (auto).
 
-## 3. Configuration locale
-
-`src/public/api/config.local.php` (gitignored) surcharge `config.php`. Déjà réglé sur :
-
-- DB : `127.0.0.1 / hodi_vcard / root / root`
-- Uploads : `storage/uploads/` (chemin absolu, hors `build/`)
-- Mail : driver `log` → magic-links écrits dans `storage/mail.log`
-- `base_url` : vide → déduite automatiquement de la requête
-
-Pour de **vrais emails** (drivers PHPMailer : `sendmail`, `mail`, `smtp`) :
+Pour de **vrais emails** :
 
 ```php
-// sendmail local (Postfix/Exim/cPanel) — le plus simple en prod
-'mail' => [
-    'driver'        => 'sendmail',
-    'from'          => 'no-reply@hodi.live',
-    'sendmail_path' => '/usr/sbin/sendmail -oi -t',  // optionnel
-],
-
-// …ou SMTP
-'mail' => [
-    'driver' => 'smtp',
-    'from'   => 'no-reply@hodi.live',
-    'smtp'   => ['host'=>'smtp.xxx','port'=>587,'user'=>'…','pass'=>'…','secure'=>'tls'],
-],
+// sendmail local (Postfix/Exim/cPanel) — sendmail_path optionnel, sinon mail() de PHP
+'mail' => ['driver' => 'sendmail', 'from' => 'no-reply@hodi.live'],
+// ou SMTP
+'mail' => ['driver' => 'smtp', 'from' => 'no-reply@hodi.live',
+           'smtp' => ['host'=>'…','port'=>587,'user'=>'…','pass'=>'…','secure'=>'tls']],
 ```
 
-## 4. Build du front-end
+## Serveur web (Apache, PHP 8.1)
 
-```bash
-npm install
-npm run build
-```
-
-## 5. Apache (ton vhost)
-
-Crée un vhost qui sert **`build/` directement à la racine** (le certificat
-`www.vcard.localhost` est déjà généré via mkcert). L'essentiel :
+Sers `build/` à la racine d'un vhost. `mod_rewrite` + `AllowOverride All` sont requis
+(les `.htaccess` gèrent : pretty URLs `/{slug}`, URLs sans `.html`, routeur API `api/<route>`).
+Les uploads sont servis en statique depuis `build/uploads/` (PHP-FPM doit pouvoir y écrire).
 
 ```apache
 DocumentRoot "/Users/julien/Sites/vcard/build"
 ServerName   www.vcard.localhost:443
 <Directory "/Users/julien/Sites/vcard/build">
-    AllowOverride All        # .htaccess pour les pretty URLs
+    AllowOverride All
     Require all granted
 </Directory>
 <FilesMatch \.php$>
@@ -89,41 +59,24 @@ ServerName   www.vcard.localhost:443
 </FilesMatch>
 ```
 
-Puis `127.0.0.1 www.vcard.localhost` dans `/etc/hosts` et recharger Apache.
-→ **https://www.vcard.localhost/**
+Puis `127.0.0.1 www.vcard.localhost` dans `/etc/hosts`, recharge Apache → **https://www.vcard.localhost/**.
+Après une modif front **ou** PHP : `npm run build` (l'API est recopiée dans `build/api/`).
 
-> Pas besoin d'Alias pour les uploads : ils sont servis par `?r=file`.
-> Après une modif front **ou** PHP : `npm run build` (l'API vit dans
-> `src/public/api/` et est recopiée dans `build/api/`).
+> **Valet/nginx** : les `.htaccess` ne sont pas honorés → le routage est porté dans
+> `LocalValetDriver.php` (racine du projet). `valet link` depuis la racine, `valet use php@8.1`,
+> `valet secure`. Le driver sert `build/` et reproduit pretty URLs + routeur API.
 
-## 6. Tester sans Apache (optionnel)
+## Déploiement prod
 
-```bash
-php -S 127.0.0.1:8799 -t src/public
-# API : http://127.0.0.1:8799/api/index.php?r=auth/session
-```
+`git push origin main` → pipeline Buddy (`.buddy/pipeline.fixed.yml`) : composer + `npm run build`
++ rsync de `build/` vers `${REMOTE_DIR}` (exclut `config.local.php` et `uploads/`).
+Sur le serveur, une fois : créer la base + importer `db/schema.sql`, et déposer
+`api/config.local.php` (DB prod, SMTP/sendmail ; `base_url` vide).
 
----
+## Sécurité (correctifs de la migration)
 
-## Sécurité — correctifs apportés pendant la migration
-
-1. **Fuite de PII corrigée** : la vue publique (`?r=vcard/public`) ne renvoie jamais
-   `owner_email` ni `user_id`. L'email du compte reste privé ; l'email affiché est
-   `email_public`. Pas d'endpoint de liste → pas d'énumération de masse.
-2. **XSS stocké `javascript:` neutralisé** : URLs validées côté serveur (`clean_url`,
-   http/https only) + garde-fou client (`safeUrl`).
-3. **`owner_email` non usurpable** : forcé = email de session à la création.
-4. **Self-XSS feedback corrigé** : emails échappés avant injection HTML.
-5. Requêtes **préparées** (PDO), cookies **HttpOnly + Secure (HTTPS)**, jetons de
-   magic-link **hashés** et à usage unique, anti-traversée sur les chemins de fichiers.
-
-## Déploiement prod (cPanel, dossier /vcard/)
-
-`npm run build && npm run deploy` pousse `build/` (base relative, vendor PHPMailer
-inclus) sur la branche `deploy`. Sur le serveur :
-
-- Crée la base + lance `db/schema.sql`.
-- Place un `config.local.php` **sur le serveur** (hors dépôt) : identifiants MySQL
-  de prod, SMTP, et `VCARD_UPLOAD_DIR` pointant un dossier **persistant hors `/vcard/`**
-  (les fichiers sont servis par `?r=file`, donc aucun Alias à configurer).
-- `base_url` peut rester vide → déduit automatiquement (`https://www.hodi.live/vcard/`).
+- Vue publique sans `owner_email`/`user_id` (pas de fuite de PII, pas d'énumération).
+- URLs validées serveur (http/https only) → anti-XSS stocké ; garde-fou client `safeUrl`.
+- `owner_email` forcé = email de session ; feedback HTML échappé.
+- PDO préparé, cookies HttpOnly+Secure, jetons magic-link hashés à usage unique,
+  anti-traversée sur les chemins de fichiers, slugs réservés (noms de pages/dossiers).
