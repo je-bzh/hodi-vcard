@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-page="mes-infos">
+<html lang="en" data-page="my-info">
 {{> head }}
 <body class="body-night">
 	<div class="wrapper">
@@ -21,11 +21,11 @@
 							</li>
 
 							<li>
-								<a href="mes-fonds.html" class="btn" data-i18n="tabs.my_wallpapers">My wallpapers</a>
+								<a href="my-wallpapers" class="btn" data-i18n="tabs.my_wallpapers">My wallpapers</a>
 							</li>
 
 							<li>
-								<a href="signature-mail.html" class="btn" data-i18n="tabs.my_signature">My email signature</a>
+								<a href="email-signature" class="btn" data-i18n="tabs.my_signature">My email signature</a>
 							</li>
 						</ul><!-- /.list-filters -->
 					</div><!-- /.filters -->
@@ -92,11 +92,11 @@
 
 										<!-- Affiché uniquement en mode EDIT : URL publique de la vCard + Aperçu -->
 										<div class="form__vcard-link js-vcard-link-row" hidden>
-											<span class="form__vcard-link-label">URL de votre vCard :</span>
+											<span class="form__vcard-link-label" data-i18n="form.your_vcard_url">Your vCard URL:</span>
 											<a href="" target="_blank" rel="noopener" class="form__vcard-link-url js-vcard-link"></a>
 											<a href="" target="_blank" rel="noopener" class="form__vcard-preview-btn js-vcard-preview">
 												<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-												Aperçu
+												<span data-i18n="form.preview">Preview</span>
 											</a>
 										</div>
 

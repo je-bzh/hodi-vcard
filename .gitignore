@@ -26,6 +26,16 @@ Thumbs.db
 # Settings
 drone.json
 
+# API local config (DB creds, SMTP) — ne pas committer
+src/public/api/config.local.php
+
+# Dépendances Composer du back-end (PHPMailer) — réinstaller via `composer install`
+src/public/api/vendor/
+
+# Uploads & logs locaux (stockage de fichiers hors build)
+storage/uploads/
+storage/mail.log
+
 # Environment variables (Supabase keys, etc.)
 .env
 .env.local

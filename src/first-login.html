@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Redirecting — Hodi vCard</title>
+	<meta http-equiv="refresh" content="0; url=my-info">
+	<link rel="canonical" href="my-info">
+</head>
+<body>
+	<script>
+		// JS redirect in case the meta refresh doesn't fire.
+		// vCard creation and editing are merged on my-info
+		// (mode auto-detected depending on whether the user already has a vCard).
+		window.location.replace('my-info');
+	</script>
+	<noscript>
+		<p>If you are not redirected automatically, <a href="my-info">click here</a>.</p>
+	</noscript>
+</body>
+</html>

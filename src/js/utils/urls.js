@@ -1,57 +1,49 @@
 /**
- * Helpers d'URL — gèrent le sous-chemin de déploiement automatiquement.
+ * Helpers d'URL — point de montage détecté au runtime (un seul build).
  *
- * En dev (npm run dev)   : base = "/"        → site servi à la racine
- * En build (npm run build): base = "/vcard/"  → site déployé à www.hodi.live/vcard
- *
- * Vite expose la base configurée via import.meta.env.BASE_URL, donc le QR code
- * et les liens internes s'adaptent automatiquement selon l'environnement.
+ * L'app est servie par Apache (.htaccess) soit à la racine (local :
+ * https://www.vcard.localhost/), soit dans un sous-dossier (prod :
+ * https://www.hodi.live/vcard/). Comme les pages ET les slugs de vCard sont
+ * toujours des enfants directs du point de montage, on déduit la base absolue
+ * en retirant le dernier segment du pathname courant :
+ *   /vcard/my-info   → /vcard/
+ *   /vcard/jerome    → /vcard/   (pretty URL d'une vCard)
+ *   /my-info         → /
+ * Les assets HTML/CSS sont, eux, référencés en relatif (Vite base './').
  */
 
-const BASE_URL = import.meta.env.BASE_URL || '/';
-
-/**
- * Construit l'URL publique d'une vCard à partir de son slug.
- *   - Prod  : https://www.hodi.live/vcard/jerome  (pretty URL, via rewrite Apache)
- *   - Dev   : http://127.0.0.1:5173/ma-vcard.html?slug=jerome (pas de rewrite en dev)
- *
- * On détecte le contexte : en prod (BASE_URL = '/vcard/'), on génère l'URL propre.
- * En dev (BASE_URL = '/'), on garde le format query string car Vite dev server
- * ne fait pas de rewrite (équivalent de la règle .htaccess).
- */
-export function buildVcardUrl(slug) {
-	const cleanSlug = encodeURIComponent(slug);
-	// En prod : pretty URL. En dev : query string (Vite ne rewrite pas)
-	const isProd = BASE_URL !== '/' && BASE_URL !== '';
-	if (isProd) {
-		return `${window.location.origin}${BASE_URL}${cleanSlug}`;
-	}
-	return `${window.location.origin}${BASE_URL}ma-vcard.html?slug=${cleanSlug}`;
+/** Base absolue de l'app (ex. "/" ou "/vcard/"), terminée par un slash. */
+export function appBase() {
+	return window.location.pathname.replace(/[^/]*$/, '') || '/';
 }
 
 /**
- * Construit l'URL d'un asset statique côté JS (PNGs/SVGs).
- *
- * Strippe automatiquement le préfixe `public/` car en build Vite copie le
- * contenu de src/public/ vers build/ sans ce préfixe.
- *
- * Exemples :
- *   assetUrl('public/assets/foo.png')  → '/vcard/assets/foo.png' (prod)
- *   assetUrl('assets/foo.png')         → '/vcard/assets/foo.png' (prod)
- *   assetUrl('/assets/foo.png')        → '/vcard/assets/foo.png' (prod)
- *   En dev (base = '/'), retourne '/assets/foo.png' dans les 3 cas.
+ * URL publique d'une vCard à partir de son slug (pretty URL absolue, pour le QR
+ * et le partage). Apache route /{slug} → card.html?slug={slug} en interne.
+ *   - Local : https://www.vcard.localhost/jerome
+ *   - Prod  : https://www.hodi.live/vcard/jerome
+ */
+export function buildVcardUrl(slug) {
+	return `${window.location.origin}${appBase()}${encodeURIComponent(slug)}`;
+}
+
+/**
+ * URL d'un asset statique côté JS (PNGs/SVGs). Strippe le préfixe `public/`
+ * (Vite copie src/public/ vers la racine du build). Renvoie un chemin absolu
+ * tenant compte du point de montage.
+ *   assetUrl('public/assets/foo.png') → '/vcard/assets/foo.png' (prod) | '/assets/foo.png' (local)
  */
 export function assetUrl(relPath) {
 	const clean = (relPath || '')
-		.replace(/^\/+/, '')      // strip leading slashes
+		.replace(/^\/+/, '')       // strip leading slashes
 		.replace(/^public\//, ''); // strip "public/" prefix s'il existe
-	return `${BASE_URL}${clean}`;
+	return `${appBase()}${clean}`;
 }
 
 /**
- * URL absolue d'un asset (utile pour les signatures email où on a besoin du
- * domaine complet pour que le destinataire puisse charger les icônes).
+ * URL absolue d'un asset (signatures email : il faut le domaine complet pour que
+ * le destinataire puisse charger les icônes).
  */
 export function absoluteAssetUrl(relPath) {
-	return new URL(assetUrl(relPath), window.location.origin).toString();
+	return `${window.location.origin}${assetUrl(relPath)}`;
 }

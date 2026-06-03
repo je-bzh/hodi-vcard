@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-auth-required data-page="mes-fonds">
+<html lang="en" data-auth-required data-page="my-wallpapers">
 {{> head }}
 <body class="body-night">
 	<div class="wrapper">
@@ -17,7 +17,7 @@
 
 						<ul class="list-filters js-filters">
 							<li>
-								<a href="mes-infos.html" class="btn" data-i18n="tabs.my_info">My information</a>
+								<a href="my-info" class="btn" data-i18n="tabs.my_info">My information</a>
 							</li>
 	
 							<li class="is-active">
@@ -25,13 +25,13 @@
 							</li>
 	
 							<li>
-								<a href="signature-mail.html" class="btn" data-i18n="tabs.my_signature">My email signature</a>
+								<a href="email-signature" class="btn" data-i18n="tabs.my_signature">My email signature</a>
 							</li>
 						</ul><!-- /.list-filters -->
 					</div><!-- /.filters -->
 
 					<div class="tiles-images">
-						<p>Créez et personnalisez vos fonds d'écran verrouillé pour votre smartphone :</p>
+						<p data-i18n="wallpapers.intro">Create and customize locked wallpapers for your smartphone:</p>
 
 						<!-- Grille peuplée dynamiquement par wallpapers.js :
 							 - 1er slot = wallpaper Hodi par défaut (verrouillé, non supprimable)

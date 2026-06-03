@@ -1,7 +1,7 @@
 <!--
 	Popup cropper partagé entre :
-	  - mes-infos.html (cover + avatar)
-	  - mes-fonds.html (wallpaper)
+	  - my-info (cover + avatar)
+	  - my-wallpapers (wallpaper)
 
 	Le titre, la viewport Croppie et le label du bouton de sauvegarde sont
 	définis dynamiquement par image-crop.js en fonction du contexte détecté.
@@ -17,7 +17,7 @@
 	<div class="popups__inner">
 		<div class="popup">
 			<div class="popup__head">
-				<h4>Nouvelle image</h4>
+				<h4 data-i18n="cropper.new_image">New image</h4>
 
 				<a href="#popup-choice" class="popup__close js-toggle-popup">
 					<img src="public/assets/images/svg/ico-close.svg" alt="">
@@ -29,11 +29,11 @@
 				<div class="image-source-tabs js-source-tabs">
 					<button type="button" class="image-source-tab is-active js-source-tab" data-source="upload">
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
-						<span>Mon ordinateur</span>
+						<span data-i18n="cropper.source_computer">My computer</span>
 					</button>
 					<button type="button" class="image-source-tab js-source-tab" data-source="unsplash">
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-						<span>Banque d'images</span>
+						<span data-i18n="cropper.source_library">Image library</span>
 					</button>
 				</div><!-- /.image-source-tabs -->
 
@@ -41,29 +41,29 @@
 				<div class="image-source-pane is-active" data-pane="upload">
 					<img class="image-cropper-icon" src="public/assets/images/svg/ico-image-cropper.svg" alt="">
 
-					<h6>Glissez votre image ici ou…</h6>
+					<h6 data-i18n="cropper.drag_or">Drag your image here or…</h6>
 
 					<div class="image-cropper__upload">
 						<input type="file" id="upload-image" class="btn btn--aqua" accept="image/*">
-						<span class="btn btn--aqua">Parcourir</span>
+						<span class="btn btn--aqua" data-i18n="cropper.browse">Browse</span>
 					</div>
 
-					<p class="image-cropper__hint">Maximum 2 Mo, fichier JPG ou PNG</p>
+					<p class="image-cropper__hint" data-i18n="cropper.limit">Maximum 2 MB, JPG or PNG</p>
 				</div><!-- /.image-source-pane -->
 
 				<!-- Pane 2 : recherche Unsplash -->
 				<div class="image-source-pane" data-pane="unsplash">
 					<div class="image-source-search">
 						<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="image-source-search__icon"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-						<input type="search" class="js-unsplash-query" placeholder="Plage, forêt, ville, abstrait…" autocomplete="off">
+						<input type="search" class="js-unsplash-query" data-i18n-placeholder="cropper.search_placeholder" placeholder="Beach, forest, city, abstract…" autocomplete="off">
 					</div>
 
 					<div class="image-source-results js-unsplash-results">
 						<!-- Vignettes injectées par image-source.js -->
-						<p class="image-source-empty js-unsplash-empty">Tapez un mot-clé pour rechercher des images libres de droits sur Unsplash.</p>
+						<p class="image-source-empty js-unsplash-empty" data-i18n="source.prompt">Type a keyword to search royalty-free images on Unsplash.</p>
 					</div>
 
-					<p class="image-cropper__hint">Photos libres de droits — crédit photographe automatique</p>
+					<p class="image-cropper__hint" data-i18n="cropper.credit">Royalty-free photos — automatic photographer credit</p>
 				</div><!-- /.image-source-pane -->
 
 				<!-- Zone Croppie : s'active dès qu'une image est sélectionnée (upload ou Unsplash) -->
@@ -80,7 +80,7 @@
 				</div>
 			</div><!-- /.image-cropper -->
 
-			<a href="#" class="btn btn--block btn--aqua btn--is-hidden" id="crop-button">Enregistrer l'image</a>
+			<a href="#" class="btn btn--block btn--aqua btn--is-hidden" id="crop-button" data-i18n="cropper.save">Save image</a>
 		</div><!-- /.popup -->
 	</div><!-- /.popups__inner -->
 </div><!-- /.popups -->

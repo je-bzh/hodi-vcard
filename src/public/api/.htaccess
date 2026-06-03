@@ -1,0 +1,23 @@
+# API Hodi vCard — front controller avec URLs propres.
+#   GET api/slug/available?slug=x   → index.php?r=slug/available&slug=x
+#   POST api/vcard/create           → index.php?r=vcard/create
+# (l'ancien format api/index.php?r=... reste accepté.)
+
+RewriteEngine On
+
+# Bloque l'accès direct aux libs / config
+RewriteRule ^(lib|routes)/ - [F]
+<FilesMatch "^(config|config\.local)\.php$">
+	Require all denied
+</FilesMatch>
+
+# Route tout chemin non-fichier vers le front controller, en passant le chemin
+# comme paramètre r (QSA conserve la query string : ?slug=, ?token=, …).
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.+)$ index.php?r=$1 [QSA,L]
+
+# Pas de cache sur l'API
+<IfModule mod_headers.c>
+	Header set Cache-Control "no-store"
+</IfModule>

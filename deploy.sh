@@ -44,8 +44,10 @@ fi
 
 ORIGIN_URL=$(git remote get-url origin)
 
+# .env n'est plus requis (le front-end n'a plus de clés Supabase depuis la
+# migration MySQL+PHP). La config back-end vit dans api/config.local.php côté serveur.
 if [[ ! -f .env ]]; then
-	err ".env introuvable. Sans .env, les clés VITE_* (Supabase, Unsplash) ne seront pas dans le build."
+	warn ".env absent — OK (plus de clés VITE_* requises depuis la migration MySQL/PHP)."
 fi
 
 # --- Build production -------------------------------------------------------
@@ -64,6 +66,10 @@ TEMP_DIR=$(mktemp -d -t hodi-vcard-deploy-XXXXXX)
 trap "rm -rf '$TEMP_DIR'" EXIT
 
 cp -R build/. "$TEMP_DIR/"
+
+# Ne jamais déployer la config locale (identifiants DB/SMTP de dev). La prod
+# utilise son propre api/config.local.php placé sur le serveur, hors dépôt.
+rm -f "$TEMP_DIR/api/config.local.php"
 
 (
 	cd "$TEMP_DIR"

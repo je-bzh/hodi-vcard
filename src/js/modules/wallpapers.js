@@ -1,5 +1,5 @@
 /**
- * Wallpapers QR (mes-fonds.html)
+ * Wallpapers QR (my-wallpapers)
  *
  * Au chargement :
  *   - Vérifie qu'on a un user auth ET une vcard (sinon redirect vers ma-vcard)
@@ -19,38 +19,33 @@
  * Workflow download :
  *   - Click sur l'image → ouvre le fichier dans un nouvel onglet (download natif)
  *
- * Activé uniquement sur la page qui a data-page="mes-fonds".
+ * Activé uniquement sur la page qui a data-page="my-wallpapers".
  */
 
-import { supabase } from '/js/utils/supabase.js';
+import { api } from '/js/utils/api.js';
+import { t } from '/js/utils/i18n.js';
 import { buildVcardUrl, assetUrl } from '/js/utils/urls.js';
 import QRCode from 'qrcode';
 
-const BUCKET = 'vcard-images';
 const MAX_WALLPAPERS = 3; // 1 défaut Hodi + 2 perso
 
 let currentVcard = null;
-let currentUserId = null;
 
-if ($('html').attr('data-page') === 'mes-fonds') {
+if ($('html').attr('data-page') === 'my-wallpapers') {
 	bootstrap();
 }
 
 async function bootstrap() {
-	const { data: { session } } = await supabase.auth.getSession();
-	if (!session) {
-		// auth-guard.js gère la redirection, on n'a rien à faire ici
-		return;
+	let vcard = null;
+	try {
+		const user = await api.auth.session();
+		if (!user) return; // auth-guard.js gère la redirection
+		vcard = await api.vcard.mine();
+	} catch (err) {
+		console.error('[wallpapers] bootstrap error', err);
 	}
-	currentUserId = session.user.id;
 
-	const { data: vcard, error } = await supabase
-		.from('vcards')
-		.select('id, slug')
-		.eq('user_id', currentUserId)
-		.maybeSingle();
-
-	if (error || !vcard) {
+	if (!vcard) {
 		showEmptyVcardState();
 		return;
 	}
@@ -64,15 +59,11 @@ async function bootstrap() {
 // Rendu
 // ---------------------------------------------------------------------------
 async function loadAndRender() {
-	let { data: walls, error } = await supabase
-		.from('wallpapers')
-		.select('*')
-		.eq('vcard_id', currentVcard.id)
-		.order('is_default', { ascending: false }) // default en premier
-		.order('created_at', { ascending: true });
-
-	if (error) {
-		console.error('[wallpapers] SELECT error', error);
+	let walls = [];
+	try {
+		walls = await api.wallpapers.list();
+	} catch (error) {
+		console.error('[wallpapers] list error', error);
 		return;
 	}
 
@@ -106,8 +97,8 @@ function renderTile(wallpaper) {
 	// Le wallpaper par défaut n'a pas de bouton suppression — il est verrouillé.
 	const deleteButton = isDefault ? '' : `
 		<li>
-			<a href="#" class="js-delete-wallpaper" aria-label="Supprimer">
-				<img src="${assetUrl('public/assets/images/svg/ico-remove-1.svg')}" alt="Supprimer">
+			<a href="#" class="js-delete-wallpaper" aria-label="${t('wallpapers.delete')}">
+				<img src="${assetUrl('public/assets/images/svg/ico-remove-1.svg')}" alt="${t('wallpapers.delete')}">
 			</a>
 		</li>`;
 	return `
@@ -116,8 +107,8 @@ function renderTile(wallpaper) {
 				<img src="${escapeAttr(wallpaper.image_url)}" alt="Wallpaper" class="js-crop-image">
 				<ul class="tile__actions">
 					<li>
-						<a href="${escapeAttr(wallpaper.image_url)}" download="hodi-wallpaper-${shortId}.png" target="_blank" rel="noopener" aria-label="Télécharger">
-							<img src="${assetUrl('public/assets/images/svg/ico-upload-1.svg')}" alt="Télécharger">
+						<a href="${escapeAttr(wallpaper.image_url)}" download="hodi-wallpaper-${shortId}.png" target="_blank" rel="noopener" aria-label="${t('wallpapers.download')}">
+							<img src="${assetUrl('public/assets/images/svg/ico-upload-1.svg')}" alt="${t('wallpapers.download')}">
 						</a>
 					</li>
 					${deleteButton}
@@ -136,7 +127,7 @@ function renderAddTile() {
 				<img src="" alt="" class="js-crop-image" style="display:none;">
 				<a href="#popup-choice" class="js-toggle-popup tile__overlay">
 					<img src="${assetUrl('public/assets/images/svg/ico-tile.svg')}" alt="">
-					<h6>Ajouter</h6>
+					<h6>${t('wallpapers.add')}</h6>
 				</a>
 			</div>
 		</div>
@@ -146,8 +137,8 @@ function renderAddTile() {
 function showEmptyVcardState() {
 	$('.tiles-images').html(`
 		<div style="text-align:center; padding:4rem 2rem; color: var(--c-white);">
-			<p style="margin-bottom: 1.6rem;">Vous devez d'abord créer votre vCard.</p>
-			<a href="mes-infos.html" class="btn btn--aqua">Créer ma vCard</a>
+			<p style="margin-bottom: 1.6rem;">${t('wallpapers.need_vcard')}</p>
+			<a href="my-info" class="btn btn--aqua">${t('form.save_create')}</a>
 		</div>
 	`);
 	$('.section__actions').hide();
@@ -274,37 +265,16 @@ async function composeDefaultHodiWallpaper(qrUrl) {
  * Exportable : utilisable aussi depuis vcard-form.js à la création de la vcard.
  * Renvoie la row insérée, ou null si erreur (best-effort, ne bloque pas).
  */
-export async function createDefaultHodiWallpaperFor({ vcardId, slug, userId }) {
+export async function createDefaultHodiWallpaperFor({ slug }) {
 	try {
 		const qrUrl = buildVcardUrl(slug);
 		const dataUrl = await composeDefaultHodiWallpaper(qrUrl);
-		const blob = dataUrlToBlob(dataUrl);
-		const path = `${userId}/wallpaper-default-${Date.now()}.png`;
-
-		const { error: uploadErr } = await supabase.storage
-			.from(BUCKET)
-			.upload(path, blob, { upsert: false, contentType: 'image/png' });
-		if (uploadErr) throw uploadErr;
-
-		const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(path);
-
-		const { data, error: insertErr } = await supabase
-			.from('wallpapers')
-			.insert({
-				vcard_id: vcardId,
-				image_url: publicUrl,
-				storage_path: path,
-				is_default: true,
-			})
-			.select()
-			.single();
-
-		if (insertErr) {
-			await supabase.storage.from(BUCKET).remove([path]);
-			console.error('[wallpapers] default INSERT error', insertErr);
-			return null;
-		}
-		return data;
+		const { url, path } = await api.upload(dataUrl, 'wallpaper');
+		return await api.wallpapers.create({
+			image_url: url,
+			storage_path: path,
+			is_default: true,
+		});
 	} catch (err) {
 		console.error('[wallpapers] createDefaultHodiWallpaperFor error', err);
 		return null;
@@ -312,14 +282,10 @@ export async function createDefaultHodiWallpaperFor({ vcardId, slug, userId }) {
 }
 
 /**
- * Wrapper interne pour le bootstrap mes-fonds (utilise currentVcard / currentUserId).
+ * Wrapper interne pour le bootstrap mes-fonds.
  */
 async function createDefaultHodiWallpaper() {
-	return createDefaultHodiWallpaperFor({
-		vcardId: currentVcard.id,
-		slug: currentVcard.slug,
-		userId: currentUserId,
-	});
+	return createDefaultHodiWallpaperFor({ slug: currentVcard.slug });
 }
 
 async function composeWallpaper(bgDataUrl, qrUrl) {
@@ -389,28 +355,8 @@ function loadImage(src) {
 }
 
 async function uploadComposedWallpaper(dataUrl) {
-	const blob = dataUrlToBlob(dataUrl);
-	const path = `${currentUserId}/wallpaper-${Date.now()}.png`;
-
-	const { error: uploadErr } = await supabase.storage
-		.from(BUCKET)
-		.upload(path, blob, {
-			upsert: false,
-			contentType: 'image/png',
-		});
-	if (uploadErr) throw uploadErr;
-
-	const { data: { publicUrl } } = supabase.storage.from(BUCKET).getPublicUrl(path);
-	return { publicUrl, path };
-}
-
-function dataUrlToBlob(dataUrl) {
-	const [meta, b64] = dataUrl.split(',');
-	const mime = (meta.match(/data:(.*?);/) || [null, 'image/png'])[1];
-	const binary = atob(b64);
-	const arr = new Uint8Array(binary.length);
-	for (let i = 0; i < binary.length; i++) arr[i] = binary.charCodeAt(i);
-	return new Blob([arr], { type: mime });
+	const { url, path } = await api.upload(dataUrl, 'wallpaper');
+	return { publicUrl: url, path };
 }
 
 // ---------------------------------------------------------------------------
@@ -469,22 +415,17 @@ async function handleNewWallpaper(croppedBgDataUrl) {
 		const composedDataUrl = await composeWallpaper(croppedBgDataUrl, qrUrl);
 		const { publicUrl, path } = await uploadComposedWallpaper(composedDataUrl);
 
-		const { error: insertErr } = await supabase
-			.from('wallpapers')
-			.insert({
-				vcard_id: currentVcard.id,
+		try {
+			await api.wallpapers.create({
 				image_url: publicUrl,
 				storage_path: path,
 			});
-
-		if (insertErr) {
-			// Cleanup Storage si l'INSERT échoue
-			await supabase.storage.from(BUCKET).remove([path]);
+		} catch (insertErr) {
 			if (insertErr.message && insertErr.message.includes('WALLPAPERS_LIMIT')) {
-				alert(`Vous avez atteint la limite de ${MAX_WALLPAPERS} fonds d'écran.`);
+				alert(t('wallpapers.limit_reached', { max: MAX_WALLPAPERS }));
 			} else {
-				console.error('[wallpapers] INSERT error', insertErr);
-				alert(`Erreur : ${insertErr.message}`);
+				console.error('[wallpapers] create error', insertErr);
+				alert(t('common.error', { message: insertErr.message }));
 			}
 			return;
 		}
@@ -494,7 +435,7 @@ async function handleNewWallpaper(croppedBgDataUrl) {
 		bindCropResultHook();
 	} catch (err) {
 		console.error('[wallpapers] handleNewWallpaper error', err);
-		alert(`Erreur lors de la création du fond : ${err.message || err}`);
+		alert(t('wallpapers.create_error', { message: err.message || err }));
 	} finally {
 		showProcessing(false);
 	}
@@ -503,7 +444,7 @@ async function handleNewWallpaper(croppedBgDataUrl) {
 function showProcessing(on) {
 	if (on) {
 		if (!$('.wallpaper-processing').length) {
-			$('body').append('<div class="wallpaper-processing" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.8rem;">Composition du fond d\'écran…</div>');
+			$('body').append('<div class="wallpaper-processing" style="position:fixed;inset:0;background:rgba(0,0,0,0.6);z-index:9999;display:flex;align-items:center;justify-content:center;color:#fff;font-size:1.8rem;">' + t('wallpapers.composing') + '</div>');
 		}
 	} else {
 		$('.wallpaper-processing').remove();
@@ -518,24 +459,15 @@ function bindTileActions() {
 		e.preventDefault();
 		const $tile = $(this).closest('.tile-image');
 		const wallpaperId = $tile.attr('data-wallpaper-id');
-		const storagePath = $tile.attr('data-storage-path');
 
-		if (!confirm('Supprimer ce fond d\'écran ?')) return;
+		if (!confirm(t('wallpapers.delete_confirm'))) return;
 
-		// 1. Delete row
-		const { error: dbErr } = await supabase
-			.from('wallpapers')
-			.delete()
-			.eq('id', wallpaperId);
-
-		if (dbErr) {
-			alert(`Erreur de suppression : ${dbErr.message}`);
+		// Le serveur supprime la row ET le fichier de stockage associé.
+		try {
+			await api.wallpapers.remove(wallpaperId);
+		} catch (dbErr) {
+			alert(t('wallpapers.delete_error', { message: dbErr.message }));
 			return;
-		}
-
-		// 2. Delete Storage object
-		if (storagePath) {
-			await supabase.storage.from(BUCKET).remove([storagePath]);
 		}
 
 		await loadAndRender();

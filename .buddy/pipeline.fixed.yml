@@ -1,0 +1,53 @@
+# ============================================================================
+# Buddy — Build & déploiement Hodi vCard (prod : https://www.hodi.live/vcard/)
+# ============================================================================
+# Variables d'env du pipeline à définir dans Buddy :
+#   $REMOTE_HOST  $REMOTE_PORT  $REMOTE_USER  ${REMOTE_DIR}  (+ clé SSH asset id_workspace)
+#
+# Spécificité vCard (vs un Laravel classique) : l'artefact déployé est build/
+# (généré par Vite, base /vcard/), pas la racine du dépôt. Composer tourne dans
+# src/public/api/ → Vite recopie vendor/ (PHPMailer) dans build/api/.
+# ============================================================================
+
+- pipeline: Build & Deploy — vCard
+  fail_on_prepare_env_warning: true
+  events:
+  - type: PUSH
+    refs:
+    - main
+  actions:
+  - action: Composer install (PHPMailer)
+    type: BUILD
+    execute_commands:
+    - cd src/public/api && composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader --ignore-platform-reqs
+    docker_image_name: library/composer
+    docker_image_tag: 2.7
+  - action: NPM install & build
+    type: BUILD
+    execute_commands:
+    - npm ci
+    - npm run build
+    docker_image_name: library/node
+    docker_image_tag: 20
+  - action: Deploy via rsync
+    type: RSYNC
+    local_path: /build/
+    remote_path: "${REMOTE_DIR}"
+    archive: true
+    compress: true
+    recursive: true
+    delete_extra_files: true
+    arguments: --delete-after
+    deployment_excludes:
+    - /api/config.local.php
+    - /uploads/
+    targets:
+    - target: remote_host
+      type: SSH
+      name: run2.hodi.host
+      host: "${REMOTE_HOST}"
+      port: "${REMOTE_PORT}"
+      auth:
+        method: ASSETS_KEY
+        username: "${REMOTE_USER}"
+        asset: id_workspace

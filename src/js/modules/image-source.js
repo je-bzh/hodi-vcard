@@ -15,6 +15,8 @@
  * Si absente : on désactive l'onglet Unsplash avec un message.
  */
 
+import { t } from '/js/utils/i18n.js';
+
 const UNSPLASH_KEY = import.meta.env.VITE_UNSPLASH_ACCESS_KEY || '';
 const UNSPLASH_API = 'https://api.unsplash.com/search/photos';
 
@@ -49,11 +51,11 @@ $(document).on('input', '.js-unsplash-query', function () {
 
 	clearTimeout(searchTimer);
 	if (!query) {
-		$results.html('<p class="image-source-empty">Tapez un mot-clé pour rechercher des images libres de droits sur Unsplash.</p>');
+		$results.html(`<p class="image-source-empty">${t('source.prompt')}</p>`);
 		return;
 	}
 
-	$results.html('<p class="image-source-empty">Recherche…</p>');
+	$results.html(`<p class="image-source-empty">${t('source.searching')}</p>`);
 
 	searchTimer = setTimeout(async () => {
 		try {
@@ -61,7 +63,7 @@ $(document).on('input', '.js-unsplash-query', function () {
 			renderUnsplashResults($results, photos);
 		} catch (err) {
 			console.error('[image-source] Unsplash search error', err);
-			$results.html(`<p class="image-source-empty image-source-error">Erreur : ${err.message || err}</p>`);
+			$results.html(`<p class="image-source-empty image-source-error">${t("common.error", { message: err.message || err })}</p>`);
 		}
 	}, 400);
 });
@@ -83,7 +85,7 @@ function detectOrientation() {
 
 async function searchUnsplash(query) {
 	if (!UNSPLASH_KEY) {
-		throw new Error("La clé Unsplash n'est pas configurée (VITE_UNSPLASH_ACCESS_KEY dans .env)");
+		throw new Error(t("source.no_key"));
 	}
 	const orientation = detectOrientation();
 	const url = `${UNSPLASH_API}?query=${encodeURIComponent(query)}&per_page=24&orientation=${orientation}`;
@@ -91,7 +93,7 @@ async function searchUnsplash(query) {
 		headers: { Authorization: `Client-ID ${UNSPLASH_KEY}` },
 	});
 	if (!res.ok) {
-		throw new Error(`HTTP ${res.status} — vérifiez votre clé API Unsplash`);
+		throw new Error(t("source.http_error", { status: res.status }));
 	}
 	const data = await res.json();
 	return data.results || [];
@@ -99,7 +101,7 @@ async function searchUnsplash(query) {
 
 function renderUnsplashResults($container, photos) {
 	if (!photos.length) {
-		$container.html('<p class="image-source-empty">Aucun résultat. Essayez un autre mot-clé.</p>');
+		$container.html(`<p class="image-source-empty">${t('source.no_results')}</p>`);
 		return;
 	}
 
@@ -160,7 +162,7 @@ $(document).on('click', '.js-unsplash-pick', async function (e) {
 		fileInput.dispatchEvent(new Event('change', { bubbles: true }));
 	} catch (err) {
 		console.error('[image-source] download error', err);
-		alert(`Impossible de récupérer cette image : ${err.message || err}`);
+		alert(t("source.fetch_error", { message: err.message || err }));
 		$cell.removeClass('is-loading');
 		$cell.siblings().css('opacity', '').css('pointer-events', '');
 	}
@@ -176,7 +178,7 @@ function resetSourcePicker() {
 	$('.image-source-pane').removeClass('is-active');
 	$('.image-source-pane[data-pane="upload"]').addClass('is-active');
 	$('.js-unsplash-query').val('');
-	$('.js-unsplash-results').html('<p class="image-source-empty">Tapez un mot-clé pour rechercher des images libres de droits sur Unsplash.</p>');
+	$('.js-unsplash-results').html(`<p class="image-source-empty">${t('source.prompt')}</p>`);
 }
 
 // Quand on ouvre le popup, reset l'état

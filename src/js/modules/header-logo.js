@@ -2,9 +2,9 @@
  * Comportement du logo Hodi vCard dans le header :
  *
  *   - Sur la home (body.body-home)  → le logo n'est pas cliquable
- *   - Sur toutes les autres pages   → le logo renvoie vers mes-infos.html
+ *   - Sur toutes les autres pages   → le logo renvoie vers my-info
  *
- * Le partial header.html définit `href="mes-infos.html"` par défaut ;
+ * Le partial header.html définit `href="my-info"` par défaut ;
  * sur la home on neutralise le clic + on retire le href pour que rien
  * ne se passe (et pour l'accessibilité : un <a> sans href ressemble à
  * du texte non interactif).

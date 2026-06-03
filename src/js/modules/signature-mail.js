@@ -1,14 +1,15 @@
 /**
- * Signature email (signature-mail.html)
+ * Signature email (email-signature)
  *
  * Génère une signature email HTML à partir des données de la vCard.
  * HTML compatible Gmail / Outlook / Apple Mail / Thunderbird :
  * table-based + inline styles uniquement, pas de flexbox.
  *
- * Activé uniquement sur la page qui a data-page="signature-mail".
+ * Activé uniquement sur la page qui a data-page="email-signature".
  */
 
-import { supabase } from '/js/utils/supabase.js';
+import { api } from '/js/utils/api.js';
+import { t } from '/js/utils/i18n.js';
 import { buildVcardUrl, absoluteAssetUrl, assetUrl } from '/js/utils/urls.js';
 
 let currentVcard = null;
@@ -22,21 +23,21 @@ const SOCIAL_ICON_MAP = [
 	{ key: 'facebook',  label: 'Facebook',  icon: 'ico-soc-c-4.svg' },
 ];
 
-if ($('html').attr('data-page') === 'signature-mail') {
+if ($('html').attr('data-page') === 'email-signature') {
 	bootstrap();
 }
 
 async function bootstrap() {
-	const { data: { session } } = await supabase.auth.getSession();
-	if (!session) return; // auth-guard.js gère le redirect
+	let vcard = null;
+	try {
+		const user = await api.auth.session();
+		if (!user) return; // auth-guard.js gère le redirect
+		vcard = await api.vcard.mine();
+	} catch (err) {
+		console.error('[signature-mail] load error', err);
+	}
 
-	const { data: vcard, error } = await supabase
-		.from('vcards')
-		.select('*')
-		.eq('user_id', session.user.id)
-		.maybeSingle();
-
-	if (error || !vcard) {
+	if (!vcard) {
 		renderEmptyState();
 		return;
 	}
@@ -53,8 +54,8 @@ async function bootstrap() {
 function renderEmptyState() {
 	$('.card-avatar').html(`
 		<div style="text-align:center; padding:4rem 2rem;">
-			<p style="margin-bottom: 1.6rem;">Vous devez d'abord créer votre vCard pour générer une signature mail.</p>
-			<a href="mes-infos.html" class="btn btn--aqua">Créer ma vCard</a>
+			<p style="margin-bottom: 1.6rem;">${t('signature.need_vcard')}</p>
+			<a href="my-info" class="btn btn--aqua">${t('form.save_create')}</a>
 		</div>
 	`);
 	$('.section__actions').hide();
@@ -202,7 +203,7 @@ function buildSignatureHtml(vcard, vcardUrl, socials) {
 			${contactLine ? `<p style="margin:0 0 14px; font-size:14px;">${contactLine}</p>` : ''}
 			<p style="margin:0;">
 				<a href="${escapeAttr(vcardUrl)}" style="color:#6b6b6b; text-decoration:underline; font-size:13px;">
-					<img src="${escapeAttr(addContactIcon)}" width="14" height="14" alt="" style="vertical-align:middle; border:0; margin-right:6px;">Ajouter à mes contacts
+					<img src="${escapeAttr(addContactIcon)}" width="14" height="14" alt="" style="vertical-align:middle; border:0; margin-right:6px;">${t('signature.add_contact')}
 				</a>
 			</p>
 		</td>
@@ -220,12 +221,12 @@ function bindActions() {
 		const originalText = $btn.text();
 		try {
 			await copySignatureHtml();
-			showFeedback('success', '✓ Signature copiée — collez-la dans votre client mail (mode HTML).');
-			$btn.text('Copié ✓');
+			showFeedback('success', t('signature.copied'));
+			$btn.text(t('signature.copied_btn'));
 			setTimeout(() => $btn.text(originalText), 2500);
 		} catch (err) {
 			console.error('[signature-mail] copy failed', err);
-			showFeedback('error', `Impossible de copier : ${err.message}`);
+			showFeedback('error', t('signature.copy_error', { message: err.message }));
 		}
 	});
 
@@ -270,7 +271,7 @@ async function copySignatureHtml() {
 	source.style.top = '-9999px';
 	source.style.position = 'absolute';
 	source.style.opacity = '';
-	if (!ok) throw new Error('execCommand copy non supporté');
+	if (!ok) throw new Error('execCommand copy not supported');
 }
 
 /**

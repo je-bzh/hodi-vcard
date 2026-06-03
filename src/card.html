@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-page="ma-vcard">
+<html lang="en" data-page="card">
 {{> head }}
 <body>
 	<div class="wrapper">
@@ -64,14 +64,14 @@
 
 				<ul class="section__actions">
 					<li data-bind-action="website_url" hidden>
-						<a href="#" target="_blank" rel="noopener" class="btn" data-bind-attr="href">Visiter mon site web</a>
+						<a href="#" target="_blank" rel="noopener" class="btn" data-bind-attr="href" data-i18n="public.visit_website">Visit my website</a>
 					</li>
 
 					<li data-bind-action="booking_url" hidden>
 						<a href="#" target="_blank" rel="noopener" class="btn" data-bind-attr="href">
 							<img src="public/assets/images/svg/ico-calendar.svg" alt="">
 
-							Prendre rendez-vous
+							<span data-i18n="public.book_appointment">Book an appointment</span>
 						</a>
 					</li>
 
@@ -79,7 +79,7 @@
 						<a href="#" class="btn btn--blue js-vcf-download">
 							<img src="public/assets/images/svg/ico-cloud.svg" alt="">
 
-							Sauvegarder la fiche contact
+							<span data-i18n="public.save_contact">Save contact card</span>
 						</a>
 					</li>
 				</ul><!-- /.section__actions -->
@@ -90,27 +90,27 @@
 			<div class="shell shell--small-s">
 				<ul class="list-cards">
 					<li data-bind-info="email_public" hidden>
-						<h6>Email</h6>
+						<h6 data-i18n="form.email_label">Email</h6>
 						<a href="#" data-bind="email_public" data-bind-attr="href" data-bind-href-prefix="mailto:"></a>
 					</li>
 
 					<li data-bind-info="phone_mobile" hidden>
-						<h6>Portable</h6>
+						<h6 data-i18n="form.mobile_label">Mobile</h6>
 						<a href="#" data-bind="phone_mobile" data-bind-attr="href" data-bind-href-prefix="tel:"></a>
 					</li>
 
 					<li data-bind-info="phone_landline" hidden>
-						<h6>Ligne fixe</h6>
+						<h6 data-i18n="form.landline_label">Landline</h6>
 						<a href="#" data-bind="phone_landline" data-bind-attr="href" data-bind-href-prefix="tel:"></a>
 					</li>
 
 					<li data-bind-info="address" hidden>
-						<h6>Adresse</h6>
+						<h6 data-i18n="form.address_label">Address</h6>
 						<a href="#" target="_blank" rel="noopener" data-bind="address" data-bind-attr="href" data-bind-href-prefix="maps"></a>
 					</li>
 
 					<li data-bind-info="website_url" hidden>
-						<h6>Site web</h6>
+						<h6 data-i18n="form.website_label">Website</h6>
 						<a href="#" target="_blank" rel="noopener" data-bind="website_url" data-bind-attr="href"></a>
 					</li>
 
@@ -127,7 +127,7 @@
 				</ul><!-- /.list-cards -->
 
 				<div class="section__actions">
-					<a href="#modifier" class="js-open-modifier">&gt; Modifier</a>
+					<a href="#modifier" class="js-open-modifier" data-i18n="public.edit">&gt; Edit</a>
 				</div><!-- /.section__actions -->
 			</div><!-- /.shell -->
 		</section><!-- /.section-info -->
@@ -147,21 +147,21 @@
 			<div class="popups__inner">
 				<div class="popup">
 					<div class="popup__head">
-						<h4 id="popup-modifier-title">Vous souhaitez modifier votre vCard ?</h4>
+						<h4 id="popup-modifier-title" data-i18n="modify.title">Want to edit your vCard?</h4>
 
-						<a href="#" class="popup__close js-close-modifier" aria-label="Fermer">
+						<a href="#" class="popup__close js-close-modifier" aria-label="Close" data-i18n-aria-label="modify.close">
 							<img src="public/assets/images/svg/ico-close.svg" alt="">
 						</a><!-- /.popup__close -->
 					</div><!-- /.popup__head -->
 
 					<div class="popup__body">
-						<h6>Cette vCard est la vôtre et vous souhaitez y apporter des modifications ?</h6>
+						<h6 data-i18n="modify.subtitle">This vCard is yours and you want to update it?</h6>
 
-						<p>Nous générons un lien unique de modification qui vous sera envoyé sur l'adresse email associée à cette vCard :</p>
+						<p data-i18n="modify.description">We'll send a unique edit link to the email associated with this vCard:</p>
 
 						<ul class="popup__actions">
 							<li>
-								<a href="#" class="btn btn--blue js-request-edit-link">Recevoir le lien unique de modification</a>
+								<a href="#" class="btn btn--blue js-request-edit-link" data-i18n="modify.cta">Send me the edit link</a>
 							</li>
 						</ul><!-- /.popup__actions -->
 					</div><!-- /.popup__body -->

@@ -6,7 +6,7 @@
  *   2. Popup s'ouvre avec un champ email
  *   3. User saisit son email et clique "Envoyer le lien"
  *   4. On appelle RPC `email_has_vcard` pour vérifier qu'une vCard existe
- *   5. Si oui  : on envoie un magic link Supabase qui redirige vers mes-infos.html
+ *   5. Si oui  : on envoie un magic link qui redirige vers my-info
  *   6. Si non : message "Aucune vCard trouvée pour cet email"
  *
  * Note de sécurité : `email_has_vcard` répond toujours en HTTPS via une RPC
@@ -15,9 +15,8 @@
  * un mail" dans les deux cas. Pour l'instant, on est explicite pour l'UX.
  */
 
-import { supabase } from '/js/utils/supabase.js';
-
-const BASE_URL = import.meta.env.BASE_URL || '/';
+import { api } from '/js/utils/api.js';
+import { t } from '/js/utils/i18n.js';
 
 $(function () {
 	// N'active que sur la home (où le popup est présent)
@@ -70,60 +69,36 @@ async function handleSend($btn) {
 	const originalText = $btn.text();
 
 	if (!email) {
-		showFeedback('error', 'Veuillez saisir votre adresse email.');
+		showFeedback('error', t('retrieve.email_required'));
 		return;
 	}
 	if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-		showFeedback('error', "L'adresse email saisie n'est pas valide.");
+		showFeedback('error', t('error.email_invalid'));
 		return;
 	}
 
-	$btn.text('Vérification…').css('pointer-events', 'none').css('opacity', 0.7);
+	$btn.text(t('retrieve.checking')).css('pointer-events', 'none').css('opacity', 0.7);
 
 	try {
 		// 1. Vérifier qu'une vCard existe pour cet email
-		const { data: hasVcard, error: rpcErr } = await supabase
-			.rpc('email_has_vcard', { p_email: email });
-
-		if (rpcErr) {
-			console.error('[retrieve-vcard] RPC error', rpcErr);
-			showFeedback('error', `Erreur de connexion au serveur : ${rpcErr.message}`);
-			return;
-		}
+		const hasVcard = await api.emailHasVcard(email);
 
 		if (!hasVcard) {
-			showFeedback('warning',
-				`Aucune vCard n'est associée à <strong>${escapeHtml(email)}</strong>.<br>` +
-				`Vous pouvez en créer une depuis le bouton "Créer ma vCard Hodi" sur cette page.`
-			);
+			showFeedback('warning', t('retrieve.none', { email: escapeHtml(email) }));
 			return;
 		}
 
-		// 2. Envoyer le magic link Supabase
-		const { error: otpErr } = await supabase.auth.signInWithOtp({
-			email,
-			options: {
-				emailRedirectTo: `${window.location.origin}${BASE_URL}mes-infos.html`,
-			},
-		});
+		// 2. Envoyer le magic link
+		await api.auth.requestLink({ email, redirect: 'my-info' });
 
-		if (otpErr) {
-			console.error('[retrieve-vcard] signInWithOtp error', otpErr);
-			showFeedback('error', `Erreur d'envoi du lien : ${otpErr.message}`);
-			return;
-		}
-
-		showFeedback('success',
-			`✓ Un lien de récupération vient d'être envoyé à <strong>${escapeHtml(email)}</strong>.<br>` +
-			`Cliquez sur le lien dans l'email pour accéder à votre vCard.`
-		);
+		showFeedback('success', t('retrieve.sent', { email: escapeHtml(email) }));
 
 		// Vide le champ après succès
 		$('.js-retrieve-email').val('');
 
 	} catch (err) {
 		console.error('[retrieve-vcard] unexpected', err);
-		showFeedback('error', "Erreur réseau. Réessayez dans un instant.");
+		showFeedback('error', t('feedback.network_error'));
 	} finally {
 		$btn.text(originalText).css('pointer-events', '').css('opacity', '');
 	}

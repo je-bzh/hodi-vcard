@@ -3,15 +3,26 @@ DirectoryIndex index.html
 
 RewriteEngine On
 
-# Pretty URLs vCard : /vcard/{slug} → /vcard/ma-vcard.html?slug={slug}
-# Le navigateur garde /vcard/jerome dans la barre d'adresse, mais Apache
-# sert ma-vcard.html en interne avec le slug en query string.
-# Match uniquement les paths "slug-like" (lettres/chiffres/tirets/underscore).
+# 0) On ne touche PAS à /api/* ni /uploads/* : l'API a son propre routeur
+#    (api/.htaccess → index.php) et les uploads sont servis en statique.
+RewriteRule ^api(/|$) - [L]
+RewriteRule ^uploads/ - [L]
+
+# 1) URLs sans extension : /my-info → my-info.html (si le fichier existe).
+#    Permet des liens propres (sans .html) vers les pages de l'app.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([a-zA-Z0-9_-]+)/?$ ma-vcard.html?slug=$1 [L,QSA]
+RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.html -f
+RewriteRule ^(.+?)/?$ $1.html [L,QSA]
 
-# Si le fichier demandé n'existe pas → on sert index.html (fallback)
+# 2) Pretty URLs vCard : /{slug} → card.html?slug={slug}
+#    Le navigateur garde /jerome dans la barre d'adresse ; Apache sert card.html
+#    en interne. Ne s'applique qu'aux segments "slug-like" qui ne sont pas une page.
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ card.html?slug=$1 [L,QSA]
+
+# 3) Fallback : si rien ne correspond → index.html
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^.*$ index.html [L]

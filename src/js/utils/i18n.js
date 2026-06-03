@@ -1,9 +1,11 @@
 /**
  * i18n minimaliste pour Hodi vCard
  *
- * Langue par défaut : EN.
- * Override possible : utilisateur switche via le sélecteur du header,
- * choix persisté dans localStorage (clé : hodi-vcard-lang).
+ * Langue par défaut : détectée automatiquement (cf. detectInitialLang) —
+ *   1. choix utilisateur persisté (localStorage 'hodi-vcard-lang'), sinon
+ *   2. langue du navigateur (navigator.language), sinon
+ *   3. fallback EN.
+ * Override possible via le sélecteur du header.
  *
  * Usage HTML :
  *   <h2 data-i18n="hero.title">Default text</h2>
@@ -150,6 +152,76 @@ const TRANSLATIONS = {
 		'cropper.browse': 'Browse',
 		'cropper.limit': 'Maximum 2 MB, JPG or PNG',
 		'cropper.save': 'Save image',
+		'cropper.new_image': 'New image',
+		'cropper.source_computer': 'My computer',
+		'cropper.source_library': 'Image library',
+		'cropper.search_placeholder': 'Beach, forest, city, abstract…',
+		'cropper.credit': 'Royalty-free photos — automatic photographer credit',
+
+		// --- Common ---
+		'common.retry': 'Try again',
+		'common.saving': 'Saving…',
+		'common.error': 'Error: {message}',
+		'modify.error_title': "Couldn't send the link",
+
+		// --- Public vCard (states + labels) ---
+		'public.contact_landline': 'Landline',
+		'public.contact_website': 'Website',
+		'public.empty_title': 'No slug',
+		'public.empty_body': 'This page expects a <code>?slug=xxx</code> parameter in the URL.',
+		'public.back_home': '← Back to home',
+		'public.notfound_title': '404 — vCard not found',
+		'public.notfound_body': 'No vCard matches the slug <strong>{slug}</strong>.',
+		'public.error_title': 'An error occurred',
+		'public.vcf_error': 'Error generating the contact card. Please try again.',
+
+		// --- Wallpapers (mes-fonds) ---
+		'wallpapers.intro': 'Create and customize locked wallpapers for your smartphone:',
+		'wallpapers.need_vcard': 'You must create your vCard first.',
+		'wallpapers.add': 'Add',
+		'wallpapers.download': 'Download',
+		'wallpapers.delete': 'Delete',
+		'wallpapers.delete_confirm': 'Delete this wallpaper?',
+		'wallpapers.composing': 'Composing wallpaper…',
+		'wallpapers.limit_reached': "You've reached the limit of {max} wallpapers.",
+		'wallpapers.create_error': 'Error creating the wallpaper: {message}',
+		'wallpapers.delete_error': 'Delete error: {message}',
+
+		// --- Email signature ---
+		'signature.intro': 'Embed your email signature with a link to your Hodi vCard:',
+		'signature.copy_btn': "Copy my signature's HTML code",
+		'signature.need_vcard': 'You must create your vCard first to generate an email signature.',
+		'signature.add_contact': 'Add to my contacts',
+		'signature.copied': '✓ Signature copied — paste it into your email client (HTML mode).',
+		'signature.copied_btn': 'Copied ✓',
+		'signature.copy_error': "Couldn't copy: {message}",
+
+		// --- Image source (Unsplash) ---
+		'source.prompt': 'Type a keyword to search royalty-free images on Unsplash.',
+		'source.searching': 'Searching…',
+		'source.no_results': 'No results. Try another keyword.',
+		'source.fetch_error': "Couldn't fetch this image: {message}",
+		'source.no_key': 'The Unsplash key is not configured (VITE_UNSPLASH_ACCESS_KEY in .env).',
+		'source.http_error': 'HTTP {status} — check your Unsplash API key.',
+
+		// --- Retrieve feedback ---
+		'retrieve.email_required': 'Please enter your email address.',
+		'retrieve.checking': 'Checking…',
+		'retrieve.none': 'No vCard is associated with <strong>{email}</strong>.<br>You can create one with the "Create my Hodi vCard" button on this page.',
+		'retrieve.sent': "✓ A recovery link has just been sent to <strong>{email}</strong>.<br>Click the link in the email to access your vCard.",
+
+		// --- Form (extra runtime labels) ---
+		'form.tab_locked_title': 'Available after creating your vCard.',
+		'form.slug_locked_title': "The username can't be changed after creation.",
+		'form.your_vcard_url': 'Your vCard URL:',
+		'form.preview': 'Preview',
+		'form.checking': 'Checking…',
+		'form.sending_email': 'Sending email…',
+		'form.email_sent_btn': 'Email sent ✓',
+		'form.finalizing_btn': 'Finalizing…',
+		'form.delete_confirm': 'Permanently delete the vCard "{slug}"?\n\nThis action is irreversible and breaks all existing links / QR codes.',
+		'feedback.generating_wallpaper': 'Generating your Hodi wallpaper…',
+		'feedback.create_conflict': 'Error: a vCard already exists for this email or username.',
 	},
 
 	fr: {
@@ -285,6 +357,76 @@ const TRANSLATIONS = {
 		'cropper.browse': 'Parcourir',
 		'cropper.limit': 'Maximum 2 Mo, fichier JPG ou PNG',
 		'cropper.save': 'Enregistrer l’image',
+		'cropper.new_image': 'Nouvelle image',
+		'cropper.source_computer': 'Mon ordinateur',
+		'cropper.source_library': 'Banque d’images',
+		'cropper.search_placeholder': 'Plage, forêt, ville, abstrait…',
+		'cropper.credit': 'Photos libres de droits — crédit photographe automatique',
+
+		// --- Common ---
+		'common.retry': 'Réessayer',
+		'common.saving': 'Enregistrement…',
+		'common.error': 'Erreur : {message}',
+		'modify.error_title': 'Impossible d’envoyer le lien',
+
+		// --- Public vCard (states + labels) ---
+		'public.contact_landline': 'Ligne fixe',
+		'public.contact_website': 'Site web',
+		'public.empty_title': 'Pas de slug',
+		'public.empty_body': 'Cette page attend un paramètre <code>?slug=xxx</code> dans l’URL.',
+		'public.back_home': '← Retour à l’accueil',
+		'public.notfound_title': '404 — vCard introuvable',
+		'public.notfound_body': 'Aucune vCard ne correspond au slug <strong>{slug}</strong>.',
+		'public.error_title': 'Une erreur est survenue',
+		'public.vcf_error': 'Erreur lors de la génération de la fiche contact. Réessayez.',
+
+		// --- Wallpapers (mes-fonds) ---
+		'wallpapers.intro': 'Créez et personnalisez vos fonds d’écran verrouillés pour votre smartphone :',
+		'wallpapers.need_vcard': 'Vous devez d’abord créer votre vCard.',
+		'wallpapers.add': 'Ajouter',
+		'wallpapers.download': 'Télécharger',
+		'wallpapers.delete': 'Supprimer',
+		'wallpapers.delete_confirm': 'Supprimer ce fond d’écran ?',
+		'wallpapers.composing': 'Composition du fond d’écran…',
+		'wallpapers.limit_reached': 'Vous avez atteint la limite de {max} fonds d’écran.',
+		'wallpapers.create_error': 'Erreur lors de la création du fond : {message}',
+		'wallpapers.delete_error': 'Erreur de suppression : {message}',
+
+		// --- Email signature ---
+		'signature.intro': 'Intégrez votre signature mail avec un lien vers votre vCard Hodi :',
+		'signature.copy_btn': 'Copier le code HTML de ma signature',
+		'signature.need_vcard': 'Vous devez d’abord créer votre vCard pour générer une signature mail.',
+		'signature.add_contact': 'Ajouter à mes contacts',
+		'signature.copied': '✓ Signature copiée — collez-la dans votre client mail (mode HTML).',
+		'signature.copied_btn': 'Copié ✓',
+		'signature.copy_error': 'Impossible de copier : {message}',
+
+		// --- Image source (Unsplash) ---
+		'source.prompt': 'Tapez un mot-clé pour rechercher des images libres de droits sur Unsplash.',
+		'source.searching': 'Recherche…',
+		'source.no_results': 'Aucun résultat. Essayez un autre mot-clé.',
+		'source.fetch_error': 'Impossible de récupérer cette image : {message}',
+		'source.no_key': 'La clé Unsplash n’est pas configurée (VITE_UNSPLASH_ACCESS_KEY dans .env).',
+		'source.http_error': 'HTTP {status} — vérifiez votre clé API Unsplash.',
+
+		// --- Retrieve feedback ---
+		'retrieve.email_required': 'Veuillez saisir votre adresse email.',
+		'retrieve.checking': 'Vérification…',
+		'retrieve.none': 'Aucune vCard n’est associée à <strong>{email}</strong>.<br>Vous pouvez en créer une depuis le bouton « Créer ma vCard Hodi » sur cette page.',
+		'retrieve.sent': '✓ Un lien de récupération vient d’être envoyé à <strong>{email}</strong>.<br>Cliquez sur le lien dans l’email pour accéder à votre vCard.',
+
+		// --- Form (extra runtime labels) ---
+		'form.tab_locked_title': 'Disponible après la création de votre vCard.',
+		'form.slug_locked_title': 'Le slug ne peut pas être modifié après création.',
+		'form.your_vcard_url': 'URL de votre vCard :',
+		'form.preview': 'Aperçu',
+		'form.checking': 'Vérification…',
+		'form.sending_email': 'Envoi de l’email…',
+		'form.email_sent_btn': 'Email envoyé ✓',
+		'form.finalizing_btn': 'Finalisation…',
+		'form.delete_confirm': 'Confirmer la suppression définitive de la vCard « {slug} » ?\n\nCette action est irréversible et casse tous les liens / QR codes existants.',
+		'feedback.generating_wallpaper': 'Génération de votre fond d’écran Hodi…',
+		'feedback.create_conflict': 'Erreur : une vCard existe déjà pour cet email ou ce username.',
 	},
 };
 

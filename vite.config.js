@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import { resolve } from 'path';
+import { existsSync, readdirSync, rmSync } from 'fs';
 import { glob } from 'glob';
 import externalGlobals from 'rollup-plugin-external-globals';
 import handlebars from 'vite-plugin-handlebars';
@@ -13,9 +14,11 @@ const outDir = resolve(__dirname, 'build');
 const htmlFilesToBuild = glob.sync(resolve(root, './*.html').replace(/\\/g, '/'));
 
 export default defineConfig(({ command }) => ({
-	// En build (prod) on déploie sous www.hodi.live/vcard/ → les assets sont
-	// préfixés /vcard/. En dev (npm run dev) on garde la racine pour /.
-	base: command === 'build' ? '/vcard/' : '',
+	// Base RELATIVE → un seul build qui marche quel que soit le point de montage :
+	// racine du domaine en local (https://www.vcard.localhost/) ET sous-dossier en
+	// prod (https://www.hodi.live/vcard/). Les assets HTML/CSS sont référencés en
+	// relatif ; le JS calcule sa base absolue au runtime (cf. utils/urls.js appBase()).
+	base: './',
 	root,
 	// .env vit à la racine du projet, pas dans src/
 	envDir: resolve(__dirname, '.'),
@@ -28,21 +31,19 @@ export default defineConfig(({ command }) => ({
 		rollupOptions: {
 			input: htmlFilesToBuild,
 			output: {
-				assetFileNames: (assetInfo) => {
-					const extType = assetInfo.name.split('.').pop();
-					const isCSS = extType == 'css';
-
-					return isCSS ? `assets/style.[ext]` : `assets/[name].[ext]`; // Hacky solution to fix issues with build file names.
-				},
-				entryFileNames: () => {
-					const areMoreThanOneHTMLs = htmlFilesToBuild.length > 1;
-
-					return areMoreThanOneHTMLs ? `assets/[name].js` : 'assets/app.js'; // Hacky solution to fix issues with build file names.
-				},
-				chunkFileNames: 'assets/app.js',
+				// Hash de contenu dans le nom → cache-busting automatique. Vite
+				// réécrit les références dans le HTML/CSS, donc les <script>/<link>
+				// pointent toujours sur le bon fichier. (Les assets verbatim de
+				// public/, référencés au runtime via assetUrl(), restent non-hashés.)
+				assetFileNames: 'assets/[name]-[hash][extname]',
+				entryFileNames: 'assets/[name]-[hash].js',
+				chunkFileNames: 'assets/[name]-[hash].js',
 			},
 		},
-		emptyOutDir: true,
+		// On NE vide PAS tout le dossier : build/uploads/ (fichiers utilisateurs)
+		// doit survivre aux rebuilds. Le nettoyage sélectif est fait par le plugin
+		// clean-build-keep-uploads ci-dessous.
+		emptyOutDir: false,
 		minify: false,
 	},
 	css: {
@@ -54,6 +55,19 @@ export default defineConfig(({ command }) => ({
 		}
 	},
 	plugins: [
+		// Vide build/ SAUF build/uploads/ (uploads utilisateurs) avant chaque build.
+		// Remplace emptyOutDir pour ne pas effacer les fichiers servis en statique.
+		{
+			name: 'clean-build-keep-uploads',
+			apply: 'build',
+			buildStart() {
+				if (!existsSync(outDir)) return;
+				for (const entry of readdirSync(outDir)) {
+					if (entry === 'uploads') continue;
+					rmSync(resolve(outDir, entry), { recursive: true, force: true });
+				}
+			},
+		},
 		// Intercepte les requêtes Chrome DevTools "workspace auto-detect"
 		// (sinon vite-plugin-list-directory-contents plante en ENOENT sur ce path)
 		{

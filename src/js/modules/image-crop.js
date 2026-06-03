@@ -1,5 +1,5 @@
 /**
- * Image cropper (Croppie) + upload Supabase Storage
+ * Image cropper (Croppie) + upload via l'API (stockage local)
  *
  * Gère :
  *   - L'ouverture du popup #popup-choice selon le contexte (cover / avatar / wallpaper)
@@ -9,10 +9,10 @@
  *     dans le payload pending, sera uploadé après l'OTP par vcard-form.js
  */
 
-import { supabase } from '/js/utils/supabase.js';
+import { api } from '/js/utils/api.js';
+import { t } from '/js/utils/i18n.js';
 
 const PENDING_KEY = 'hodi-vcard-pending';
-const BUCKET = 'vcard-images';
 
 let croppieContainer;
 let currentCropContext = 'avatar'; // mémorise le type de crop en cours
@@ -25,7 +25,7 @@ const CROP_CONFIGS = {
 		viewport: { width: 480, height: 160, type: 'square' }, // 3:1
 		boundary: { width: 540, height: 400 },
 		output_size: { width: 1200, height: 400 },
-		title: 'Nouvelle image de couverture',
+		titleKey: 'cropper.title_cover',
 		colName: 'cover_url',
 		filename: 'cover',
 	},
@@ -33,7 +33,7 @@ const CROP_CONFIGS = {
 		viewport: { width: 240, height: 240, type: 'circle' },
 		boundary: { width: 400, height: 400 },
 		output_size: { width: 480, height: 480 },
-		title: 'Nouvelle photo de profil',
+		titleKey: 'cropper.title_avatar',
 		colName: 'avatar_url',
 		filename: 'avatar',
 	},
@@ -41,7 +41,7 @@ const CROP_CONFIGS = {
 		viewport: { width: 200, height: 433, type: 'square' }, // ~9:19,5
 		boundary: { width: 540, height: 500 },
 		output_size: { width: 900, height: 1950 },
-		title: 'Nouveau fond d’écran mobile',
+		titleKey: 'cropper.title_wallpaper',
 		colName: null, // géré séparément (table wallpapers)
 		filename: 'wallpaper',
 	},
@@ -78,7 +78,7 @@ function uploadImageToCroppie() {
 
 		setTimeout(() => {
 			const config = CROP_CONFIGS[currentCropContext] || CROP_CONFIGS.avatar;
-			$closestPopup.find('.popup__head h4').text(config.title);
+			$closestPopup.find('.popup__head h4').text(t(config.titleKey));
 
 			croppieContainer = new Croppie(document.getElementById('croppie-container'), {
 				viewport: config.viewport,
@@ -101,44 +101,12 @@ function uploadImageToCroppie() {
 }
 
 /**
- * Convertit un data URL base64 en Blob.
+ * Upload une image (data URL) vers le back-end (stockage local) et retourne
+ * l'URL publique. `kind` ∈ {avatar, cover, wallpaper}.
  */
-function dataUrlToBlob(dataUrl) {
-	const [meta, b64] = dataUrl.split(',');
-	const mime = (meta.match(/data:(.*?);/) || [null, 'image/png'])[1];
-	const binary = atob(b64);
-	const len = binary.length;
-	const arr = new Uint8Array(len);
-	for (let i = 0; i < len; i++) arr[i] = binary.charCodeAt(i);
-	return new Blob([arr], { type: mime });
-}
-
-/**
- * Upload une image (data URL) vers Supabase Storage et retourne l'URL publique.
- * Le path est `{user_id}/{filename}-{timestamp}.png` pour éviter le cache navigateur
- * quand on remplace une image.
- */
-async function uploadToStorage(dataUrl, userId, filename) {
-	const blob = dataUrlToBlob(dataUrl);
-	const path = `${userId}/${filename}-${Date.now()}.png`;
-
-	const { error: uploadError } = await supabase.storage
-		.from(BUCKET)
-		.upload(path, blob, {
-			upsert: false,
-			contentType: blob.type || 'image/png',
-		});
-
-	if (uploadError) {
-		console.error('[image-crop] upload error', uploadError);
-		throw uploadError;
-	}
-
-	const { data: { publicUrl } } = supabase.storage
-		.from(BUCKET)
-		.getPublicUrl(path);
-
-	return publicUrl;
+async function uploadToStorage(dataUrl, kind) {
+	const { url } = await api.upload(dataUrl, kind);
+	return url;
 }
 
 /**
@@ -146,14 +114,9 @@ async function uploadToStorage(dataUrl, userId, filename) {
  * Retourne null si pas d'auth ou pas de vcard.
  */
 async function getCurrentVcard() {
-	const { data: { session } } = await supabase.auth.getSession();
-	if (!session) return null;
-	const { data } = await supabase
-		.from('vcards')
-		.select('id')
-		.eq('user_id', session.user.id)
-		.maybeSingle();
-	return data ? { ...data, userId: session.user.id } : null;
+	const user = await api.auth.session();
+	if (!user) return null;
+	return api.vcard.mine();
 }
 
 /**
@@ -196,7 +159,7 @@ function saveCroppedImageToTile() {
 		const config = CROP_CONFIGS[currentCropContext] || CROP_CONFIGS.avatar;
 		const $btn = $(this);
 		const originalLabel = $btn.text();
-		$btn.text('Enregistrement…').css('pointer-events', 'none').css('opacity', 0.7);
+		$btn.text(t('common.saving')).css('pointer-events', 'none').css('opacity', 0.7);
 
 		try {
 			const croppedDataUrl = await croppieContainer.result({
@@ -219,15 +182,13 @@ function saveCroppedImageToTile() {
 			const vcard = await getCurrentVcard();
 
 			if (vcard && config.colName) {
-				// MODE EDIT : upload immédiat vers Storage + UPDATE vcard
-				const publicUrl = await uploadToStorage(croppedDataUrl, vcard.userId, config.filename);
-				const { error: updErr } = await supabase
-					.from('vcards')
-					.update({ [config.colName]: publicUrl })
-					.eq('id', vcard.id);
-				if (updErr) {
+				// MODE EDIT : upload immédiat + UPDATE vcard
+				try {
+					const publicUrl = await uploadToStorage(croppedDataUrl, config.filename);
+					await api.vcard.update(vcard.id, { [config.colName]: publicUrl });
+				} catch (updErr) {
 					console.error('[image-crop] update vcard error', updErr);
-					alert(`Erreur sauvegarde : ${updErr.message}`);
+					alert(t('common.error', { message: updErr.message }));
 				}
 			} else if (config.colName) {
 				// MODE CREATE : on garde le base64 pour upload post-OTP
@@ -237,7 +198,7 @@ function saveCroppedImageToTile() {
 			closePopup();
 		} catch (err) {
 			console.error('[image-crop] save error', err);
-			alert(`Erreur : ${err.message || err}`);
+			alert(t('common.error', { message: err.message || err }));
 		} finally {
 			$btn.text(originalLabel).css('pointer-events', '').css('opacity', '');
 		}

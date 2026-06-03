@@ -1,9 +1,9 @@
 /**
- * Affichage public de la vCard (ma-vcard.html)
+ * Affichage public de la vCard (card)
  *
  * Au chargement :
  *   - Lit le slug depuis ?slug=xxx dans l'URL
- *   - SELECT la vCard depuis Supabase
+ *   - Récupère la vCard via l'API back-end
  *   - Peuple tous les bindings (nom, contacts, socials, actions)
  *   - Branche le bouton "Sauvegarder la fiche contact" (download .vcf)
  *   - Met à jour data-vcard-email du popup modifier
@@ -11,14 +11,15 @@
  * Si pas de slug : affiche un message d'aide.
  * Si vcard introuvable : affiche un 404 propre.
  *
- * Activé uniquement sur la page qui a data-page="ma-vcard".
+ * Activé uniquement sur la page qui a data-page="card".
  */
 
-import { supabase } from '/js/utils/supabase.js';
-import { buildVcardUrl, assetUrl } from '/js/utils/urls.js';
+import { api } from '/js/utils/api.js';
+import { t } from '/js/utils/i18n.js';
+import { buildVcardUrl, assetUrl, appBase } from '/js/utils/urls.js';
 import QRCode from 'qrcode';
 
-if ($('html').attr('data-page') === 'ma-vcard') {
+if ($('html').attr('data-page') === 'card') {
 	bootstrap();
 }
 
@@ -30,15 +31,12 @@ async function bootstrap() {
 		return;
 	}
 
-	const { data: vcard, error } = await supabase
-		.from('vcards')
-		.select('*')
-		.ilike('slug', slug) // case-insensitive
-		.maybeSingle();
-
-	if (error) {
-		console.error('[vcard-public] SELECT error', error);
-		renderError(`Erreur : ${error.message}`);
+	let vcard;
+	try {
+		vcard = await api.vcard.public(slug);
+	} catch (err) {
+		console.error('[vcard-public] load error', err);
+		renderError(err.message);
 		return;
 	}
 
@@ -61,9 +59,10 @@ function render(vcard) {
 	const fullMobile = joinPhone(vcard.phone_mobile_country, vcard.phone_mobile);
 	const fullLandline = joinPhone(vcard.phone_landline_country, vcard.phone_landline);
 
-	// Pour l'email affiché sur la vcard publique : on utilise owner_email (l'email du compte)
-	// → un seul email = celui rattaché au compte Hodi
-	const displayEmail = vcard.owner_email || '';
+	// Email affiché : email_public (champ de contact optionnel choisi par
+	// l'utilisateur). L'email du compte (owner_email) n'est JAMAIS exposé
+	// publiquement → la vue publique de l'API ne le renvoie même pas.
+	const displayEmail = vcard.email_public || '';
 
 	// Champs textuels
 	setText('full_name', joinName(vcard));
@@ -109,7 +108,7 @@ function render(vcard) {
 		$docRow.prop('hidden', false);
 		$docRow.find('[data-bind="document_label"]')
 			.text(vcard.document_label)
-			.attr('href', vcard.document_url);
+			.attr('href', safeUrl(vcard.document_url));
 	} else {
 		$docRow.prop('hidden', true);
 	}
@@ -135,8 +134,9 @@ function render(vcard) {
 		toggleSocial('whatsapp', null);
 	}
 
-	// Met à jour l'email cible du popup "Modifier" (pour le magic link)
-	$('#popup-modifier').attr('data-vcard-email', vcard.owner_email);
+	// Popup "Modifier" : on passe le SLUG (pas l'email). Le serveur résout
+	// l'owner_email en interne pour envoyer le magic-link → l'email reste privé.
+	$('#popup-modifier').attr('data-vcard-slug', vcard.slug);
 
 	// Branche le téléchargement .vcf (async car embed PHOTO en base64)
 	$('.js-vcf-download').off('click').on('click', async (e) => {
@@ -147,7 +147,7 @@ function render(vcard) {
 			await downloadVcf(vcard);
 		} catch (err) {
 			console.error('[vcard-public] downloadVcf error', err);
-			alert("Erreur lors de la génération de la fiche contact. Réessayez.");
+			alert(t('public.vcf_error'));
 		}
 	});
 }
@@ -158,10 +158,10 @@ function render(vcard) {
 function renderEmptyState() {
 	$('.section-promote-card .shell').html(`
 		<div style="text-align:center; padding: 6rem 2rem; color: var(--c-white);">
-			<h2 style="margin-bottom: 1.6rem;">Pas de slug</h2>
-			<p style="opacity: 0.7;">Cette page attend un paramètre <code>?slug=xxx</code> dans l'URL.</p>
+			<h2 style="margin-bottom: 1.6rem;">${t('public.empty_title')}</h2>
+			<p style="opacity: 0.7;">${t('public.empty_body')}</p>
 			<p style="margin-top: 2.4rem;">
-				<a href="/" style="color: #fff; text-decoration: underline;">← Retour à l'accueil</a>
+				<a href="/" style="color: #fff; text-decoration: underline;">${t('public.back_home')}</a>
 			</p>
 		</div>
 	`);
@@ -169,13 +169,13 @@ function renderEmptyState() {
 }
 
 function renderNotFound(slug) {
-	document.title = `vCard introuvable — Hodi`;
+	document.title = t('public.notfound_title');
 	$('.section-promote-card .shell').html(`
 		<div style="text-align:center; padding: 6rem 2rem; color: var(--c-white);">
-			<h2 style="margin-bottom: 1.6rem;">404 — vCard introuvable</h2>
-			<p style="opacity: 0.7;">Aucune vCard ne correspond au slug <strong>${escapeHtml(slug)}</strong>.</p>
+			<h2 style="margin-bottom: 1.6rem;">${t('public.notfound_title')}</h2>
+			<p style="opacity: 0.7;">${t('public.notfound_body', { slug: escapeHtml(slug) })}</p>
 			<p style="margin-top: 2.4rem;">
-				<a href="/" style="color: #fff; text-decoration: underline;">← Retour à l'accueil</a>
+				<a href="/" style="color: #fff; text-decoration: underline;">${t('public.back_home')}</a>
 			</p>
 		</div>
 	`);
@@ -185,7 +185,7 @@ function renderNotFound(slug) {
 function renderError(message) {
 	$('.section-promote-card .shell').html(`
 		<div style="text-align:center; padding: 6rem 2rem; color: var(--c-white);">
-			<h2 style="margin-bottom: 1.6rem;">Une erreur est survenue</h2>
+			<h2 style="margin-bottom: 1.6rem;">${t('public.error_title')}</h2>
 			<p style="opacity: 0.7;">${escapeHtml(message)}</p>
 		</div>
 	`);
@@ -219,6 +219,19 @@ function setImg(key, value) {
 }
 
 /**
+ * Garde-fou anti-XSS (défense en profondeur — le serveur valide déjà les URLs).
+ * N'autorise que http(s)/mailto/tel ; tout schéma dangereux (javascript:, data:…)
+ * est neutralisé en '#'.
+ */
+function safeUrl(url) {
+	const s = (url || '').trim();
+	if (!s) return '#';
+	if (/^(https?:|mailto:|tel:)/i.test(s)) return s;
+	if (/^[a-z][a-z0-9+.\-]*:/i.test(s)) return '#'; // autre schéma explicite → bloqué
+	return s; // relatif / sans schéma → sûr
+}
+
+/**
  * Affiche/cache une ligne d'info contact, et set le lien si fourni.
  */
 function toggleInfoRow(key, value, href) {
@@ -229,7 +242,7 @@ function toggleInfoRow(key, value, href) {
 	}
 	$row.prop('hidden', false);
 	if (href) {
-		$row.find('a').attr('href', href);
+		$row.find('a').attr('href', safeUrl(href));
 	}
 }
 
@@ -243,7 +256,7 @@ function toggleAction(key, url) {
 		return;
 	}
 	$li.prop('hidden', false);
-	$li.find('a').attr('href', url);
+	$li.find('a').attr('href', safeUrl(url));
 }
 
 /**
@@ -256,7 +269,7 @@ function toggleSocial(network, url) {
 		return;
 	}
 	$li.prop('hidden', false);
-	$li.find('a').attr('href', url);
+	$li.find('a').attr('href', safeUrl(url));
 }
 
 // ---------------------------------------------------------------------------
@@ -291,24 +304,22 @@ function joinName(vcard) {
 /**
  * Récupère le slug depuis l'URL en gérant les 2 formats :
  *   - Pretty URL : /vcard/jerome  → "jerome" (lu depuis le path)
- *   - Legacy    : /vcard/ma-vcard.html?slug=jerome → "jerome" (lu depuis query)
+ *   - Legacy    : /vcard/card?slug=jerome → "jerome" (lu depuis query)
  *
  * Permet la rétro-compatibilité avec d'anciens liens partagés en `?slug=`.
  */
 function getSlugFromUrl() {
-	// Tente d'abord la pretty URL : segment final du pathname
+	// Pretty URL : le slug est le dernier segment du pathname (après la base).
 	const path = window.location.pathname || '';
-	const BASE = (import.meta.env.BASE_URL || '/');
-	let afterBase = path;
-	if (path.startsWith(BASE)) afterBase = path.slice(BASE.length);
+	const base = appBase();
+	let afterBase = path.startsWith(base) ? path.slice(base.length) : path;
 	afterBase = afterBase.replace(/^\/+/, '').replace(/\/+$/, '');
 
-	// Si ce qui reste après la base est un slug-like (pas .html, pas vide), on le prend
 	if (afterBase && !afterBase.endsWith('.html') && !afterBase.includes('/')) {
 		return afterBase;
 	}
 
-	// Sinon fallback sur le query string
+	// Fallback : ?slug= (rétro-compatibilité d'anciens liens)
 	return new URLSearchParams(window.location.search).get('slug');
 }
 
@@ -396,9 +407,9 @@ async function downloadVcf(vcard) {
 		lines.push(`TEL;TYPE=WORK,VOICE:+${cc}${local}`);
 	}
 
-	// Email : on utilise owner_email (l'email du compte Hodi, seul champ email disponible)
-	if (vcard.owner_email) {
-		lines.push(`EMAIL;TYPE=INTERNET:${vcfEscape(vcard.owner_email)}`);
+	// Email : on utilise email_public (champ de contact public, jamais l'email du compte)
+	if (vcard.email_public) {
+		lines.push(`EMAIL;TYPE=INTERNET:${vcfEscape(vcard.email_public)}`);
 	}
 
 	if (vcard.address) {

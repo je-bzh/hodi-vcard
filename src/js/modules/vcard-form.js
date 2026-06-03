@@ -1,5 +1,5 @@
 /**
- * Formulaire vCard (mes-infos.html)
+ * Formulaire vCard (my-info)
  *
  * Gère 3 états :
  *   1. Anonyme              → mode CREATE, email librement saisissable
@@ -11,24 +11,23 @@
  *   a) User remplit le form (anonyme), clique "Créer ma vCard"
  *   b) On vérifie via RPC email_has_vcard que l'email n'a pas déjà une vCard
  *   c) On sauve le payload dans localStorage
- *   d) On appelle supabase.auth.signInWithOtp({email}) → magic link envoyé
- *   e) User clique le lien → revient sur mes-infos.html, authentifié
+ *   d) On appelle api.auth.requestLink({email}) → magic link envoyé
+ *   e) User clique le lien → revient sur my-info, authentifié
  *   f) Le module détecte localStorage + session + pas de vCard → INSERT
- *   g) Redirection vers /ma-vcard.html?slug=xxx
+ *   g) Redirection vers /card?slug=xxx
  *
- * Activé uniquement sur la page qui a data-page="mes-infos".
+ * Activé uniquement sur la page qui a data-page="my-info".
  */
 
-import { supabase } from '/js/utils/supabase.js';
+import { api } from '/js/utils/api.js';
+import { t } from '/js/utils/i18n.js';
 import { buildVcardUrl, assetUrl } from '/js/utils/urls.js';
 import { createDefaultHodiWallpaperFor } from './wallpapers.js';
 import { initIntlPhone, readPhone, writePhone } from './intl-phone.js';
 
-const BASE_URL = import.meta.env.BASE_URL || '/';
-
 const PENDING_KEY = 'hodi-vcard-pending';
 
-if ($('html').attr('data-page') !== 'mes-infos') {
+if ($('html').attr('data-page') !== 'my-info') {
 	console.log('[vcard-form] Module non-actif sur cette page.');
 } else {
 	bootstrap();
@@ -82,8 +81,11 @@ async function bootstrap() {
 	});
 
 	// 1. Récupère la session (peut être null)
-	const { data: { session } } = await supabase.auth.getSession();
-	currentUser = session?.user || null;
+	try {
+		currentUser = await api.auth.session();
+	} catch (e) {
+		currentUser = null;
+	}
 
 	// 2. Charge le payload pending depuis localStorage si présent
 	let pending = null;
@@ -97,15 +99,12 @@ async function bootstrap() {
 
 	if (currentUser) {
 		// 3a. Authentifié : lookup vCard existante
-		const { data: vcard, error } = await supabase
-			.from('vcards')
-			.select('*')
-			.eq('user_id', currentUser.id)
-			.maybeSingle();
-
-		if (error) {
-			console.error('[vcard-form] SELECT error', error);
-			showFeedback('error', `Erreur de chargement : ${error.message}`);
+		let vcard = null;
+		try {
+			vcard = await api.vcard.mine();
+		} catch (error) {
+			console.error('[vcard-form] mine() error', error);
+			showFeedback('error', t('common.error', { message: error.message }));
 			bindActions();
 			return;
 		}
@@ -150,7 +149,7 @@ function bindActions() {
 function enterEditMode(vcard) {
 	populateForm(vcard);
 	applyImages(vcard);
-	$('.js-save-vcard').text('Enregistrer mes informations');
+	$('.js-save-vcard').text(t('form.save_update'));
 	$('.js-delete-vcard').show();
 	enableSecondaryTabs(true);
 	$('.js-form-intro').hide(); // bandeau d'intro inutile en mode édition
@@ -164,7 +163,7 @@ function enterEditMode(vcard) {
 
 function enterCreateMode({ emailLocked, defaultEmail }) {
 	resetImages();
-	$('.js-save-vcard').text('Créer ma vCard');
+	$('.js-save-vcard').text(t('form.save_create'));
 	$('.js-delete-vcard').hide();
 	enableSecondaryTabs(false);
 
@@ -215,7 +214,7 @@ function enableSecondaryTabs(enabled) {
 				$a.data('href-original', $a.attr('href') || '#');
 			}
 			$a.attr('href', '#');
-			$a.attr('title', 'Disponible après la création de votre vCard.');
+			$a.attr('title', t('form.tab_locked_title'));
 		}
 	});
 }
@@ -248,7 +247,7 @@ function populateForm(vcard) {
 
 	// Slug verrouillé après création
 	$('input[name="url"]').prop('readonly', true)
-		.attr('title', "Le slug ne peut pas être modifié après création.");
+		.attr('title', t('form.slug_locked_title'));
 	// Email aussi readonly en édition
 	$('input[name="email"]').prop('readonly', true);
 	// Bouton "Vérifier" inutile en édition
@@ -258,7 +257,7 @@ function populateForm(vcard) {
 }
 
 // ---------------------------------------------------------------------------
-// Construction du payload pour Supabase
+// Construction du payload pour l'API
 // ---------------------------------------------------------------------------
 function collectFormData() {
 	const payload = { socials: {} };
@@ -300,6 +299,13 @@ function collectFormData() {
 		payload.phone_landline_country = country || null;
 	}
 
+	// L'email saisi sert d'identité de connexion (owner_email, privé côté serveur)
+	// ET d'email de contact affiché sur la carte (email_public). On le synchronise
+	// ici pour que la vCard publique continue d'afficher un email.
+	if (payload.owner_email) {
+		payload.email_public = payload.owner_email;
+	}
+
 	return payload;
 }
 
@@ -309,19 +315,19 @@ function collectFormData() {
 function validate(payload) {
 	const errors = [];
 
-	if (!payload.first_name) errors.push('Le prénom est requis.');
-	if (!payload.last_name) errors.push('Le nom est requis.');
-	if (!payload.owner_email) errors.push("L'email est requis.");
+	if (!payload.first_name) errors.push(t('error.first_name_required'));
+	if (!payload.last_name) errors.push(t('error.last_name_required'));
+	if (!payload.owner_email) errors.push(t('error.email_required'));
 	else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.owner_email)) {
-		errors.push("L'email saisi n'est pas valide.");
+		errors.push(t('error.email_invalid'));
 	}
-	if (!payload.phone_mobile) errors.push('Le numéro de portable est requis.');
+	if (!payload.phone_mobile) errors.push(t('error.mobile_required'));
 	if (!payload.slug) {
-		errors.push('Le username Hodi vCard est requis.');
+		errors.push(t('error.username_required'));
 	} else if (!/^[a-z0-9-]+$/.test(payload.slug)) {
-		errors.push('Le username ne peut contenir que des lettres minuscules, chiffres et tirets.');
+		errors.push(t('error.username_invalid'));
 	} else if (payload.slug.length < 3 || payload.slug.length > 50) {
-		errors.push('Le username doit faire entre 3 et 50 caractères.');
+		errors.push(t('error.username_length'));
 	}
 
 	return errors;
@@ -356,35 +362,18 @@ async function onSave(e) {
 async function doUpdate($btn, payload) {
 	$btn.prop('disabled', true).css('opacity', 0.6);
 	const originalLabel = $btn.text();
-	$btn.text('Enregistrement…');
+	$btn.text(t('common.saving'));
 
 	try {
-		// L'email et le slug ne sont jamais modifiés en update
-		payload.owner_email = currentVcard.owner_email;
-		payload.slug = currentVcard.slug;
-		payload.user_id = currentVcard.user_id;
-
-		const { data, error } = await supabase
-			.from('vcards')
-			.update(payload)
-			.eq('id', currentVcard.id)
-			.select()
-			.single();
-
-		if (error) {
-			showFeedback('error', `Erreur : ${error.message}`);
-			return;
-		}
+		// L'email et le slug ne sont jamais modifiés en update (immuables côté serveur)
+		const data = await api.vcard.update(currentVcard.id, payload);
 
 		currentVcard = data;
 		const url = buildVcardUrl(data.slug);
-		showFeedback(
-			'success',
-			`✓ Modifications enregistrées.<br>Lien public : <a href="${url}">${url}</a>`
-		);
+		showFeedback('success', t('feedback.saved', { url: escapeHtml(url) }));
 	} catch (err) {
 		console.error('[vcard-form] update exception', err);
-		showFeedback('error', "Erreur réseau. Vérifiez votre connexion et réessayez.");
+		showFeedback('error', t('feedback.network_error'));
 	} finally {
 		$btn.prop('disabled', false).css('opacity', 1);
 		$btn.text(originalLabel);
@@ -394,32 +383,21 @@ async function doUpdate($btn, payload) {
 async function initiateCreate($btn, payload) {
 	$btn.prop('disabled', true).css('opacity', 0.6);
 	const originalLabel = $btn.text();
-	$btn.text('Vérification…');
+	$btn.text(t('form.checking'));
 
 	try {
 		// 1. Vérifier si l'email a déjà une vCard
-		const { data: alreadyExists, error: rpcError } = await supabase
-			.rpc('email_has_vcard', { p_email: payload.owner_email });
-
-		if (rpcError) {
-			console.error('[vcard-form] RPC email_has_vcard error', rpcError);
-			showFeedback('error', `Erreur : ${rpcError.message}`);
-			return;
-		}
+		const alreadyExists = await api.emailHasVcard(payload.owner_email);
 
 		if (alreadyExists) {
-			showFeedback(
-				'error',
-				`Une vCard existe déjà pour <strong>${payload.owner_email}</strong>. ` +
-				`Pour la modifier, cliquez sur "> Modifier" en bas de cette vCard.`
-			);
+			showFeedback('error', t('feedback.email_already_used', { email: escapeHtml(payload.owner_email) }));
 			return;
 		}
 
 		// 2. Vérifier dispo du slug aussi
-		const { data: slugFree } = await supabase.rpc('slug_available', { p_slug: payload.slug });
+		const slugFree = await api.slugAvailable(payload.slug);
 		if (slugFree === false) {
-			showFeedback('error', `Le username « ${payload.slug} » est déjà pris. Choisissez-en un autre.`);
+			showFeedback('error', t('feedback.slug_taken', { slug: escapeHtml(payload.slug) }));
 			return;
 		}
 
@@ -440,34 +418,23 @@ async function initiateCreate($btn, payload) {
 		};
 		localStorage.setItem(PENDING_KEY, JSON.stringify(toSave));
 
-		// 4. Envoyer l'OTP (Supabase crée le user en bg)
-		$btn.text('Envoi de l\'email…');
-		const { error: otpError } = await supabase.auth.signInWithOtp({
-			email: payload.owner_email,
-			options: {
-				emailRedirectTo: `${window.location.origin}${BASE_URL}mes-infos.html`,
-			},
-		});
-
-		if (otpError) {
-			console.error('[vcard-form] signInWithOtp error', otpError);
+		// 4. Envoyer le magic-link (le back-end crée le compte si besoin)
+		$btn.text(t('form.sending_email'));
+		try {
+			await api.auth.requestLink({ email: payload.owner_email, redirect: 'my-info' });
+		} catch (otpError) {
+			console.error('[vcard-form] requestLink error', otpError);
 			localStorage.removeItem(PENDING_KEY);
-			showFeedback('error', `Erreur lors de l'envoi : ${otpError.message}`);
+			showFeedback('error', t('common.error', { message: otpError.message }));
 			return;
 		}
 
 		// 5. UI de confirmation
-		showFeedback(
-			'success',
-			`<h6 style="margin: 0 0 1rem; font-weight: 600;">✓ Email de confirmation envoyé !</h6>` +
-			`Un lien vient d'être envoyé à <strong>${payload.owner_email}</strong>.<br>` +
-			`Cliquez dessus pour <strong>finaliser la création</strong> de votre vCard.<br><br>` +
-			`<span style="opacity: 0.7;">Vous pouvez fermer cette fenêtre — le lien est valable 1 heure.</span>`
-		);
-		$btn.text('Email envoyé ✓').prop('disabled', true).css('opacity', 0.6);
+		showFeedback('success', t('feedback.create_email_sent', { email: escapeHtml(payload.owner_email) }));
+		$btn.text(t('form.email_sent_btn')).prop('disabled', true).css('opacity', 0.6);
 	} catch (err) {
 		console.error('[vcard-form] initiateCreate exception', err);
-		showFeedback('error', "Erreur réseau. Vérifiez votre connexion et réessayez.");
+		showFeedback('error', t('feedback.network_error'));
 		$btn.prop('disabled', false).css('opacity', 1);
 		$btn.text(originalLabel);
 	}
@@ -481,52 +448,47 @@ async function initiateCreate($btn, payload) {
  * 3) Redirection vers la vCard publique
  */
 async function finalizeCreate(pending) {
-	$('.js-save-vcard').text('Finalisation…').prop('disabled', true).css('opacity', 0.6);
+	$('.js-save-vcard').text(t('form.finalizing_btn')).prop('disabled', true).css('opacity', 0.6);
 	hideFeedback();
-	showFeedback('info', 'Finalisation de la création de votre vCard…');
+	showFeedback('info', t('feedback.finalizing'));
 
-	// Extraire les images en attente avant d'envoyer le payload (sinon Supabase rejette)
+	// Extraire les images en attente avant d'envoyer le payload (sinon l'API rejette)
 	const pendingCoverDataUrl = pending._pending_cover_data_url;
 	const pendingAvatarDataUrl = pending._pending_avatar_data_url;
 	delete pending._pending_cover_data_url;
 	delete pending._pending_avatar_data_url;
 
 	try {
-		pending.owner_email = currentUser.email;
-		pending.user_id = currentUser.id;
-
-		const { data: created, error } = await supabase
-			.from('vcards')
-			.insert(pending)
-			.select()
-			.single();
-
-		if (error) {
-			console.error('[vcard-form] finalizeCreate insert error', error);
-			if (error.code === '23505') {
-				showFeedback('error', `Erreur : une vCard existe déjà pour cet email ou ce username.`);
+		// owner_email est forcé côté serveur = email de session ; on ne l'envoie pas.
+		let created;
+		try {
+			created = await api.vcard.create(pending);
+		} catch (error) {
+			console.error('[vcard-form] finalizeCreate create error', error);
+			if (error.status === 409) {
+				showFeedback('error', t('feedback.create_conflict'));
 			} else {
-				showFeedback('error', `Erreur lors de la finalisation : ${error.message}`);
+				showFeedback('error', t('common.error', { message: error.message }));
 			}
-			$('.js-save-vcard').text('Réessayer').prop('disabled', false).css('opacity', 1);
+			$('.js-save-vcard').text(t('common.retry')).prop('disabled', false).css('opacity', 1);
 			return;
 		}
 
 		// Upload des images en attente si présentes
 		const imageUpdates = {};
 		if (pendingCoverDataUrl) {
-			showFeedback('info', 'Upload de la cover…');
+			showFeedback('info', t('feedback.uploading_cover'));
 			try {
-				const url = await uploadDataUrlToStorage(pendingCoverDataUrl, currentUser.id, 'cover');
+				const { url } = await api.upload(pendingCoverDataUrl, 'cover');
 				imageUpdates.cover_url = url;
 			} catch (e) {
 				console.error('[vcard-form] cover upload failed', e);
 			}
 		}
 		if (pendingAvatarDataUrl) {
-			showFeedback('info', 'Upload de la photo de profil…');
+			showFeedback('info', t('feedback.uploading_avatar'));
 			try {
-				const url = await uploadDataUrlToStorage(pendingAvatarDataUrl, currentUser.id, 'avatar');
+				const { url } = await api.upload(pendingAvatarDataUrl, 'avatar');
 				imageUpdates.avatar_url = url;
 			} catch (e) {
 				console.error('[vcard-form] avatar upload failed', e);
@@ -534,24 +496,17 @@ async function finalizeCreate(pending) {
 		}
 
 		if (Object.keys(imageUpdates).length) {
-			await supabase
-				.from('vcards')
-				.update(imageUpdates)
-				.eq('id', created.id);
+			await api.vcard.update(created.id, imageUpdates);
 		}
 
 		// Crée le wallpaper Hodi par défaut (best-effort, ne bloque pas la redirection
 		// si ça plante — un fallback dans wallpapers.js le créera à la 1re visite mes-fonds).
-		showFeedback('info', 'Génération de votre fond d\'écran Hodi…');
-		await createDefaultHodiWallpaperFor({
-			vcardId: created.id,
-			slug: created.slug,
-			userId: currentUser.id,
-		});
+		showFeedback('info', t('feedback.generating_wallpaper'));
+		await createDefaultHodiWallpaperFor({ slug: created.slug });
 
 		// Clean et redirection
 		localStorage.removeItem(PENDING_KEY);
-		showFeedback('success', `✓ vCard créée ! Redirection vers votre carte publique…`);
+		showFeedback('success', t('feedback.created_redirecting'));
 
 		setTimeout(() => {
 			// Pretty URL en prod, query string en dev
@@ -559,33 +514,9 @@ async function finalizeCreate(pending) {
 		}, 1200);
 	} catch (err) {
 		console.error('[vcard-form] finalizeCreate exception', err);
-		showFeedback('error', "Erreur réseau pendant la finalisation. Réessayez dans un instant.");
-		$('.js-save-vcard').text('Réessayer').prop('disabled', false).css('opacity', 1);
+		showFeedback('error', t('feedback.network_error'));
+		$('.js-save-vcard').text(t('common.retry')).prop('disabled', false).css('opacity', 1);
 	}
-}
-
-/**
- * Upload un data URL base64 vers le bucket vcard-images.
- * Retourne l'URL publique.
- */
-async function uploadDataUrlToStorage(dataUrl, userId, filename) {
-	const [meta, b64] = dataUrl.split(',');
-	const mime = (meta.match(/data:(.*?);/) || [null, 'image/png'])[1];
-	const binary = atob(b64);
-	const arr = new Uint8Array(binary.length);
-	for (let i = 0; i < binary.length; i++) arr[i] = binary.charCodeAt(i);
-	const blob = new Blob([arr], { type: mime });
-	const path = `${userId}/${filename}-${Date.now()}.png`;
-
-	const { error } = await supabase.storage
-		.from('vcard-images')
-		.upload(path, blob, { upsert: false, contentType: mime });
-	if (error) throw error;
-
-	const { data: { publicUrl } } = supabase.storage
-		.from('vcard-images')
-		.getPublicUrl(path);
-	return publicUrl;
 }
 
 // ---------------------------------------------------------------------------
@@ -594,23 +525,17 @@ async function uploadDataUrlToStorage(dataUrl, userId, filename) {
 async function onDelete(e) {
 	e.preventDefault();
 	if (!currentVcard) {
-		showFeedback('info', "Vous n'avez pas de vCard à supprimer.");
+		showFeedback('info', t('feedback.no_vcard_to_delete'));
 		return;
 	}
 
-	const ok = window.confirm(
-		`Confirmer la suppression définitive de la vCard « ${currentVcard.slug} » ?\n\n` +
-		`Cette action est irréversible et casse tous les liens / QR codes existants.`
-	);
+	const ok = window.confirm(t('form.delete_confirm', { slug: currentVcard.slug }));
 	if (!ok) return;
 
-	const { error } = await supabase
-		.from('vcards')
-		.delete()
-		.eq('id', currentVcard.id);
-
-	if (error) {
-		showFeedback('error', `Erreur de suppression : ${error.message}`);
+	try {
+		await api.vcard.remove(currentVcard.id);
+	} catch (error) {
+		showFeedback('error', t('wallpapers.delete_error', { message: error.message }));
 		return;
 	}
 
@@ -622,8 +547,8 @@ async function onDelete(e) {
 	$('.js-check-slug').show();
 	$('.js-delete-vcard').hide();
 	enableSecondaryTabs(false);
-	showFeedback('success', 'vCard supprimée. Vous pouvez en créer une nouvelle ci-dessus.');
-	$('.js-save-vcard').text('Créer ma vCard');
+	showFeedback('success', t('feedback.deleted'));
+	$('.js-save-vcard').text(t('form.save_create'));
 }
 
 // ---------------------------------------------------------------------------
@@ -652,29 +577,28 @@ async function onCheckSlug(e) {
 	}
 
 	if (!slug) {
-		$status.text('Saisissez un username avant de vérifier.').removeClass('form__slug-status--ok').addClass('form__slug-status--ko');
+		$status.text(t('slug.empty')).removeClass('form__slug-status--ok').addClass('form__slug-status--ko');
 		return;
 	}
 	if (slug.length < 3) {
-		$status.text('Trop court : minimum 3 caractères.').removeClass('form__slug-status--ok').addClass('form__slug-status--ko');
+		$status.text(t('slug.too_short')).removeClass('form__slug-status--ok').addClass('form__slug-status--ko');
 		return;
 	}
 
 	$btn.prop('disabled', true);
-	$status.text('Vérification…').removeClass('form__slug-status--ok form__slug-status--ko');
+	$status.text(t('slug.checking')).removeClass('form__slug-status--ok form__slug-status--ko');
 
 	try {
-		const { data, error } = await supabase.rpc('slug_available', { p_slug: slug });
-		if (error) throw error;
+		const data = await api.slugAvailable(slug);
 
 		if (data === true) {
-			$status.text(`✓ « ${slug} » est disponible !`).removeClass('form__slug-status--ko').addClass('form__slug-status--ok');
+			$status.text(t('slug.available', { slug })).removeClass('form__slug-status--ko').addClass('form__slug-status--ok');
 		} else {
-			$status.text(`✗ « ${slug} » est déjà pris.`).removeClass('form__slug-status--ok').addClass('form__slug-status--ko');
+			$status.text(t('slug.taken', { slug })).removeClass('form__slug-status--ok').addClass('form__slug-status--ko');
 		}
 	} catch (err) {
 		console.error('[slug check] error', err);
-		$status.text(`Erreur : ${err.message}`).removeClass('form__slug-status--ok').addClass('form__slug-status--ko');
+		$status.text(t('slug.error', { message: err.message })).removeClass('form__slug-status--ok').addClass('form__slug-status--ko');
 	} finally {
 		$btn.prop('disabled', false);
 	}
@@ -741,6 +665,12 @@ function showFeedback(type, htmlMessage) {
 
 function hideFeedback() {
 	$('.js-form-feedback').prop('hidden', true).empty();
+}
+
+function escapeHtml(s) {
+	return (s || '').replace(/[&<>"']/g, (c) => ({
+		'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;',
+	}[c]));
 }
 
 function slugify(str) {

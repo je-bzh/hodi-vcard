@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr" data-auth-required data-page="signature-mail">
+<html lang="en" data-auth-required data-page="email-signature">
 {{> head }}
 <body class="body-night">
 	<div class="wrapper">
@@ -17,22 +17,22 @@
 
 						<ul class="list-filters js-filters">
 							<li>
-								<a href="mes-infos.html" class="btn" data-i18n="tabs.my_info">My information</a>
+								<a href="my-info" class="btn" data-i18n="tabs.my_info">My information</a>
 							</li>
 
 							<li>
-								<a href="mes-fonds.html" class="btn" data-i18n="tabs.my_wallpapers">My wallpapers</a>
+								<a href="my-wallpapers" class="btn" data-i18n="tabs.my_wallpapers">My wallpapers</a>
 							</li>
 
 							<li class="is-active">
-								<a href="signature-mail.html" class="btn" data-i18n="tabs.my_signature">My email signature</a>
+								<a href="email-signature" class="btn" data-i18n="tabs.my_signature">My email signature</a>
 							</li>
 						</ul><!-- /.list-filters -->
 					</div><!-- /.filters -->
 
 					<div class="card-avatar">
 						<div class="card__head">
-							<p>Intégrez votre signature mail avec un lien vers votre vCard Hodi :</p>
+							<p data-i18n="signature.intro">Embed your email signature with a link to your Hodi vCard:</p>
 						</div><!-- /.card__head -->
 
 						<!-- Preview de la signature : peuplée dynamiquement par signature-mail.js -->
@@ -53,7 +53,7 @@
 									<p>
 										<a href="#" class="js-sig-vcard-link" target="_blank" rel="noopener">
 											<img src="public/assets/images/svg/ico-user.svg" alt="">
-											Ajouter à mes contacts
+											<span data-i18n="signature.add_contact">Add to my contacts</span>
 										</a>
 									</p>
 								</div><!-- /.card__entry -->
@@ -65,7 +65,7 @@
 					<div class="form__feedback js-sig-feedback" hidden></div>
 
 					<div class="section__actions">
-						<a href="#" class="btn btn--block btn--aqua js-sig-copy">Copier le code HTML de ma signature</a>
+						<a href="#" class="btn btn--block btn--aqua js-sig-copy" data-i18n="signature.copy_btn">Copy my signature's HTML code</a>
 					</div><!-- /.section__actions -->
 
 					<!-- Zone (cachée) où la signature HTML est rendue : utilisée par le bouton "Copier" -->
