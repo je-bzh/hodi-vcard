@@ -12,13 +12,22 @@
  * Lib : https://github.com/jackocnr/intl-tel-input (v25)
  */
 
-// v28 : import du bundle "with utils" pour validation + format avancé inclus
-// (les exports map pointent vers ./dist/js/... et ./dist/css/...)
-import intlTelInput from 'intl-tel-input/intlTelInputWithUtils';
-import 'intl-tel-input/styles';
-
 // Map des instances par <input> (intl-tel-input retourne une instance par init)
 const instances = new WeakMap();
+
+// La lib (~bundle "with utils" + flags + 240 pays) est LOURDE et n'est utile que
+// sur la page d'édition. On la charge donc à la demande (chunk séparé) via import()
+// dynamique, au lieu de l'embarquer dans le bundle principal chargé partout.
+let libPromise = null;
+function loadIntlTelInput() {
+	if (!libPromise) {
+		libPromise = Promise.all([
+			import('intl-tel-input/intlTelInputWithUtils'),
+			import('intl-tel-input/styles'),
+		]).then(([mod]) => mod.default);
+	}
+	return libPromise;
+}
 
 /**
  * Initialise intl-tel-input sur un input téléphone.
@@ -27,8 +36,11 @@ const instances = new WeakMap();
  * - liste complète des pays
  * - séparateur de format auto à la saisie
  */
-export function initIntlPhone(input, { defaultCountry = 'fr' } = {}) {
+export async function initIntlPhone(input, { defaultCountry = 'fr' } = {}) {
 	if (!input || instances.has(input)) return instances.get(input);
+
+	const intlTelInput = await loadIntlTelInput();
+	if (instances.has(input)) return instances.get(input); // garde anti-course
 
 	const iti = intlTelInput(input, {
 		initialCountry: defaultCountry,

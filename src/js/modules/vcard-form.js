@@ -74,11 +74,13 @@ let currentUser = null;
 // Bootstrap
 // ---------------------------------------------------------------------------
 async function bootstrap() {
-	// 0. Init intl-tel-input sur les champs téléphone (avant tout le reste pour
-	//    qu'enterEditMode/CreateMode puissent écrire dedans avec writePhone)
-	document.querySelectorAll('.js-intl-tel').forEach((input) => {
-		initIntlPhone(input, { defaultCountry: 'fr' });
-	});
+	// 0. Init intl-tel-input sur les champs téléphone (lib chargée à la demande,
+	//    on attend qu'elle soit prête pour qu'enterEditMode/writePhone l'utilisent)
+	await Promise.all(
+		[...document.querySelectorAll('.js-intl-tel')].map((input) =>
+			initIntlPhone(input, { defaultCountry: 'fr' })
+		)
+	);
 
 	// 1. Récupère la session (peut être null)
 	try {

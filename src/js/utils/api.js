@@ -50,14 +50,26 @@ async function call(route, { method = 'GET', body = null, query = null } = {}) {
 	return data;
 }
 
+// La session est stable le temps d'un chargement de page → on mémoïse la promesse
+// pour que les multiples modules (auth-guard + module de page) ne fassent qu'UN
+// seul aller-retour au lieu de plusieurs.
+let sessionPromise = null;
+
 export const api = {
 	auth: {
 		/** @returns {Promise<{id:string,email:string}|null>} */
-		session: () => call('auth/session').then((d) => d.user),
+		session: () => {
+			if (!sessionPromise) sessionPromise = call('auth/session').then((d) => d.user);
+			return sessionPromise;
+		},
 		/** Envoie un magic-link. Fournir { email } ou { slug }. */
 		requestLink: ({ email, slug, redirect } = {}) =>
 			call('auth/request-link', { method: 'POST', body: { email, slug, redirect } }),
-		logout: () => call('auth/logout', { method: 'POST' }),
+		logout: () =>
+			call('auth/logout', { method: 'POST' }).then((r) => {
+				sessionPromise = null; // invalide le cache de session
+				return r;
+			}),
 	},
 
 	vcard: {

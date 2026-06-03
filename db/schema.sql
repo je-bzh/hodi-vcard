@@ -14,12 +14,6 @@
 --      owner_email = email de session, vérifie la propriété sur update/delete).
 -- ============================================================================
 
-CREATE DATABASE IF NOT EXISTS hodi_vcard
-	CHARACTER SET utf8mb4
-	COLLATE utf8mb4_unicode_ci;
-
-USE hodi_vcard;
-
 -- ----------------------------------------------------------------------------
 -- users — identités (l'email est l'identifiant, comme Supabase Auth)
 -- ----------------------------------------------------------------------------

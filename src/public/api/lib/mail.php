@@ -3,8 +3,9 @@
  * Envoi d'email — driver configurable (log | sendmail | smtp).
  *
  *   log      → écrit le message dans storage/mail.log (dev sans serveur mail)
- *   sendmail → PHPMailer en mode sendmail
- *   smtp     → PHPMailer en mode SMTP (AUTH + TLS/SSL)
+ *   sendmail → si sendmail_path est défini : binaire local via isSendmail() ;
+ *              sinon : fonction mail() de PHP via isMail() ('mail' = alias)
+ *   smtp     → PHPMailer isSMTP() (AUTH + TLS/SSL)
  *
  * Utilise la librairie standard PHPMailer (vendor/, via Composer) plutôt qu'une
  * implémentation maison. Driver choisi via config.mail.driver.
@@ -54,8 +55,17 @@ function send_mail(string $toEmail, string $subject, string $htmlBody): void
 			} elseif ($secure === 'ssl') {
 				$mailer->SMTPSecure = PHPMailer::ENCRYPTION_SMTPS;
 			}
-		} else { // sendmail
-			$mailer->isSendmail();
+		} elseif ($mail['driver'] === 'sendmail' || $mail['driver'] === 'mail') {
+			if (!empty($mail['sendmail_path'])) {
+				// Chemin fourni → binaire sendmail local (Postfix/Exim/cPanel).
+				$mailer->isSendmail();
+				$mailer->Sendmail = $mail['sendmail_path'];
+			} else {
+				// Pas de chemin → fonction mail() de PHP (utilise php.ini sendmail_path).
+				$mailer->isMail();
+			}
+		} else {
+			throw new ApiError("Driver mail inconnu : {$mail['driver']}", 500);
 		}
 
 		$mailer->setFrom($mail['from'], $mail['from_name']);

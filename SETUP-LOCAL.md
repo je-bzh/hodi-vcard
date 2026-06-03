@@ -4,7 +4,7 @@ Cette app n'utilise plus Supabase. Elle tourne désormais sur :
 
 - **Base de données** : MySQL/MariaDB local (`hodi_vcard`)
 - **Back-end** : API PHP (cible **PHP 8.1**) sous `src/public/api/` (→ `build/api/`), servie par Apache
-- **Auth** : magic-links par email — **PHPMailer** (driver configurable : `log` / `sendmail` / `smtp`)
+- **Auth** : magic-links par email — **PHPMailer** (driver configurable : `log` / `sendmail` / `mail` / `smtp`)
 - **Stockage fichiers** : disque local `storage/uploads/`, servi par PHP via `?r=file`
   (pas d'Alias Apache, fonctionne quel que soit le chemin de montage, survit aux redeploys)
 
@@ -47,17 +47,23 @@ cd src/public/api && composer install      # crée vendor/ (PHPMailer)
 - Mail : driver `log` → magic-links écrits dans `storage/mail.log`
 - `base_url` : vide → déduite automatiquement de la requête
 
-Pour de **vrais emails**, passe le bloc `mail` en SMTP (PHPMailer) :
+Pour de **vrais emails** (drivers PHPMailer : `sendmail`, `mail`, `smtp`) :
 
 ```php
+// sendmail local (Postfix/Exim/cPanel) — le plus simple en prod
+'mail' => [
+    'driver'        => 'sendmail',
+    'from'          => 'no-reply@hodi.live',
+    'sendmail_path' => '/usr/sbin/sendmail -oi -t',  // optionnel
+],
+
+// …ou SMTP
 'mail' => [
     'driver' => 'smtp',
     'from'   => 'no-reply@hodi.live',
     'smtp'   => ['host'=>'smtp.xxx','port'=>587,'user'=>'…','pass'=>'…','secure'=>'tls'],
 ],
 ```
-
-(ou `'driver' => 'sendmail'`.)
 
 ## 4. Build du front-end
 

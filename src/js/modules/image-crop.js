@@ -14,6 +14,24 @@ import { t } from '/js/utils/i18n.js';
 
 const PENDING_KEY = 'hodi-vcard-pending';
 
+// Croppie chargé à la demande (1re ouverture du cropper) → pas de script
+// render-blocking sur les pages qui ne croppent rien.
+const CROPPIE_CDN = 'https://cdnjs.cloudflare.com/ajax/libs/croppie/2.6.4/croppie.min.js';
+let croppiePromise = null;
+function loadCroppie() {
+	if (typeof window.Croppie !== 'undefined') return Promise.resolve();
+	if (!croppiePromise) {
+		croppiePromise = new Promise((resolve, reject) => {
+			const s = document.createElement('script');
+			s.src = CROPPIE_CDN;
+			s.onload = resolve;
+			s.onerror = () => { croppiePromise = null; reject(new Error('Croppie load failed')); };
+			document.head.appendChild(s);
+		});
+	}
+	return croppiePromise;
+}
+
 let croppieContainer;
 let currentCropContext = 'avatar'; // mémorise le type de crop en cours
 
@@ -71,7 +89,14 @@ function uploadImageToCroppie() {
 	const fileInput = document.getElementById('upload-image');
 	if (!fileInput) return;
 
-	fileInput.addEventListener('change', function (event) {
+	fileInput.addEventListener('change', async function (event) {
+		try {
+			await loadCroppie();
+		} catch (e) {
+			console.error('[image-crop] Croppie load failed', e);
+			alert(t('common.error', { message: e.message || e }));
+			return;
+		}
 		const $closestPopup = $(this).closest('.popups');
 		const reader = new FileReader();
 		$closestPopup.find('.js-croppie').empty().append('<div id="croppie-container"></div>');

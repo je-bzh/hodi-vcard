@@ -34,14 +34,16 @@ return (static function (): array {
 
 		// --- Email (magic-links) ---------------------------------------------
 		// driver :
-		//   'log'      → écrit le lien dans storage/mail.log (dev sans SMTP)
-		//   'sendmail' → utilise mail() / sendmail local
+		//   'log'      → écrit le lien dans storage/mail.log (dev sans serveur mail)
+		//   'sendmail' → si sendmail_path défini : binaire local ; sinon : mail() de PHP
 		//   'smtp'     → SMTP direct (host/port/user/pass/secure)
 		'mail' => [
-			'driver'    => getenv('VCARD_MAIL_DRIVER') ?: 'log',
-			'from'      => getenv('VCARD_MAIL_FROM') ?: 'no-reply@hodi.live',
-			'from_name' => getenv('VCARD_MAIL_FROM_NAME') ?: 'Hodi vCard',
-			'log_file'  => getenv('VCARD_MAIL_LOG') ?: dirname(__DIR__, 4) . '/storage/mail.log',
+			'driver'        => getenv('VCARD_MAIL_DRIVER') ?: 'log',
+			'from'          => getenv('VCARD_MAIL_FROM') ?: 'no-reply@hodi.live',
+			'from_name'     => getenv('VCARD_MAIL_FROM_NAME') ?: 'Hodi vCard',
+			'log_file'      => getenv('VCARD_MAIL_LOG') ?: dirname(__DIR__, 4) . '/storage/mail.log',
+			// Optionnel : chemin du binaire sendmail. Si vide → fallback mail() de PHP.
+			'sendmail_path' => getenv('VCARD_SENDMAIL_PATH') ?: '', // ex. '/usr/sbin/sendmail -oi -t'
 			'smtp' => [
 				'host'   => getenv('VCARD_SMTP_HOST') ?: 'localhost',
 				'port'   => (int) (getenv('VCARD_SMTP_PORT') ?: 587),

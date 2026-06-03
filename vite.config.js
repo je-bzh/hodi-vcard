@@ -44,7 +44,7 @@ export default defineConfig(({ command }) => ({
 		// doit survivre aux rebuilds. Le nettoyage sélectif est fait par le plugin
 		// clean-build-keep-uploads ci-dessous.
 		emptyOutDir: false,
-		minify: false,
+		minify: 'esbuild', // réduit nettement le poids/parse du bundle (perf de chargement)
 	},
 	css: {
 		preprocessorOptions: {
