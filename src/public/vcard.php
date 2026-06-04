@@ -14,7 +14,11 @@ declare(strict_types=1);
 require __DIR__ . '/api/lib/http.php';
 require __DIR__ . '/api/lib/db.php';
 require __DIR__ . '/api/lib/validate.php';
+require __DIR__ . '/api/lib/auth.php';   // app_base_url()
 require __DIR__ . '/api/lib/vcard.php';
+if (is_file(__DIR__ . '/api/vendor/autoload.php')) {
+	require_once __DIR__ . '/api/vendor/autoload.php'; // QR code (chillerlan)
+}
 
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-cache, must-revalidate');
@@ -137,6 +141,12 @@ function render_card(string $html, array $v): string
 	// --- Popup "Modifier" : slug (jamais l'email) ---
 	if ($popup = $first_node($xp, '//*[@id="popup-modifier"]')) {
 		$popup->setAttribute('data-vcard-slug', (string) $v['slug']);
+	}
+
+	// --- QR code rendu côté serveur (évite le flash placeholder → QR au load) ---
+	$qrUri = qr_data_uri(app_base_url() . rawurlencode((string) $v['slug']));
+	if ($qrUri !== null && ($qrImg = $first_node($xp, '//img[@data-bind="qr_url"]'))) {
+		$qrImg->setAttribute('src', $qrUri);
 	}
 
 	// --- Titre + meta SEO/social ---
@@ -275,4 +285,25 @@ function safe_url(string $url): string
 	if (preg_match('#^(https?:|mailto:|tel:)#i', $u)) { return $u; }
 	if (preg_match('#^[a-z][a-z0-9+.\-]*:#i', $u)) { return '#'; } // schéma dangereux
 	return $u;
+}
+
+/** QR (SVG data URI) du lien public, généré côté serveur. null si lib absente. */
+function qr_data_uri(string $url): ?string
+{
+	if (!class_exists(\chillerlan\QRCode\QRCode::class)) {
+		return null;
+	}
+	try {
+		$options = new \chillerlan\QRCode\QROptions([
+			'outputType'     => \chillerlan\QRCode\QRCode::OUTPUT_MARKUP_SVG,
+			'eccLevel'       => \chillerlan\QRCode\QRCode::ECC_M,
+			'imageBase64'    => true,
+			'addQuietzone'   => true,
+			'quietzoneSize'  => 1,
+			'svgViewBoxSize' => 0,
+		]);
+		return (new \chillerlan\QRCode\QRCode($options))->render($url);
+	} catch (\Throwable $e) {
+		return null; // best-effort : le JS régénérera le QR
+	}
 }

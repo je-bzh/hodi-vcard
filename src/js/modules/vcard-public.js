@@ -292,6 +292,9 @@ function toggleSocial(network, url) {
  * avec une marge blanche minimale (margin: 1 module).
  */
 async function generateQrCode(url) {
+	// Déjà rendu côté serveur (vcard.php) → on ne régénère pas (évite tout flash).
+	const existing = $('[data-bind="qr_url"]').attr('src') || '';
+	if (existing.startsWith('data:')) return;
 	try {
 		const dataUrl = await QRCode.toDataURL(url, {
 			errorCorrectionLevel: 'M',
