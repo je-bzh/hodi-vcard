@@ -34,7 +34,9 @@ let currentVcard = null;
 let bootWalls = boot && boot.wallpapers ? boot.wallpapers : null;
 
 if ($('html').attr('data-page') === 'my-wallpapers') {
-	bootstrap();
+	// Microtask : le module doit finir de s'initialiser avant bootstrap()
+	// (le chemin hydraté via boot rend de façon synchrone).
+	Promise.resolve().then(bootstrap);
 }
 
 async function bootstrap() {

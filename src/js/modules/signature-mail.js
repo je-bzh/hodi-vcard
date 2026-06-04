@@ -24,7 +24,10 @@ const SOCIAL_ICON_MAP = [
 ];
 
 if ($('html').attr('data-page') === 'email-signature') {
-	bootstrap();
+	// Microtask : laisse le module finir de s'initialiser (consts définies plus bas,
+	// ex. absUrl) avant que bootstrap() ne s'exécute — le chemin hydraté (boot) est
+	// synchrone et toucherait sinon des déclarations encore dans la TDZ.
+	Promise.resolve().then(bootstrap);
 }
 
 async function bootstrap() {

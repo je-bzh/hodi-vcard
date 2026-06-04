@@ -103,4 +103,9 @@
 	display: block;
 	padding-inline: 0;
 	text-align: center;
+
+	// Espace entre deux boutons block empilés (ex. signature : Copier / Télécharger)
+	& + .btn--block {
+		margin-top: 25px;
+	}
 }

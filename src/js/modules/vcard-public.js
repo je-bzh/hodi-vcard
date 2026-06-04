@@ -20,7 +20,9 @@ import { buildVcardUrl, assetUrl, appBase } from '/js/utils/urls.js';
 import QRCode from 'qrcode';
 
 if ($('html').attr('data-page') === 'card') {
-	bootstrap();
+	// Microtask : le module doit finir de s'initialiser avant bootstrap()
+	// (le chemin SSR via window.__VCARD__ rend de façon synchrone).
+	Promise.resolve().then(bootstrap);
 }
 
 async function bootstrap() {
