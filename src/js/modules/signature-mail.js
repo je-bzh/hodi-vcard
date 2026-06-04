@@ -230,6 +230,17 @@ function bindActions() {
 		}
 	});
 
+	$('.js-sig-download').off('click').on('click', function (e) {
+		e.preventDefault();
+		try {
+			downloadSignatureHtml();
+			showFeedback('success', t('signature.downloaded'));
+		} catch (err) {
+			console.error('[signature-mail] download failed', err);
+			showFeedback('error', t('signature.copy_error', { message: err.message }));
+		}
+	});
+
 	$('.js-sig-howto').off('click').on('click', function (e) {
 		e.preventDefault();
 		$('#popup-howto').addClass('is-visible').removeClass('not-visible');
@@ -272,6 +283,40 @@ async function copySignatureHtml() {
 	source.style.position = 'absolute';
 	source.style.opacity = '';
 	if (!ok) throw new Error('execCommand copy not supported');
+}
+
+/**
+ * Télécharge la signature comme fichier .html autonome (document complet),
+ * que l'utilisateur peut importer dans son client mail.
+ */
+function downloadSignatureHtml() {
+	const source = document.getElementById('signature-html-source');
+	const inner = source ? source.innerHTML : '';
+	const name = (currentVcard && joinName(currentVcard)) || 'Hodi vCard';
+
+	const lang = document.documentElement.getAttribute('lang') || 'en';
+	const doc = `<!DOCTYPE html>
+<html lang="${lang}">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>${escapeHtml(name)} — ${escapeHtml(t('tabs.my_signature'))}</title>
+</head>
+<body>
+${inner}
+</body>
+</html>
+`;
+
+	const blob = new Blob([doc], { type: 'text/html;charset=utf-8' });
+	const url = URL.createObjectURL(blob);
+	const a = document.createElement('a');
+	a.href = url;
+	a.download = `signature-${(currentVcard && currentVcard.slug) || 'hodi'}.html`;
+	document.body.appendChild(a);
+	a.click();
+	a.remove();
+	setTimeout(() => URL.revokeObjectURL(url), 1000);
 }
 
 /**

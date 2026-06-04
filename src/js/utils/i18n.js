@@ -188,6 +188,8 @@ const TRANSLATIONS = {
 		// --- Email signature ---
 		'signature.intro': 'Embed your email signature with a link to your Hodi vCard:',
 		'signature.copy_btn': "Copy my signature's HTML code",
+		'signature.download_btn': 'Download as HTML file',
+		'signature.downloaded': '✓ HTML file downloaded.',
 		'signature.need_vcard': 'You must create your vCard first to generate an email signature.',
 		'signature.add_contact': 'Add to my contacts',
 		'signature.copied': '✓ Signature copied — paste it into your email client (HTML mode).',
@@ -391,6 +393,8 @@ const TRANSLATIONS = {
 		// --- Email signature ---
 		'signature.intro': 'Intégrez votre signature mail avec un lien vers votre vCard Hodi :',
 		'signature.copy_btn': 'Copier le code HTML de ma signature',
+		'signature.download_btn': 'Télécharger en fichier HTML',
+		'signature.downloaded': '✓ Fichier HTML téléchargé.',
 		'signature.need_vcard': 'Vous devez d’abord créer votre vCard pour générer une signature mail.',
 		'signature.add_contact': 'Ajouter à mes contacts',
 		'signature.copied': '✓ Signature copiée — collez-la dans votre client mail (mode HTML).',
