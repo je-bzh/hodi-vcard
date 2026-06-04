@@ -94,6 +94,11 @@ function open_session(string $userId): void
 		[$userId, $hash, $expires]
 	);
 
+	// GC opportuniste (à la connexion, opération rare) : purge les sessions expirées
+	// et les magic-links expirés/consommés pour éviter que les tables ne gonflent.
+	db_run('DELETE FROM sessions WHERE expires_at < NOW()');
+	db_run('DELETE FROM auth_tokens WHERE expires_at < NOW() OR used_at IS NOT NULL');
+
 	setcookie($cfg['app']['cookie_name'], $token, [
 		'expires'  => time() + $ttl,
 		'path'     => '/',

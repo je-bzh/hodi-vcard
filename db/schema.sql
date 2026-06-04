@@ -31,7 +31,7 @@ CREATE TABLE IF NOT EXISTS auth_tokens (
 	id          BIGINT       NOT NULL AUTO_INCREMENT PRIMARY KEY,
 	user_id     CHAR(36)     NOT NULL,
 	token_hash  CHAR(64)     NOT NULL,           -- sha256 du jeton (jamais stocké en clair)
-	redirect    VARCHAR(255) NOT NULL DEFAULT 'mes-infos.html',
+	redirect    VARCHAR(255) NOT NULL DEFAULT 'my-info',
 	expires_at  DATETIME     NOT NULL,
 	used_at     DATETIME     NULL,
 	created_at  DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,

@@ -151,6 +151,21 @@ function require_post(string $method): void
 }
 
 /**
+ * Exige que la requête provienne de notre propre origine (Origin ou Referer).
+ * Les CORS seuls ne protègent pas un appel serveur→serveur ; ce contrôle côté
+ * serveur bloque l'usage cross-site dans un navigateur et le scraping casual.
+ */
+function require_same_origin(): void
+{
+	$host = preg_replace('/:\d+$/', '', (string) ($_SERVER['HTTP_HOST'] ?? ''));
+	$src = $_SERVER['HTTP_ORIGIN'] ?? ($_SERVER['HTTP_REFERER'] ?? '');
+	$srcHost = $src !== '' ? (string) parse_url($src, PHP_URL_HOST) : '';
+	if ($host === '' || $srcHost === '' || strcasecmp($srcHost, $host) !== 0) {
+		throw new ApiError('Origine non autorisée.', 403);
+	}
+}
+
+/**
  * Envoi d'un magic-link. Deux modes :
  *   - { email }  : flux création / récupération (l'appelant connaît son email)
  *   - { slug }   : flux "Modifier" depuis la vCard publique (l'email reste privé,
@@ -406,6 +421,8 @@ function file_url(string $relPath): string
  */
 function handle_unsplash_search(array $config): void
 {
+	require_same_origin(); // anti-abus : seulement depuis notre propre front
+
 	$key = (string) ($config['unsplash']['access_key'] ?? '');
 	if ($key === '') {
 		throw new ApiError("Banque d'images non configurée.", 503);

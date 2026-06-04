@@ -33,7 +33,7 @@ async function bootstrap() {
 		return;
 	}
 	if (window.__VCARD__) {
-		render(window.__VCARD__);
+		render(window.__VCARD__, true); // hydraté par le serveur → pas de re-remplissage
 		return;
 	}
 
@@ -64,98 +64,79 @@ async function bootstrap() {
 // ---------------------------------------------------------------------------
 // Rendu principal
 // ---------------------------------------------------------------------------
-function render(vcard) {
-	// Titre de l'onglet
-	document.title = `${joinName(vcard)} — Hodi vCard`;
+function render(vcard, hydrated = false) {
+	// Si la page a été rendue côté serveur (vcard.php), le DOM est déjà rempli →
+	// on saute tout le remplissage et on ne fait que l'enrichissement interactif.
+	if (!hydrated) {
+		document.title = `${joinName(vcard)} — Hodi vCard`;
 
-	// Concaténation country code + numéro pour affichage
-	const fullMobile = joinPhone(vcard.phone_mobile_country, vcard.phone_mobile);
-	const fullLandline = joinPhone(vcard.phone_landline_country, vcard.phone_landline);
+		const fullMobile = joinPhone(vcard.phone_mobile_country, vcard.phone_mobile);
+		const fullLandline = joinPhone(vcard.phone_landline_country, vcard.phone_landline);
+		// Email affiché : email_public (l'email du compte n'est jamais exposé).
+		const displayEmail = vcard.email_public || '';
 
-	// Email affiché : email_public (champ de contact optionnel choisi par
-	// l'utilisateur). L'email du compte (owner_email) n'est JAMAIS exposé
-	// publiquement → la vue publique de l'API ne le renvoie même pas.
-	const displayEmail = vcard.email_public || '';
+		setText('full_name', joinName(vcard));
+		setTextOrHide('role', vcard.role);
+		setTextOrHide('company', vcard.company);
+		setText('phone_mobile', fullMobile);
+		setText('phone_landline', fullLandline);
+		setText('email_public', displayEmail);
+		setText('address', vcard.address);
+		setText('website_url', vcard.website_url);
 
-	// Champs textuels
-	setText('full_name', joinName(vcard));
-	// role et company : on masque carrément l'élément si vide → pas de tirets, pas d'espace mort
-	setTextOrHide('role', vcard.role);
-	setTextOrHide('company', vcard.company);
-	setText('phone_mobile', fullMobile);
-	setText('phone_landline', fullLandline);
-	setText('email_public', displayEmail);
-	setText('address', vcard.address);
-	setText('website_url', vcard.website_url);
+		setImg('cover_url', vcard.cover_url || assetUrl('public/assets/images/temp/bg-form.png'));
 
-	// Images
-	setImg('cover_url', vcard.cover_url || assetUrl('public/assets/images/temp/bg-form.png'));
+		const $avatarImg = $('[data-bind="avatar_url"]');
+		const $avatarInitials = $('.js-avatar-initials');
+		if (vcard.avatar_url) {
+			$avatarImg.attr('src', vcard.avatar_url).show();
+			$avatarInitials.hide();
+		} else {
+			$avatarImg.hide();
+			$avatarInitials.text(computeInitials(vcard)).show();
+		}
 
-	// Avatar : si photo → on l'affiche. Sinon → rond bleu avec initiales prénom+nom.
-	const $avatarImg = $('[data-bind="avatar_url"]');
-	const $avatarInitials = $('.js-avatar-initials');
-	if (vcard.avatar_url) {
-		$avatarImg.attr('src', vcard.avatar_url).show();
-		$avatarInitials.hide();
-	} else {
-		const initials = computeInitials(vcard);
-		$avatarImg.hide();
-		$avatarInitials.text(initials).show();
+		toggleInfoRow('email_public', displayEmail, `mailto:${displayEmail}`);
+		toggleInfoRow('phone_mobile', vcard.phone_mobile, `tel:${onlyDigits(fullMobile)}`);
+		toggleInfoRow('phone_landline', vcard.phone_landline, `tel:${onlyDigits(fullLandline)}`);
+		toggleInfoRow('address', vcard.address, mapsUrl(vcard.address));
+		toggleInfoRow('website_url', vcard.website_url, vcard.website_url);
+
+		const $docRow = $('[data-bind-info="document"]');
+		if (vcard.document_url && vcard.document_label) {
+			$docRow.prop('hidden', false);
+			$docRow.find('[data-bind="document_label"]')
+				.text(vcard.document_label)
+				.attr('href', safeUrl(vcard.document_url));
+		} else {
+			$docRow.prop('hidden', true);
+		}
+
+		toggleAction('website_url', vcard.website_url);
+		toggleAction('booking_url', vcard.booking_url);
+
+		const socials = vcard.socials || {};
+		toggleSocial('linkedin', socials.linkedin);
+		toggleSocial('instagram', socials.instagram);
+		toggleSocial('facebook', socials.facebook);
+		toggleSocial('pinterest', socials.pinterest);
+		if (socials.whatsapp_enabled === true && vcard.phone_mobile) {
+			toggleSocial('whatsapp', `https://wa.me/${buildWaNumber(vcard.phone_mobile_country, vcard.phone_mobile)}`);
+		} else {
+			toggleSocial('whatsapp', null);
+		}
+
+		// Popup "Modifier" : slug uniquement (l'email reste privé côté serveur).
+		$('#popup-modifier').attr('data-vcard-slug', vcard.slug);
 	}
 
-	// QR code dynamique → pointe vers l'URL publique de cette vcard
-	// Génération client-side : pas de Storage, pas de DB. Quand la vcard est
-	// supprimée, la page renvoie un 404 et le QR n'est jamais re-généré.
+	// --- Enrichissement interactif (toujours, quel que soit le mode de rendu) ---
+	// QR : ne régénère pas si le serveur l'a déjà posé (cf. garde dans generateQrCode).
 	generateQrCode(buildVcardUrl(vcard.slug));
 
-	// Sections contact (afficher uniquement les renseignées)
-	toggleInfoRow('email_public', displayEmail, `mailto:${displayEmail}`);
-	toggleInfoRow('phone_mobile', vcard.phone_mobile, `tel:${onlyDigits(fullMobile)}`);
-	toggleInfoRow('phone_landline', vcard.phone_landline, `tel:${onlyDigits(fullLandline)}`);
-	toggleInfoRow('address', vcard.address, mapsUrl(vcard.address));
-	toggleInfoRow('website_url', vcard.website_url, vcard.website_url);
-
-	// Document (plaquette, etc.) — n'affiche que si url ET label sont renseignés
-	const $docRow = $('[data-bind-info="document"]');
-	if (vcard.document_url && vcard.document_label) {
-		$docRow.prop('hidden', false);
-		$docRow.find('[data-bind="document_label"]')
-			.text(vcard.document_label)
-			.attr('href', safeUrl(vcard.document_url));
-	} else {
-		$docRow.prop('hidden', true);
-	}
-
-	// Boutons d'action
-	toggleAction('website_url', vcard.website_url);
-	toggleAction('booking_url', vcard.booking_url);
-
-	// Socials (URLs)
-	const socials = vcard.socials || {};
-	toggleSocial('linkedin', socials.linkedin);
-	toggleSocial('instagram', socials.instagram);
-	toggleSocial('facebook', socials.facebook);
-	toggleSocial('pinterest', socials.pinterest);
-
-	// WhatsApp : géré séparément via checkbox + numéro mobile
-	// Format wa.me : indicatif pays + numéro local SANS le 0 de tête, sans espaces.
-	// Ex: +33 0651051611 → 33651051611 (pas 330651051611).
-	if (socials.whatsapp_enabled === true && vcard.phone_mobile) {
-		const waNumber = buildWaNumber(vcard.phone_mobile_country, vcard.phone_mobile);
-		toggleSocial('whatsapp', `https://wa.me/${waNumber}`);
-	} else {
-		toggleSocial('whatsapp', null);
-	}
-
-	// Popup "Modifier" : on passe le SLUG (pas l'email). Le serveur résout
-	// l'owner_email en interne pour envoyer le magic-link → l'email reste privé.
-	$('#popup-modifier').attr('data-vcard-slug', vcard.slug);
-
-	// Branche le téléchargement .vcf (async car embed PHOTO en base64)
+	// Téléchargement .vcf (embed PHOTO base64 → async)
 	$('.js-vcf-download').off('click').on('click', async (e) => {
 		e.preventDefault();
-		const $btn = $(e.currentTarget);
-		const originalText = $btn.find('img').next().text() || $btn.text();
 		try {
 			await downloadVcf(vcard);
 		} catch (err) {

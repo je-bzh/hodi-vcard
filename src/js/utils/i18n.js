@@ -201,8 +201,6 @@ const TRANSLATIONS = {
 		'source.searching': 'Searching…',
 		'source.no_results': 'No results. Try another keyword.',
 		'source.fetch_error': "Couldn't fetch this image: {message}",
-		'source.no_key': 'Image library not configured on the server.',
-		'source.http_error': 'HTTP {status} — check your Unsplash API key.',
 
 		// --- Retrieve feedback ---
 		'retrieve.email_required': 'Please enter your email address.',
@@ -406,8 +404,6 @@ const TRANSLATIONS = {
 		'source.searching': 'Recherche…',
 		'source.no_results': 'Aucun résultat. Essayez un autre mot-clé.',
 		'source.fetch_error': 'Impossible de récupérer cette image : {message}',
-		'source.no_key': 'Banque d’images non configurée côté serveur.',
-		'source.http_error': 'HTTP {status} — vérifiez votre clé API Unsplash.',
 
 		// --- Retrieve feedback ---
 		'retrieve.email_required': 'Veuillez saisir votre adresse email.',
