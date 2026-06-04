@@ -68,10 +68,8 @@ const TRANSLATIONS = {
 
 		'form.section_contact': 'Contact details',
 		'form.mobile_label': 'Mobile',
-		'form.mobile_placeholder': '6 12 34 56 78',
 		'form.whatsapp_checkbox': 'This number is also reachable on WhatsApp',
 		'form.landline_label': 'Landline',
-		'form.landline_placeholder': '0 92 12 34 56',
 		'form.address_label': 'Address',
 		'form.address_placeholder': 'Your postal address',
 		'form.website_label': 'Website',
@@ -273,10 +271,8 @@ const TRANSLATIONS = {
 
 		'form.section_contact': 'Coordonnées',
 		'form.mobile_label': 'Portable',
-		'form.mobile_placeholder': '6 12 34 56 78',
 		'form.whatsapp_checkbox': 'Ce numéro est aussi joignable sur WhatsApp',
 		'form.landline_label': 'Ligne fixe',
-		'form.landline_placeholder': '0 92 12 34 56',
 		'form.address_label': 'Adresse',
 		'form.address_placeholder': 'Votre adresse postale',
 		'form.website_label': 'Site web',

@@ -36,7 +36,7 @@ function loadIntlTelInput() {
  * - liste complète des pays
  * - séparateur de format auto à la saisie
  */
-export async function initIntlPhone(input, { defaultCountry = 'fr' } = {}) {
+export async function initIntlPhone(input, { defaultCountry = 'fr', numberType = 'MOBILE' } = {}) {
 	if (!input || instances.has(input)) return instances.get(input);
 
 	const intlTelInput = await loadIntlTelInput();
@@ -49,6 +49,11 @@ export async function initIntlPhone(input, { defaultCountry = 'fr' } = {}) {
 		formatAsYouType: true,             // espacement automatique pendant la saisie
 		countrySearch: true,               // barre de recherche dans le dropdown
 		countryOrder: ['fr', 'ci', 'sn', 'cm', 'cd', 'ma', 'be', 'ch'], // priorités haut de liste (v28)
+		// Placeholder = numéro d'exemple du pays sélectionné (via utils), mis à jour
+		// à chaque changement de pays. 'aggressive' écrase tout placeholder statique.
+		autoPlaceholder: 'aggressive',
+		// Type d'exemple : 'MOBILE' (portable) ou 'FIXED_LINE' (ligne fixe)
+		placeholderNumberType: numberType,
 		// Liste complète des pays (~240) chargée automatiquement
 	});
 

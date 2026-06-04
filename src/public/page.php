@@ -37,9 +37,15 @@ if ($requiresAuth && !$user) {
 	exit;
 }
 
+// Pays déduit de l'en-tête géo de Cloudflare (CF-IPCountry) → drapeau pré-sélectionné
+// dans intl-tel-input. Absent hors Cloudflare → le front retombe sur 'fr'.
+$cc = strtolower(trim((string) ($_SERVER['HTTP_CF_IPCOUNTRY'] ?? '')));
+$country = (preg_match('/^[a-z]{2}$/', $cc) && !in_array($cc, ['xx', 't1'], true)) ? $cc : null;
+
 $boot = [
-	'user'  => $user ? ['id' => $user['id'], 'email' => $user['email']] : null,
-	'vcard' => null,
+	'user'    => $user ? ['id' => $user['id'], 'email' => $user['email']] : null,
+	'vcard'   => null,
+	'country' => $country,
 ];
 
 if ($user) {

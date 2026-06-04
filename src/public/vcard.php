@@ -41,12 +41,16 @@ if (!$row) {
 }
 
 $v = vcard_public_view($row);
-echo render_card($template, $v);
+// QR du lien public, mis en cache (fichier) dans le dossier de l'utilisateur.
+$qrSrc = qr_src($row, app_base_url() . rawurlencode((string) $v['slug']));
+echo render_card($template, $v, $qrSrc);
 
 // ===========================================================================
 
-/** @param array<string,mixed> $v */
-function render_card(string $html, array $v): string
+/**
+ * @param array<string,mixed> $v
+ */
+function render_card(string $html, array $v, ?string $qrSrc): string
 {
 	$doc = new DOMDocument();
 	libxml_use_internal_errors(true);
@@ -144,9 +148,8 @@ function render_card(string $html, array $v): string
 	}
 
 	// --- QR code rendu côté serveur (évite le flash placeholder → QR au load) ---
-	$qrUri = qr_data_uri(app_base_url() . rawurlencode((string) $v['slug']));
-	if ($qrUri !== null && ($qrImg = $first_node($xp, '//img[@data-bind="qr_url"]'))) {
-		$qrImg->setAttribute('src', $qrUri);
+	if ($qrSrc !== null && ($qrImg = $first_node($xp, '//img[@data-bind="qr_url"]'))) {
+		$qrImg->setAttribute('src', $qrSrc);
 	}
 
 	// --- Titre + meta SEO/social ---
@@ -287,17 +290,51 @@ function safe_url(string $url): string
 	return $u;
 }
 
-/** QR (SVG data URI) du lien public, généré côté serveur. null si lib absente. */
-function qr_data_uri(string $url): ?string
+/**
+ * Source du QR pour l'<img>. Mis en CACHE en fichier SVG dans le dossier uploads
+ * de l'utilisateur ({user_id}/qr.svg) : généré une seule fois (le slug est
+ * immuable → le QR ne change jamais), puis servi en statique. Renvoie l'URL du
+ * fichier ; à défaut (pas de user_id) un data URI ; null si la lib manque.
+ *
+ * @param array<string,mixed> $row  ligne brute (pour user_id)
+ */
+function qr_src(array $row, string $url): ?string
 {
 	if (!class_exists(\chillerlan\QRCode\QRCode::class)) {
 		return null;
 	}
+	$userId = (string) ($row['user_id'] ?? '');
+
+	// Pas de user_id (vcard orpheline) → data URI inline, sans cache.
+	if ($userId === '' || !preg_match('/^[A-Za-z0-9-]+$/', $userId)) {
+		return qr_render($url, true);
+	}
+
+	$cfg = require __DIR__ . '/api/config.php';
+	$dir = rtrim($cfg['storage']['dir'], '/') . '/' . $userId;
+	$file = $dir . '/qr.svg';
+
+	if (!is_file($file)) {
+		$svg = qr_render($url, false); // markup SVG brut
+		if ($svg === null) {
+			return null;
+		}
+		if (!is_dir($dir)) {
+			@mkdir($dir, 0775, true);
+		}
+		@file_put_contents($file, $svg);
+	}
+	return app_base_url() . 'uploads/' . $userId . '/qr.svg';
+}
+
+/** Rend le QR en SVG. $base64=true → data URI ; false → markup SVG brut. null si erreur. */
+function qr_render(string $url, bool $base64): ?string
+{
 	try {
 		$options = new \chillerlan\QRCode\QROptions([
 			'outputType'     => \chillerlan\QRCode\QRCode::OUTPUT_MARKUP_SVG,
 			'eccLevel'       => \chillerlan\QRCode\QRCode::ECC_M,
-			'imageBase64'    => true,
+			'imageBase64'    => $base64,
 			'addQuietzone'   => true,
 			'quietzoneSize'  => 1,
 			'svgViewBoxSize' => 0,

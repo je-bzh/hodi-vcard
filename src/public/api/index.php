@@ -334,6 +334,8 @@ function handle_vcard_delete(array $body): void
 			delete_storage_file($path, $user['id']);
 		}
 	}
+	// QR mis en cache (rendu serveur).
+	delete_storage_file($user['id'] . '/qr.svg', $user['id']);
 
 	db_run('DELETE FROM vcards WHERE id = ?', [$id]); // cascade wallpapers
 	json_response(['ok' => true]);

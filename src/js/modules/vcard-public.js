@@ -293,8 +293,9 @@ function toggleSocial(network, url) {
  */
 async function generateQrCode(url) {
 	// Déjà rendu côté serveur (vcard.php) → on ne régénère pas (évite tout flash).
+	// SSR pose soit un data URI, soit l'URL du QR mis en cache (…/uploads/…/qr.svg).
 	const existing = $('[data-bind="qr_url"]').attr('src') || '';
-	if (existing.startsWith('data:')) return;
+	if (existing.startsWith('data:') || /\/uploads\/.+\/qr\.svg/.test(existing)) return;
 	try {
 		const dataUrl = await QRCode.toDataURL(url, {
 			errorCorrectionLevel: 'M',

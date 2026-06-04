@@ -76,9 +76,15 @@ let currentUser = null;
 async function bootstrap() {
 	// 0. Init intl-tel-input sur les champs téléphone (lib chargée à la demande,
 	//    on attend qu'elle soit prête pour qu'enterEditMode/writePhone l'utilisent)
+	// Pays par défaut : géoloc Cloudflare (boot.country) sinon France.
+	const defaultCountry = (boot && boot.country) || 'fr';
 	await Promise.all(
 		[...document.querySelectorAll('.js-intl-tel')].map((input) =>
-			initIntlPhone(input, { defaultCountry: 'fr' })
+			initIntlPhone(input, {
+				defaultCountry,
+				// Exemple de placeholder adapté : ligne fixe pour "ligne", mobile sinon
+				numberType: input.name === 'ligne' ? 'FIXED_LINE' : 'MOBILE',
+			})
 		)
 	);
 
