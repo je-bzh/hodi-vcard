@@ -36,10 +36,10 @@ const TRANSLATIONS = {
 		'hero.badge_no_card': 'No physical card',
 		'hero.badge_no_app': 'No app',
 		'hero.title_line1': 'Your virtual business card.',
-		'hero.title_line2': 'Hosted in Africa.',
+		'hero.title_line2': 'Made in Africa.',
 		'hero.cta': 'Create my Hodi vCard',
 		'hero.retrieve_link': 'I already have a vCard — recover my access',
-		'hero.pitch': 'Hodi offers you your virtual business card, hosted on its pan-African cloud.<br>Your data is encrypted, securely stored, and never used for commercial purposes.',
+		'hero.pitch': 'Hodi offers you your virtual business card. Your data is securely stored, and never used for commercial purposes.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'Recover my Hodi vCard',
@@ -239,10 +239,10 @@ const TRANSLATIONS = {
 		'hero.badge_no_card': 'Pas de carte',
 		'hero.badge_no_app': 'Pas d’appli',
 		'hero.title_line1': 'Votre carte de visite virtuelle.',
-		'hero.title_line2': 'Hébergée en Afrique.',
+		'hero.title_line2': 'Conçue en Afrique.',
 		'hero.cta': 'Créer ma vCard Hodi',
 		'hero.retrieve_link': "J'ai déjà une vCard — retrouver mon accès",
-		'hero.pitch': 'Hodi vous offre votre carte de visite virtuelle, hébergée sur son cloud panafricain.<br>Vos données sont chiffrées, stockées de manière sécurisée et ne sont pas exploitées commercialement.',
+		'hero.pitch': 'Hodi vous offre votre carte de visite virtuelle. Vos données sont stockées de manière sécurisée et ne sont jamais exploitées commercialement.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'Retrouver ma vCard Hodi',
