@@ -373,11 +373,9 @@ function handle_upload(array $body): void
 	}
 
 	$dataUrl = (string) ($body['data_url'] ?? '');
-	if (!preg_match('#^data:(image/(png|jpeg|jpg|webp));base64,#i', $dataUrl, $m)) {
+	if (!preg_match('#^data:image/(png|jpeg|jpg|webp);base64,#i', $dataUrl)) {
 		throw new ApiError('Image invalide (data URL attendu).', 422);
 	}
-	$mime = strtolower($m[1]);
-	$ext = ($mime === 'image/png') ? 'png' : (($mime === 'image/webp') ? 'webp' : 'jpg');
 
 	$b64 = substr($dataUrl, strpos($dataUrl, ',') + 1);
 	$binary = base64_decode($b64, true);
@@ -387,6 +385,16 @@ function handle_upload(array $body): void
 	if (strlen($binary) > (int) $cfg['storage']['max_bytes']) {
 		throw new ApiError('Image trop volumineuse.', 413);
 	}
+
+	// On ne se fie PAS au type annoncé : on vérifie que le contenu décodé est une
+	// VRAIE image, et on déduit l'extension du type réellement détecté → impossible
+	// de stocker un fichier non-image (HTML/JS/PHP) déguisé en .png.
+	$extByType = [IMAGETYPE_PNG => 'png', IMAGETYPE_JPEG => 'jpg', IMAGETYPE_WEBP => 'webp'];
+	$info = @getimagesizefromstring($binary);
+	if ($info === false || !isset($extByType[$info[2]])) {
+		throw new ApiError('Fichier non valide (image PNG/JPEG/WebP attendue).', 422);
+	}
+	$ext = $extByType[$info[2]];
 
 	$dir = rtrim($cfg['storage']['dir'], '/') . '/' . $user['id'];
 	if (!is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {

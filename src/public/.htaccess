@@ -29,6 +29,12 @@ RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteRule ^.*$ index.html [L]
 
+# Empêche le MIME-sniffing (un upload servi en image/png ne sera jamais
+# réinterprété en HTML/JS par le navigateur).
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>
+
 # Cache long sur les assets statiques
 <FilesMatch "\.(css|js|svg|png|jpg|jpeg|gif|woff2?|ico)$">
     Header set Cache-Control "max-age=31536000, public"
