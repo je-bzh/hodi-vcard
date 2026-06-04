@@ -24,8 +24,19 @@ if ($('html').attr('data-page') === 'card') {
 }
 
 async function bootstrap() {
-	const slug = getSlugFromUrl();
+	// Rendu serveur (vcard.php) : les données sont déjà injectées dans la page →
+	// pas d'appel API, on enrichit juste (QR, .vcf, popup).
+	if (typeof window.__VCARD_NOTFOUND__ !== 'undefined') {
+		renderNotFound(window.__VCARD_NOTFOUND__);
+		return;
+	}
+	if (window.__VCARD__) {
+		render(window.__VCARD__);
+		return;
+	}
 
+	// Fallback (page servie en statique, sans SSR) : on récupère via l'API.
+	const slug = getSlugFromUrl();
 	if (!slug) {
 		renderEmptyState();
 		return;

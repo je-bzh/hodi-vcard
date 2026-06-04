@@ -7,16 +7,19 @@
  * Ce module s'active uniquement sur les pages qui ont l'attribut data-auth-required.
  */
 
-import { api } from '/js/utils/api.js';
+import { api, boot } from '/js/utils/api.js';
 
 // On ne protège que les pages qui en ont besoin
 if (document.documentElement.hasAttribute('data-auth-required')) {
 	(async function checkAuth() {
-		let user = null;
-		try {
-			user = await api.auth.session();
-		} catch (err) {
-			console.error('[auth-guard] session error', err);
+		// Le serveur (page.php) a déjà gardé la page et hydraté → pas d'appel réseau.
+		let user = boot ? boot.user : null;
+		if (!boot) {
+			try {
+				user = await api.auth.session();
+			} catch (err) {
+				console.error('[auth-guard] session error', err);
+			}
 		}
 
 		if (!user) {

@@ -22,7 +22,7 @@
  * Activé uniquement sur la page qui a data-page="my-wallpapers".
  */
 
-import { api } from '/js/utils/api.js';
+import { api, boot } from '/js/utils/api.js';
 import { t } from '/js/utils/i18n.js';
 import { buildVcardUrl, assetUrl } from '/js/utils/urls.js';
 import QRCode from 'qrcode';
@@ -30,6 +30,8 @@ import QRCode from 'qrcode';
 const MAX_WALLPAPERS = 3; // 1 défaut Hodi + 2 perso
 
 let currentVcard = null;
+// Première liste de wallpapers fournie par le serveur (page.php) → 0 appel API au load.
+let bootWalls = boot && boot.wallpapers ? boot.wallpapers : null;
 
 if ($('html').attr('data-page') === 'my-wallpapers') {
 	bootstrap();
@@ -38,9 +40,9 @@ if ($('html').attr('data-page') === 'my-wallpapers') {
 async function bootstrap() {
 	let vcard = null;
 	try {
-		const user = await api.auth.session();
+		const user = boot ? boot.user : await api.auth.session();
 		if (!user) return; // auth-guard.js gère la redirection
-		vcard = await api.vcard.mine();
+		vcard = boot ? boot.vcard : await api.vcard.mine();
 	} catch (err) {
 		console.error('[wallpapers] bootstrap error', err);
 	}
@@ -60,11 +62,16 @@ async function bootstrap() {
 // ---------------------------------------------------------------------------
 async function loadAndRender() {
 	let walls = [];
-	try {
-		walls = await api.wallpapers.list();
-	} catch (error) {
-		console.error('[wallpapers] list error', error);
-		return;
+	if (bootWalls) {
+		walls = bootWalls;
+		bootWalls = null; // une seule fois ; les rechargements (ajout/suppr) refetchent
+	} else {
+		try {
+			walls = await api.wallpapers.list();
+		} catch (error) {
+			console.error('[wallpapers] list error', error);
+			return;
+		}
 	}
 
 	// Si pas de wallpaper par défaut Hodi → on le crée (résilience pour les

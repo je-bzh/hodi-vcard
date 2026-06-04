@@ -8,19 +8,21 @@ RewriteEngine On
 RewriteRule ^api(/|$) - [L]
 RewriteRule ^uploads/ - [L]
 
-# 1) URLs sans extension : /my-info → my-info.html (si le fichier existe).
-#    Permet des liens propres (sans .html) vers les pages de l'app.
+# 1a) Pages admin → rendu serveur (gate session + hydratation) par page.php.
+RewriteRule ^(my-info|my-wallpapers|email-signature)/?$ page.php?page=$1 [L,QSA]
+
+# 1b) Autres URLs sans extension : /first-login → first-login.html (si le fichier existe).
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
 RewriteCond %{DOCUMENT_ROOT}%{REQUEST_URI}.html -f
 RewriteRule ^(.+?)/?$ $1.html [L,QSA]
 
-# 2) Pretty URLs vCard : /{slug} → card.html?slug={slug}
-#    Le navigateur garde /jerome dans la barre d'adresse ; Apache sert card.html
+# 2) Pretty URLs vCard : /{slug} → vcard.php?slug={slug} (rendu serveur)
+#    Le navigateur garde /jerome dans la barre d'adresse ; Apache exécute vcard.php
 #    en interne. Ne s'applique qu'aux segments "slug-like" qui ne sont pas une page.
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([a-zA-Z0-9_-]+)/?$ card.html?slug=$1 [L,QSA]
+RewriteRule ^([a-zA-Z0-9_-]+)/?$ vcard.php?slug=$1 [L,QSA]
 
 # 3) Fallback : si rien ne correspond → index.html
 RewriteCond %{REQUEST_FILENAME} !-f

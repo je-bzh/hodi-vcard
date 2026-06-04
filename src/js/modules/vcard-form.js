@@ -19,7 +19,7 @@
  * Activé uniquement sur la page qui a data-page="my-info".
  */
 
-import { api } from '/js/utils/api.js';
+import { api, boot } from '/js/utils/api.js';
 import { t } from '/js/utils/i18n.js';
 import { buildVcardUrl, assetUrl } from '/js/utils/urls.js';
 import { createDefaultHodiWallpaperFor } from './wallpapers.js';
@@ -82,11 +82,15 @@ async function bootstrap() {
 		)
 	);
 
-	// 1. Récupère la session (peut être null)
-	try {
-		currentUser = await api.auth.session();
-	} catch (e) {
-		currentUser = null;
+	// 1. Récupère la session (peut être null) — déjà fournie par le serveur si hydraté
+	if (boot) {
+		currentUser = boot.user;
+	} else {
+		try {
+			currentUser = await api.auth.session();
+		} catch (e) {
+			currentUser = null;
+		}
 	}
 
 	// 2. Charge le payload pending depuis localStorage si présent
@@ -100,10 +104,10 @@ async function bootstrap() {
 	}
 
 	if (currentUser) {
-		// 3a. Authentifié : lookup vCard existante
+		// 3a. Authentifié : vCard existante (hydratée par le serveur, sinon API)
 		let vcard = null;
 		try {
-			vcard = await api.vcard.mine();
+			vcard = boot ? boot.vcard : await api.vcard.mine();
 		} catch (error) {
 			console.error('[vcard-form] mine() error', error);
 			showFeedback('error', t('common.error', { message: error.message }));

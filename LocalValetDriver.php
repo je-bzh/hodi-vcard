@@ -42,6 +42,10 @@ class LocalValetDriver extends ValetDriver
 		$root = $this->docRoot($sitePath);
 		$path = $root . $uri;
 
+		// Pages admin → toujours dynamiques (page.php), jamais le .html statique.
+		if (preg_match('#^/(my-info|my-wallpapers|email-signature)/?$#', $uri)) {
+			return false;
+		}
 		// Fichier réel (assets, uploads, *.html…) — jamais un .php
 		if ($uri !== '/' && is_file($path) && !preg_match('/\.php$/i', $path)) {
 			return $path;
@@ -50,25 +54,47 @@ class LocalValetDriver extends ValetDriver
 		if (preg_match('#^/[A-Za-z0-9_-]+$#', $uri) && is_file($root . $uri . '.html')) {
 			return $root . $uri . '.html';
 		}
-		// Segment simple inconnu → pretty URL de vCard (le slug est lu côté JS dans l'URL)
-		if (preg_match('#^/[A-Za-z0-9_-]+/?$#', $uri)) {
-			return $root . '/card.html';
-		}
-		// Fallback
-		return $root . '/index.html';
+		// Le reste (/api/*, slug de vCard, fallback) est dynamique → frontControllerPath.
+		return false;
 	}
 
-	/** Seul /api/* est dynamique : route /api/<route> → api/index.php?r=<route>. */
+	/** Parties dynamiques : /api/*, pages admin (page.php), /{slug} (vcard.php), fallback. */
 	public function frontControllerPath(string $sitePath, string $siteName, string $uri)
 	{
 		$root = $this->docRoot($sitePath);
 
+		// Pages admin → rendu serveur
+		if (preg_match('#^/(my-info|my-wallpapers|email-signature)/?$#', $uri, $m)) {
+			if (!isset($_GET['page'])) {
+				$_GET['page'] = $m[1];
+			}
+			$_SERVER['SCRIPT_NAME'] = '/page.php';
+			return $root . '/page.php';
+		}
+
+		// API
 		if (preg_match('#^/api/(.+)$#', $uri, $m)) {
 			if (!isset($_GET['r'])) {
 				$_GET['r'] = rtrim($m[1], '/');
 			}
+			$_SERVER['SCRIPT_NAME'] = '/api/index.php';
+			return $root . '/api/index.php';
 		}
-		$_SERVER['SCRIPT_NAME'] = '/api/index.php';
-		return $root . '/api/index.php';
+		if ($uri === '/api' || $uri === '/api/') {
+			$_SERVER['SCRIPT_NAME'] = '/api/index.php';
+			return $root . '/api/index.php';
+		}
+
+		// Pretty URL de vCard : /{slug} → rendu serveur par vcard.php
+		if (preg_match('#^/([A-Za-z0-9_-]+)/?$#', $uri, $m)) {
+			if (!isset($_GET['slug'])) {
+				$_GET['slug'] = $m[1];
+			}
+			$_SERVER['SCRIPT_NAME'] = '/vcard.php';
+			return $root . '/vcard.php';
+		}
+
+		// Fallback
+		return $root . '/index.html';
 	}
 }

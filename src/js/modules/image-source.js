@@ -174,19 +174,9 @@ $(document).on('click', '.js-toggle-popup', function () {
 	setTimeout(resetSourcePicker, 50);
 });
 
-// Désactive l'onglet Unsplash si la banque n'est pas configurée côté serveur.
-$(function () {
-	const $tab = $('.js-source-tab[data-source="unsplash"]');
-	if (!$tab.length) return;
-	api.unsplash.enabled()
-		.then((enabled) => {
-			if (!enabled) {
-				$tab.addClass('is-disabled')
-					.attr('title', 'Banque d\'images non configurée (VCARD_UNSPLASH_KEY côté serveur).');
-			}
-		})
-		.catch(() => { /* en cas d'erreur réseau, on laisse l'onglet cliquable */ });
-});
+// La banque d'images est considérée comme configurée (clé posée côté serveur) :
+// l'onglet est toujours actif, pas de round-trip de vérification. Si la clé manque,
+// la recherche renvoie une erreur explicite affichée dans la zone de résultats.
 
 // ---------------------------------------------------------------------------
 // Helpers

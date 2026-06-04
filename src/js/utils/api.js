@@ -50,10 +50,13 @@ async function call(route, { method = 'GET', body = null, query = null } = {}) {
 	return data;
 }
 
-// La session est stable le temps d'un chargement de page → on mémoïse la promesse
-// pour que les multiples modules (auth-guard + module de page) ne fassent qu'UN
-// seul aller-retour au lieu de plusieurs.
-let sessionPromise = null;
+// Données injectées par le rendu serveur (page.php) : { user, vcard, wallpapers? }.
+// Présentes → les modules évitent les appels session()/mine()/wallpapers/list.
+export const boot = (typeof window !== 'undefined' && window.__BOOT__) ? window.__BOOT__ : null;
+
+// La session est stable le temps d'un chargement de page → on mémoïse la promesse.
+// Si le serveur a déjà hydraté (boot), on part directement de sa valeur (0 round-trip).
+let sessionPromise = boot ? Promise.resolve(boot.user || null) : null;
 
 export const api = {
 	auth: {

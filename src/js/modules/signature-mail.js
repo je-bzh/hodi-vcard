@@ -8,7 +8,7 @@
  * Activé uniquement sur la page qui a data-page="email-signature".
  */
 
-import { api } from '/js/utils/api.js';
+import { api, boot } from '/js/utils/api.js';
 import { t } from '/js/utils/i18n.js';
 import { buildVcardUrl, absoluteAssetUrl, assetUrl } from '/js/utils/urls.js';
 
@@ -30,9 +30,9 @@ if ($('html').attr('data-page') === 'email-signature') {
 async function bootstrap() {
 	let vcard = null;
 	try {
-		const user = await api.auth.session();
+		const user = boot ? boot.user : await api.auth.session();
 		if (!user) return; // auth-guard.js gère le redirect
-		vcard = await api.vcard.mine();
+		vcard = boot ? boot.vcard : await api.vcard.mine();
 	} catch (err) {
 		console.error('[signature-mail] load error', err);
 	}
