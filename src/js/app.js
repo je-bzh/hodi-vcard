@@ -7,6 +7,7 @@ import '/scss/style.scss';
  * Modules
  */
 import '/js/utils/i18n.js';
+import './modules/analytics.js';
 import './modules/lang-switcher.js';
 import './modules/header-logo.js';
 import './modules/image-crop.js';

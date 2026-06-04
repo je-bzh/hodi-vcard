@@ -25,11 +25,11 @@ const TRANSLATIONS = {
 		'header.lang_label': 'Language',
 
 		// --- Meta ---
-		'meta.title': 'Hodi vCard – By Hodi, the unified African cloud',
+		'meta.title': 'Hodi vCard - By Hodi, the unified African cloud',
 		'meta.description': 'Your virtual business card, hosted on Hodi\'s pan-African cloud. Encrypted, secure, never used commercially.',
 
 		// --- Footer ---
-		'footer.logo_label': 'Hodi — Host different.',
+		'footer.logo_label': 'Hodi - Host different.',
 
 		// --- Home / Hero ---
 		'hero.badge_no_paper': 'No paper',
@@ -38,8 +38,8 @@ const TRANSLATIONS = {
 		'hero.title_line1': 'Your virtual business card.',
 		'hero.title_line2': 'Made in Africa.',
 		'hero.cta': 'Create my Hodi vCard',
-		'hero.retrieve_link': 'I already have a vCard — recover my access',
-		'hero.pitch': 'Hodi offers you your virtual business card. Your data is securely stored, and never used for commercial purposes.',
+		'hero.retrieve_link': 'I already have a vCard, recover my access',
+		'hero.pitch': 'Hodi offers you your virtual business card.<br>Your data is securely stored, and never used for commercial purposes.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'Recover my Hodi vCard',
@@ -106,7 +106,7 @@ const TRANSLATIONS = {
 		'feedback.saved': '✓ Changes saved.<br>Public link: <a href="{url}">{url}</a>',
 		'feedback.email_already_used': 'A vCard already exists for <strong>{email}</strong>. To edit it, click "Edit" at the bottom of that vCard.',
 		'feedback.slug_taken': 'The username "{slug}" is already taken. Choose another one.',
-		'feedback.create_email_sent': '<strong>✓ Confirmation email sent!</strong><br>A link has just been sent to <strong>{email}</strong>.<br>Click it to <strong>finalize the creation</strong> of your vCard.<br><br><span style="opacity: 0.7;">You can close this window — the link is valid for 1 hour.</span>',
+		'feedback.create_email_sent': '<strong>✓ Confirmation email sent!</strong><br>A link has just been sent to <strong>{email}</strong>.<br>Click it to <strong>finalize the creation</strong> of your vCard.<br><br><span style="opacity: 0.7;">You can close this window. The link is valid for 1 hour.</span>',
 		'feedback.finalizing': 'Finalizing the creation of your vCard…',
 		'feedback.uploading_cover': 'Uploading cover…',
 		'feedback.uploading_avatar': 'Uploading profile picture…',
@@ -132,7 +132,7 @@ const TRANSLATIONS = {
 		'modify.sending': 'Sending…',
 		'modify.sent_title': '✓ Link sent',
 		'modify.sent_description': 'An edit link has been sent to <strong>{email}</strong>.<br>It is valid for 1 hour. Check your inbox (and spam folder).',
-		'modify.sent_footnote': 'You can close this window — when you click the link in your email, you will be signed in automatically.',
+		'modify.sent_footnote': 'You can close this window. When you click the link in your email, you will be signed in automatically.',
 		'modify.error_no_email': "This vCard has no associated email.",
 		'modify.error_network': 'A network error occurred. Check your connection and try again.',
 
@@ -154,7 +154,7 @@ const TRANSLATIONS = {
 		'cropper.source_computer': 'My computer',
 		'cropper.source_library': 'Image library',
 		'cropper.search_placeholder': 'Beach, forest, city, abstract…',
-		'cropper.credit': 'Royalty-free photos — automatic photographer credit',
+		'cropper.credit': 'Royalty-free photos, automatic photographer credit',
 
 		// --- Common ---
 		'common.retry': 'Try again',
@@ -168,7 +168,7 @@ const TRANSLATIONS = {
 		'public.empty_title': 'No slug',
 		'public.empty_body': 'This page expects a <code>?slug=xxx</code> parameter in the URL.',
 		'public.back_home': '← Back to home',
-		'public.notfound_title': '404 — vCard not found',
+		'public.notfound_title': '404 - vCard not found',
 		'public.notfound_body': 'No vCard matches the slug <strong>{slug}</strong>.',
 		'public.error_title': 'An error occurred',
 		'public.vcf_error': 'Error generating the contact card. Please try again.',
@@ -192,7 +192,7 @@ const TRANSLATIONS = {
 		'signature.downloaded': '✓ HTML file downloaded.',
 		'signature.need_vcard': 'You must create your vCard first to generate an email signature.',
 		'signature.add_contact': 'Add to my contacts',
-		'signature.copied': '✓ Signature copied — paste it into your email client (HTML mode).',
+		'signature.copied': '✓ Signature copied. Paste it into your email client (HTML mode).',
 		'signature.copied_btn': 'Copied ✓',
 		'signature.copy_error': "Couldn't copy: {message}",
 
@@ -228,11 +228,11 @@ const TRANSLATIONS = {
 		'header.lang_label': 'Langue',
 
 		// --- Meta ---
-		'meta.title': 'Hodi vCard – By Hodi, le cloud unifié africain',
+		'meta.title': 'Hodi vCard - By Hodi, le cloud unifié africain',
 		'meta.description': 'Votre carte de visite virtuelle, hébergée sur le cloud panafricain de Hodi. Chiffrée, sécurisée, jamais exploitée commercialement.',
 
 		// --- Footer ---
-		'footer.logo_label': 'Hodi — Host different.',
+		'footer.logo_label': 'Hodi - Host different.',
 
 		// --- Home / Hero ---
 		'hero.badge_no_paper': 'Pas de papier',
@@ -241,8 +241,8 @@ const TRANSLATIONS = {
 		'hero.title_line1': 'Votre carte de visite virtuelle.',
 		'hero.title_line2': 'Conçue en Afrique.',
 		'hero.cta': 'Créer ma vCard Hodi',
-		'hero.retrieve_link': "J'ai déjà une vCard — retrouver mon accès",
-		'hero.pitch': 'Hodi vous offre votre carte de visite virtuelle. Vos données sont stockées de manière sécurisée et ne sont jamais exploitées commercialement.',
+		'hero.retrieve_link': "J'ai déjà une vCard, retrouver mon accès",
+		'hero.pitch': 'Hodi vous offre votre carte de visite virtuelle.<br>Vos données sont stockées de manière sécurisée et ne sont jamais exploitées commercialement.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'Retrouver ma vCard Hodi',
@@ -309,7 +309,7 @@ const TRANSLATIONS = {
 		'feedback.saved': '✓ Modifications enregistrées.<br>Lien public : <a href="{url}">{url}</a>',
 		'feedback.email_already_used': 'Une vCard existe déjà pour <strong>{email}</strong>. Pour la modifier, cliquez sur « Modifier » en bas de cette vCard.',
 		'feedback.slug_taken': 'Le username « {slug} » est déjà pris. Choisissez-en un autre.',
-		'feedback.create_email_sent': '<strong>✓ Email de confirmation envoyé !</strong><br>Un lien vient d’être envoyé à <strong>{email}</strong>.<br>Cliquez dessus pour <strong>finaliser la création</strong> de votre vCard.<br><br><span style="opacity: 0.7;">Vous pouvez fermer cette fenêtre — le lien est valable 1 heure.</span>',
+		'feedback.create_email_sent': '<strong>✓ Email de confirmation envoyé !</strong><br>Un lien vient d’être envoyé à <strong>{email}</strong>.<br>Cliquez dessus pour <strong>finaliser la création</strong> de votre vCard.<br><br><span style="opacity: 0.7;">Vous pouvez fermer cette fenêtre. Le lien est valable 1 heure.</span>',
 		'feedback.finalizing': 'Finalisation de la création de votre vCard…',
 		'feedback.uploading_cover': 'Upload de la couverture…',
 		'feedback.uploading_avatar': 'Upload de la photo de profil…',
@@ -335,7 +335,7 @@ const TRANSLATIONS = {
 		'modify.sending': 'Envoi en cours…',
 		'modify.sent_title': '✓ Lien envoyé',
 		'modify.sent_description': 'Un lien de modification a été envoyé à <strong>{email}</strong>.<br>Il est valable 1 heure. Vérifiez votre boîte mail (et les spams).',
-		'modify.sent_footnote': 'Vous pouvez fermer cette fenêtre — en cliquant sur le lien reçu par email, vous serez connecté automatiquement.',
+		'modify.sent_footnote': 'Vous pouvez fermer cette fenêtre. En cliquant sur le lien reçu par email, vous serez connecté automatiquement.',
 		'modify.error_no_email': "Cette vCard n’a pas d’email associé.",
 		'modify.error_network': 'Une erreur réseau est survenue. Vérifiez votre connexion et réessayez.',
 
@@ -357,7 +357,7 @@ const TRANSLATIONS = {
 		'cropper.source_computer': 'Mon ordinateur',
 		'cropper.source_library': 'Banque d’images',
 		'cropper.search_placeholder': 'Plage, forêt, ville, abstrait…',
-		'cropper.credit': 'Photos libres de droits — crédit photographe automatique',
+		'cropper.credit': 'Photos libres de droits, crédit photographe automatique',
 
 		// --- Common ---
 		'common.retry': 'Réessayer',
@@ -371,7 +371,7 @@ const TRANSLATIONS = {
 		'public.empty_title': 'Pas de slug',
 		'public.empty_body': 'Cette page attend un paramètre <code>?slug=xxx</code> dans l’URL.',
 		'public.back_home': '← Retour à l’accueil',
-		'public.notfound_title': '404 — vCard introuvable',
+		'public.notfound_title': '404 - vCard introuvable',
 		'public.notfound_body': 'Aucune vCard ne correspond au slug <strong>{slug}</strong>.',
 		'public.error_title': 'Une erreur est survenue',
 		'public.vcf_error': 'Erreur lors de la génération de la fiche contact. Réessayez.',
@@ -395,7 +395,7 @@ const TRANSLATIONS = {
 		'signature.downloaded': '✓ Fichier HTML téléchargé.',
 		'signature.need_vcard': 'Vous devez d’abord créer votre vCard pour générer une signature mail.',
 		'signature.add_contact': 'Ajouter à mes contacts',
-		'signature.copied': '✓ Signature copiée — collez-la dans votre client mail (mode HTML).',
+		'signature.copied': '✓ Signature copiée. Collez-la dans votre client mail (mode HTML).',
 		'signature.copied_btn': 'Copié ✓',
 		'signature.copy_error': 'Impossible de copier : {message}',
 

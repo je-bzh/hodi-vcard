@@ -110,7 +110,7 @@ function renderPreview(vcard, vcardUrl, socials) {
 	}
 
 	$('.js-sig-name').text(fullName);
-	$('.js-sig-role-company').text(roleCompany || '—');
+	$('.js-sig-role-company').text(roleCompany || '');
 	$('.js-sig-contact').html(buildContactLineHtml(vcard));
 	$('.js-sig-vcard-link').attr('href', vcardUrl);
 
@@ -136,7 +136,7 @@ function buildContactLineHtml(vcard) {
 	if (vcard.website_url) {
 		parts.push(`<a href="${escapeAttr(vcard.website_url)}" style="color:#0d81fe; text-decoration:none;">${escapeHtml(prettyHost(vcard.website_url))}</a>`);
 	}
-	return parts.join(' - ') || '—';
+	return parts.join(' - ') || '';
 }
 
 // ---------------------------------------------------------------------------
@@ -303,7 +303,7 @@ function downloadSignatureHtml() {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>${escapeHtml(name)} — ${escapeHtml(t('tabs.my_signature'))}</title>
+<title>${escapeHtml(name)} - ${escapeHtml(t('tabs.my_signature'))}</title>
 </head>
 <body>
 ${inner}

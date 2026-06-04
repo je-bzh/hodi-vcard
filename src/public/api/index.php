@@ -237,7 +237,7 @@ function handle_vcard_create(array $body): void
 
 	$slug = strtolower(trim((string) ($body['slug'] ?? '')));
 	if (!is_valid_slug($slug)) {
-		throw new ApiError('Username invalide (3–50 caractères, lettres minuscules, chiffres, tirets).', 422);
+		throw new ApiError('Username invalide (3-50 caractères, lettres minuscules, chiffres, tirets).', 422);
 	}
 	// Réservé OU déjà utilisé → même erreur "déjà pris".
 	if (slug_is_reserved($slug) || db_one('SELECT 1 FROM vcards WHERE slug = ? LIMIT 1', [$slug])) {

@@ -153,11 +153,11 @@ function render_card(string $html, array $v, ?string $qrSrc): string
 	}
 
 	// --- Titre + meta SEO/social ---
-	$title = ($fullName !== '' ? $fullName : 'vCard') . ' — Hodi vCard';
+	$title = ($fullName !== '' ? $fullName : 'vCard') . ' - Hodi vCard';
 	if ($t = $first_node($xp, '//title')) {
 		$t->textContent = $title;
 	}
-	$desc = trim(implode(' · ', array_filter([$v['role'] ?? '', $v['company'] ?? '']))) ?: $title;
+	$desc = trim(implode(', ', array_filter([$v['role'] ?? '', $v['company'] ?? '']))) ?: $title;
 	set_meta($xp, 'property', 'og:title', $fullName !== '' ? $fullName : $title);
 	set_meta($xp, 'property', 'og:description', $desc);
 	if (!empty($v['avatar_url'])) {

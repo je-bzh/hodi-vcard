@@ -68,7 +68,7 @@ function render(vcard, hydrated = false) {
 	// Si la page a été rendue côté serveur (vcard.php), le DOM est déjà rempli →
 	// on saute tout le remplissage et on ne fait que l'enrichissement interactif.
 	if (!hydrated) {
-		document.title = `${joinName(vcard)} — Hodi vCard`;
+		document.title = `${joinName(vcard)} - Hodi vCard`;
 
 		const fullMobile = joinPhone(vcard.phone_mobile_country, vcard.phone_mobile);
 		const fullLandline = joinPhone(vcard.phone_landline_country, vcard.phone_landline);
