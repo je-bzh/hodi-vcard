@@ -6,8 +6,9 @@
 import { getLang, setLang } from '/js/utils/i18n.js';
 
 const LANGS = [
-	{ code: 'en', label: 'English', short: 'EN', flag: '🇬🇧' },
-	{ code: 'fr', label: 'Français', short: 'FR', flag: '🇫🇷' },
+	{ code: 'en', label: 'English' },
+	{ code: 'fr', label: 'Français' },
+	{ code: 'sw', label: 'Kiswahili' },
 ];
 
 function renderSwitcher() {
@@ -19,7 +20,7 @@ function renderSwitcher() {
 		$select.append(
 			$('<option>', {
 				value: l.code,
-				text: `${l.flag} ${l.short}`,
+				text: l.label,
 				selected: getLang() === l.code,
 			})
 		);

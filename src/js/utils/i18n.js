@@ -428,6 +428,212 @@ const TRANSLATIONS = {
 		'feedback.generating_wallpaper': 'Génération de votre fond d’écran Hodi…',
 		'feedback.create_conflict': 'Erreur : une vCard existe déjà pour cet email ou ce username.',
 	},
+
+	// Kiswahili — traduction à faire relire par un locuteur natif avant lancement.
+	sw: {
+		// --- Header ---
+		'header.visit_hodi': 'Tembelea Hodi.host',
+		'header.lang_label': 'Lugha',
+
+		// --- Meta ---
+		'meta.title': 'Hodi vCard - Kutoka Hodi, wingu la Afrika lililounganishwa',
+		'meta.description': 'Kadi yako ya mawasiliano ya kidijitali, iliyohifadhiwa kwenye wingu la Hodi la Kiafrika. Imesimbwa, salama, haitumiwi kamwe kibiashara.',
+
+		// --- Footer ---
+		'footer.logo_label': 'Hodi - Host different.',
+		'footer.legal': 'Ilani za kisheria',
+		'footer.privacy': 'Sera ya faragha',
+
+		// --- Home / Hero ---
+		'hero.badge_no_paper': 'Hakuna karatasi',
+		'hero.badge_no_card': 'Hakuna kadi halisi',
+		'hero.badge_no_app': 'Hakuna programu',
+		'hero.title_line1': 'Kadi yako ya mawasiliano ya kidijitali.',
+		'hero.title_line2': 'Imetengenezwa Afrika.',
+		'hero.cta': 'Tengeneza vCard yangu ya Hodi',
+		'hero.retrieve_link': 'Tayari nina vCard, nirejeshee ufikiaji',
+		'hero.pitch': 'Hodi inakupa kadi yako ya mawasiliano ya kidijitali.<br>Data yako huhifadhiwa kwa usalama, na haitumiwi kamwe kwa madhumuni ya kibiashara.',
+
+		// --- Retrieve popup ---
+		'retrieve.title': 'Rejesha vCard yangu ya Hodi',
+		'retrieve.intro': 'Weka barua pepe inayohusishwa na vCard yako ya Hodi. Tutakutumia kiungo cha matumizi ya mara moja ili kuifikia na kuihariri.',
+		'retrieve.email_placeholder': 'barua@pepe.com',
+		'retrieve.send_btn': 'Tuma kiungo cha urejeshaji',
+
+		// --- Tabs admin ---
+		'tabs.my_info': 'Taarifa zangu',
+		'tabs.my_wallpapers': 'Mandhari zangu',
+		'tabs.my_signature': 'Sahihi yangu ya barua pepe',
+
+		// --- Form (mes-infos) ---
+		'form.intro': 'Data unayoweka hapa hutumika tu kutengeneza vCard yako. Huhifadhiwa kwa usalama, haitumiwi kamwe kwa madhumuni ya kibiashara, na timu ya Hodi haina ufikiaji wake.',
+
+		'form.username_label': 'Jina la mtumiaji la Hodi vCard',
+		'form.username_placeholder': 'jina-lako-la-mtumiaji',
+		'form.check_btn': 'Angalia',
+		'form.email_label': 'Barua pepe',
+		'form.email_placeholder': 'barua@pepe.com',
+		'form.email_hint': 'Barua pepe hii imeunganishwa na akaunti yako ya Hodi na haiwezi kubadilishwa.',
+		'form.first_name_label': 'Jina',
+		'form.last_name_label': 'Jina la familia',
+		'form.organization_label': 'Shirika',
+		'form.role_label': 'Wadhifa',
+
+		'form.section_contact': 'Maelezo ya mawasiliano',
+		'form.mobile_label': 'Simu ya mkononi',
+		'form.whatsapp_checkbox': 'Nambari hii inapatikana pia kwenye WhatsApp',
+		'form.landline_label': 'Simu ya mezani',
+		'form.address_label': 'Anwani',
+		'form.address_placeholder': 'Anwani yako ya posta',
+		'form.website_label': 'Tovuti',
+		'form.booking_label': 'Weka miadi',
+
+		'form.section_socials': 'Mitandao ya kijamii',
+
+		'form.section_link': 'Kiungo maalum (hiari)',
+		'form.doc_label_label': 'Jina la kiungo',
+		'form.doc_label_placeholder': 'Portfolio yangu, brosha, makala…',
+		'form.doc_url_label': 'URL',
+		'form.doc_url_placeholder': 'https://...',
+		'form.doc_hint': 'Kiungo unachotaka kuangazia kwenye vCard yako: portfolio, brosha ya PDF, makala…',
+
+		'form.save_create': 'Tengeneza vCard yangu',
+		'form.save_update': 'Hifadhi taarifa zangu',
+		'form.delete': 'Futa vCard yangu kabisa',
+
+		'form.placeholder_empty': 'Haijawekwa',
+
+		// --- Slug check feedback ---
+		'slug.empty': 'Andika jina la mtumiaji kabla ya kuangalia.',
+		'slug.too_short': 'Fupi mno: angalau herufi 3.',
+		'slug.checking': 'Inakagua…',
+		'slug.available': '✓ "{slug}" inapatikana!',
+		'slug.taken': '✗ "{slug}" tayari imechukuliwa.',
+		'slug.error': 'Hitilafu: {message}',
+
+		// --- Feedback messages (JS) ---
+		'feedback.no_vcard_yet': 'Bado huna vCard. Jaza fomu hii na ubofye "Tengeneza vCard yangu" chini.',
+		'feedback.network_error': 'Hitilafu ya mtandao. Angalia muunganisho wako na ujaribu tena.',
+		'feedback.no_vcard_to_delete': 'Huna vCard ya kufuta.',
+		'feedback.deleted': 'vCard imefutwa. Unaweza kutengeneza mpya hapo juu.',
+		'feedback.saved': '✓ Mabadiliko yamehifadhiwa.<br>Kiungo cha umma: <a href="{url}">{url}</a>',
+		'feedback.email_already_used': 'vCard tayari ipo kwa <strong>{email}</strong>. Ili kuihariri, bofya "Hariri" chini ya vCard hiyo.',
+		'feedback.slug_taken': 'Jina la mtumiaji "{slug}" tayari limechukuliwa. Chagua jingine.',
+		'feedback.create_email_sent': '<strong>✓ Barua pepe ya uthibitisho imetumwa!</strong><br>Kiungo kimetumwa hivi punde kwa <strong>{email}</strong>.<br>Bofya ili <strong>kukamilisha kuunda</strong> vCard yako.<br><br><span style="opacity: 0.7;">Unaweza kufunga dirisha hili. Kiungo kinafanya kazi kwa saa 1.</span>',
+		'feedback.finalizing': 'Inakamilisha kuunda vCard yako…',
+		'feedback.uploading_cover': 'Inapakia jalada…',
+		'feedback.uploading_avatar': 'Inapakia picha ya wasifu…',
+		'feedback.created_redirecting': '✓ vCard imetengenezwa! Inaelekeza kwenye kadi yako ya umma…',
+
+		// --- Validation errors ---
+		'error.first_name_required': 'Jina linahitajika.',
+		'error.last_name_required': 'Jina la familia linahitajika.',
+		'error.email_required': 'Barua pepe inahitajika.',
+		'error.email_invalid': 'Barua pepe si sahihi.',
+		'error.mobile_required': 'Nambari ya simu ya mkononi inahitajika.',
+		'error.username_required': 'Jina la mtumiaji la Hodi vCard linahitajika.',
+		'error.username_invalid': 'Jina la mtumiaji linaweza kuwa na herufi ndogo, tarakimu na vistari pekee.',
+		'error.username_length': 'Jina la mtumiaji lazima liwe na herufi 3 hadi 50.',
+		'error.email_missing_auth': 'Barua pepe ya mmiliki haipo (tatizo la uthibitishaji).',
+
+		// --- Modifier popup ---
+		'modify.title': 'Unataka kuhariri vCard yako?',
+		'modify.subtitle': 'vCard hii ni yako na unataka kuisasisha?',
+		'modify.description': 'Tutatuma kiungo cha kipekee cha kuhariri kwa barua pepe inayohusishwa na vCard hii:',
+		'modify.cta': 'Nitumie kiungo cha kuhariri',
+		'modify.close': 'Funga',
+		'modify.sending': 'Inatuma…',
+		'modify.sent_title': '✓ Kiungo kimetumwa',
+		'modify.sent_description': 'Kiungo cha kuhariri kimetumwa kwa <strong>{email}</strong>.<br>Kinafanya kazi kwa saa 1. Angalia kikasha chako (na folda ya barua taka).',
+		'modify.sent_footnote': 'Unaweza kufunga dirisha hili. Ukibofya kiungo kwenye barua pepe yako, utaingia kiotomatiki.',
+		'modify.error_no_email': 'vCard hii haina barua pepe inayohusishwa.',
+		'modify.error_network': 'Hitilafu ya mtandao imetokea. Angalia muunganisho wako na ujaribu tena.',
+
+		// --- Public vCard actions ---
+		'public.visit_website': 'Tembelea tovuti yangu',
+		'public.book_appointment': 'Weka miadi',
+		'public.save_contact': 'Hifadhi kadi ya mawasiliano',
+		'public.edit': '> Hariri',
+
+		// --- Cropper popup ---
+		'cropper.title_avatar': 'Picha mpya ya wasifu',
+		'cropper.title_cover': 'Picha mpya ya jalada',
+		'cropper.title_wallpaper': 'Mandhari mpya ya simu',
+		'cropper.drag_or': 'Buruta picha yako hapa au…',
+		'cropper.browse': 'Vinjari',
+		'cropper.limit': 'Upeo MB 2, JPG au PNG',
+		'cropper.save': 'Hifadhi picha',
+		'cropper.new_image': 'Picha mpya',
+		'cropper.source_computer': 'Kompyuta yangu',
+		'cropper.source_library': 'Maktaba ya picha',
+		'cropper.search_placeholder': 'Pwani, msitu, jiji, dhahania…',
+		'cropper.credit': 'Picha zisizo na mrabaha, sifa ya mpiga picha kiotomatiki',
+
+		// --- Common ---
+		'common.retry': 'Jaribu tena',
+		'common.saving': 'Inahifadhi…',
+		'common.error': 'Hitilafu: {message}',
+		'modify.error_title': 'Imeshindwa kutuma kiungo',
+
+		// --- Public vCard (states + labels) ---
+		'public.contact_landline': 'Simu ya mezani',
+		'public.contact_website': 'Tovuti',
+		'public.empty_title': 'Kiungo hakijabainishwa',
+		'public.empty_body': 'Ukurasa huu unahitaji kigezo <code>?slug=xxx</code> kwenye URL.',
+		'public.back_home': '← Rudi mwanzo',
+		'public.notfound_title': '404 - vCard haikupatikana',
+		'public.notfound_body': 'Hakuna vCard inayolingana na slug <strong>{slug}</strong>.',
+		'public.error_title': 'Hitilafu imetokea',
+		'public.vcf_error': 'Hitilafu katika kutengeneza kadi ya mawasiliano. Tafadhali jaribu tena.',
+
+		// --- Wallpapers (mes-fonds) ---
+		'wallpapers.intro': 'Tengeneza na ubinafsishe mandhari ya skrini iliyofungwa kwa simu yako:',
+		'wallpapers.need_vcard': 'Lazima utengeneze vCard yako kwanza.',
+		'wallpapers.add': 'Ongeza',
+		'wallpapers.download': 'Pakua',
+		'wallpapers.delete': 'Futa',
+		'wallpapers.delete_confirm': 'Futa mandhari hii?',
+		'wallpapers.composing': 'Inatengeneza mandhari…',
+		'wallpapers.limit_reached': 'Umefikia kikomo cha mandhari {max}.',
+		'wallpapers.create_error': 'Hitilafu katika kutengeneza mandhari: {message}',
+		'wallpapers.delete_error': 'Hitilafu ya kufuta: {message}',
+
+		// --- Email signature ---
+		'signature.intro': 'Pachika sahihi yako ya barua pepe yenye kiungo cha vCard yako ya Hodi:',
+		'signature.copy_btn': 'Nakili msimbo wa HTML wa sahihi yangu',
+		'signature.download_btn': 'Pakua kama faili la HTML',
+		'signature.downloaded': '✓ Faili la HTML limepakuliwa.',
+		'signature.need_vcard': 'Lazima utengeneze vCard yako kwanza ili kutengeneza sahihi ya barua pepe.',
+		'signature.add_contact': 'Ongeza kwa anwani zangu',
+		'signature.copied': '✓ Sahihi imenakiliwa. Ibandike kwenye programu yako ya barua pepe (hali ya HTML).',
+		'signature.copied_btn': 'Imenakiliwa ✓',
+		'signature.copy_error': 'Imeshindwa kunakili: {message}',
+
+		// --- Image source (Unsplash) ---
+		'source.prompt': 'Andika neno muhimu kutafuta picha zisizo na mrabaha kwenye Unsplash.',
+		'source.searching': 'Inatafuta…',
+		'source.no_results': 'Hakuna matokeo. Jaribu neno jingine.',
+		'source.fetch_error': 'Imeshindwa kupata picha hii: {message}',
+
+		// --- Retrieve feedback ---
+		'retrieve.email_required': 'Tafadhali weka anwani yako ya barua pepe.',
+		'retrieve.checking': 'Inakagua…',
+		'retrieve.none': 'Hakuna vCard inayohusishwa na <strong>{email}</strong>.<br>Unaweza kutengeneza moja kwa kitufe cha "Tengeneza vCard yangu ya Hodi" kwenye ukurasa huu.',
+		'retrieve.sent': '✓ Kiungo cha urejeshaji kimetumwa hivi punde kwa <strong>{email}</strong>.<br>Bofya kiungo kwenye barua pepe ili kufikia vCard yako.',
+
+		// --- Form (extra runtime labels) ---
+		'form.tab_locked_title': 'Inapatikana baada ya kutengeneza vCard yako.',
+		'form.slug_locked_title': 'Jina la mtumiaji haliwezi kubadilishwa baada ya kutengenezwa.',
+		'form.your_vcard_url': 'URL ya vCard yako:',
+		'form.preview': 'Hakiki',
+		'form.checking': 'Inakagua…',
+		'form.sending_email': 'Inatuma barua pepe…',
+		'form.email_sent_btn': 'Barua pepe imetumwa ✓',
+		'form.finalizing_btn': 'Inakamilisha…',
+		'form.delete_confirm': 'Futa kabisa vCard "{slug}"?\n\nKitendo hiki hakiwezi kutenduliwa na kitaharibu viungo / misimbo ya QR yote iliyopo.',
+		'feedback.generating_wallpaper': 'Inatengeneza mandhari yako ya Hodi…',
+		'feedback.create_conflict': 'Hitilafu: vCard tayari ipo kwa barua pepe au jina hili la mtumiaji.',
+	},
 };
 
 /**
@@ -439,7 +645,9 @@ function detectInitialLang() {
 		if (saved && TRANSLATIONS[saved]) return saved;
 	} catch {}
 	const nav = (navigator.language || 'en').toLowerCase();
-	return nav.startsWith('fr') ? 'fr' : 'en';
+	if (nav.startsWith('fr')) return 'fr';
+	if (nav.startsWith('sw')) return 'sw';
+	return 'en';
 }
 
 let currentLang = detectInitialLang();
