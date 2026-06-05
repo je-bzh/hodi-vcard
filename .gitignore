@@ -49,3 +49,11 @@ storage/mail.log
 # Deploy artefacts
 hodi-vcard-deploy.zip
 vcard-htaccess.txt
+
+# Claude Code: share only docs (*.md) with the team — never the .json config
+# (launch.json, settings.local.json…). Overrides the global ~/.gitignore_global
+# that ignores .claude/ entirely.
+!.claude/
+.claude/**
+!.claude/**/
+!.claude/**/*.md
