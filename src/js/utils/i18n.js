@@ -27,7 +27,7 @@ const TRANSLATIONS = {
 
 		// --- Meta ---
 		'meta.title': 'Hodi vCard - By Hodi, the unified African cloud',
-		'meta.description': 'Your virtual business card, hosted on Hodi\'s pan-African cloud. Encrypted, secure, never used commercially.',
+		'meta.description': 'Your virtual business card, made in Africa. Encrypted, secure, never used commercially.',
 
 		// --- Footer ---
 		'footer.logo_label': 'Hodi - Host different.',
@@ -232,7 +232,7 @@ const TRANSLATIONS = {
 
 		// --- Meta ---
 		'meta.title': 'Hodi vCard - By Hodi, le cloud unifié africain',
-		'meta.description': 'Votre carte de visite virtuelle, hébergée sur le cloud panafricain de Hodi. Chiffrée, sécurisée, jamais exploitée commercialement.',
+		'meta.description': 'Votre carte de visite virtuelle, conçue en Afrique. Chiffrée, sécurisée, jamais exploitée commercialement.',
 
 		// --- Footer ---
 		'footer.logo_label': 'Hodi - Host different.',
@@ -438,7 +438,7 @@ const TRANSLATIONS = {
 
 		// --- Meta ---
 		'meta.title': 'Hodi vCard - Kutoka Hodi, wingu la Afrika lililounganishwa',
-		'meta.description': 'Kadi yako ya mawasiliano ya kidijitali, iliyohifadhiwa kwenye wingu la Hodi la Kiafrika. Imesimbwa, salama, haitumiwi kamwe kibiashara.',
+		'meta.description': 'Kadi yako ya mawasiliano ya kidijitali, iliyotengenezwa Afrika. Imesimbwa, salama, haitumiwi kamwe kibiashara.',
 
 		// --- Footer ---
 		'footer.logo_label': 'Hodi - Host different.',
@@ -644,7 +644,7 @@ const TRANSLATIONS = {
 
 		// --- Meta ---
 		'meta.title': 'Hodi vCard - Pela Hodi, a nuvem africana unificada',
-		'meta.description': 'O seu cartão de visita virtual, alojado na nuvem panafricana da Hodi. Encriptado, seguro, nunca usado comercialmente.',
+		'meta.description': 'O seu cartão de visita virtual, feito em África. Encriptado, seguro, nunca usado comercialmente.',
 
 		// --- Footer ---
 		'footer.logo_label': 'Hodi - Host different.',
@@ -850,7 +850,7 @@ const TRANSLATIONS = {
 
 		// --- Meta ---
 		'meta.title': 'Hodi vCard - من Hodi، السحابة الأفريقية الموحّدة',
-		'meta.description': 'بطاقة عملك الرقمية، مستضافة على سحابة Hodi الأفريقية. مشفّرة وآمنة ولا تُستخدم تجاريًا أبدًا.',
+		'meta.description': 'بطاقة عملك الافتراضية، مصنوعة في أفريقيا. مشفّرة وآمنة ولا تُستخدم تجاريًا أبدًا.',
 
 		// --- Footer ---
 		'footer.logo_label': 'Hodi - Host different.',
