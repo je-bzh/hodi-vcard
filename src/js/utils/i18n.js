@@ -30,6 +30,8 @@ const TRANSLATIONS = {
 
 		// --- Footer ---
 		'footer.logo_label': 'Hodi - Host different.',
+		'footer.legal': 'Legal notice',
+		'footer.privacy': 'Privacy policy',
 
 		// --- Home / Hero ---
 		'hero.badge_no_paper': 'No paper',
@@ -233,6 +235,8 @@ const TRANSLATIONS = {
 
 		// --- Footer ---
 		'footer.logo_label': 'Hodi - Host different.',
+		'footer.legal': 'Mentions légales',
+		'footer.privacy': 'Politique de confidentialité',
 
 		// --- Home / Hero ---
 		'hero.badge_no_paper': 'Pas de papier',
