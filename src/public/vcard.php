@@ -36,14 +36,15 @@ $row  = $slug !== '' ? vcard_by_slug($slug) : null;
 if (!$row) {
 	// Carte introuvable : 404 + drapeau pour que le JS affiche le message propre.
 	http_response_code(404);
-	echo inject_head_script($template, 'window.__VCARD_NOTFOUND__=' . json_encode($slug, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT));
+	$out = inject_head_script($template, 'window.__VCARD_NOTFOUND__=' . json_encode($slug, JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_QUOT));
+	echo html_with_lang($out);
 	exit;
 }
 
 $v = vcard_public_view($row);
 // QR du lien public, mis en cache (fichier) dans le dossier de l'utilisateur.
 $qrSrc = qr_src($row, app_base_url() . rawurlencode((string) $v['slug']));
-echo render_card($template, $v, $qrSrc);
+echo html_with_lang(render_card($template, $v, $qrSrc));
 
 // ===========================================================================
 

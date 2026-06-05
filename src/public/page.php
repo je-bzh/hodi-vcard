@@ -83,6 +83,9 @@ $script = "<script>window.__BOOT__={$json}</script>";
 $pos = stripos($html, '</head>');
 $html = $pos === false ? $script . $html : substr($html, 0, $pos) . $script . substr($html, $pos);
 
+// Langue/sens d'écriture côté serveur (cookie) → pas de flash LTR avant le JS.
+$html = html_with_lang($html);
+
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: no-cache, must-revalidate');
 echo $html;

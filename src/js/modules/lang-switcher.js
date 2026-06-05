@@ -9,6 +9,8 @@ const LANGS = [
 	{ code: 'en', label: 'English' },
 	{ code: 'fr', label: 'Français' },
 	{ code: 'sw', label: 'Kiswahili' },
+	{ code: 'pt', label: 'Português' },
+	{ code: 'ar', label: 'العربية' },
 ];
 
 function renderSwitcher() {

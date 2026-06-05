@@ -2,10 +2,11 @@
  * i18n minimaliste pour Hodi vCard
  *
  * Langue par défaut : détectée automatiquement (cf. detectInitialLang) —
- *   1. choix utilisateur persisté (localStorage 'hodi-vcard-lang'), sinon
+ *   1. choix utilisateur persisté (localStorage, puis cookie 'hodi-vcard-lang'), sinon
  *   2. langue du navigateur (navigator.language), sinon
  *   3. fallback EN.
- * Override possible via le sélecteur du header.
+ * Override possible via le sélecteur du header. Le choix est aussi écrit dans un
+ * cookie lisible par le serveur (SSR + langue des emails/erreurs).
  *
  * Usage HTML :
  *   <h2 data-i18n="hero.title">Default text</h2>
@@ -55,7 +56,7 @@ const TRANSLATIONS = {
 		'tabs.my_signature': 'My email signature',
 
 		// --- Form (mes-infos) ---
-		'form.intro': "The data you enter here is only used to generate your vCard. It is stored securely, never used for commercial purposes, and the Hodi team has no access to it.",
+		'form.intro': "The data you enter here is only used to generate your vCard. It is stored securely and will never be used for commercial purposes.",
 
 		'form.username_label': 'Hodi vCard username',
 		'form.username_placeholder': 'your-username',
@@ -260,7 +261,7 @@ const TRANSLATIONS = {
 		'tabs.my_signature': 'Ma signature mail',
 
 		// --- Form (mes-infos) ---
-		'form.intro': "Les données saisies ici servent uniquement à générer votre vCard. Elles sont stockées de manière sécurisée, ne sont jamais exploitées à des fins commerciales, et l’équipe Hodi n’y a pas accès.",
+		'form.intro': "Les données saisies ici servent uniquement à générer votre vCard. Elles sont stockées de manière sécurisée et ne seront jamais exploitées à des fins commerciales.",
 
 		'form.username_label': 'Username Hodi vCard',
 		'form.username_placeholder': 'votre-username',
@@ -466,7 +467,7 @@ const TRANSLATIONS = {
 		'tabs.my_signature': 'Sahihi yangu ya barua pepe',
 
 		// --- Form (mes-infos) ---
-		'form.intro': 'Data unayoweka hapa hutumika tu kutengeneza vCard yako. Huhifadhiwa kwa usalama, haitumiwi kamwe kwa madhumuni ya kibiashara, na timu ya Hodi haina ufikiaji wake.',
+		'form.intro': 'Data unayoweka hapa hutumika tu kutengeneza vCard yako. Huhifadhiwa kwa usalama na haitatumiwa kamwe kwa madhumuni ya kibiashara.',
 
 		'form.username_label': 'Anwani ya Hodi vCard',
 		'form.username_placeholder': 'jina-lako',
@@ -582,7 +583,7 @@ const TRANSLATIONS = {
 		'public.empty_body': 'Ukurasa huu unahitaji kigezo <code>?slug=xxx</code> kwenye URL.',
 		'public.back_home': '← Rudi mwanzo',
 		'public.notfound_title': '404 - vCard haikupatikana',
-		'public.notfound_body': 'Hakuna vCard inayolingana na slug <strong>{slug}</strong>.',
+		'public.notfound_body': 'Hakuna vCard inayolingana na anwani <strong>{slug}</strong>.',
 		'public.error_title': 'Hitilafu imetokea',
 		'public.vcf_error': 'Hitilafu katika kutengeneza kadi ya mawasiliano. Tafadhali jaribu tena.',
 
@@ -634,20 +635,460 @@ const TRANSLATIONS = {
 		'feedback.generating_wallpaper': 'Inatengeneza mandhari yako ya Hodi…',
 		'feedback.create_conflict': 'Hitilafu: vCard tayari ipo kwa barua pepe au anwani hii ya vCard.',
 	},
+
+	// Português (variante europeia / africana — Angola, Moçambique).
+	pt: {
+		// --- Header ---
+		'header.visit_hodi': 'Visitar Hodi.host',
+		'header.lang_label': 'Idioma',
+
+		// --- Meta ---
+		'meta.title': 'Hodi vCard - Pela Hodi, a nuvem africana unificada',
+		'meta.description': 'O seu cartão de visita virtual, alojado na nuvem panafricana da Hodi. Encriptado, seguro, nunca usado comercialmente.',
+
+		// --- Footer ---
+		'footer.logo_label': 'Hodi - Host different.',
+		'footer.legal': 'Aviso legal',
+		'footer.privacy': 'Política de privacidade',
+
+		// --- Home / Hero ---
+		'hero.badge_no_paper': 'Sem papel',
+		'hero.badge_no_card': 'Sem cartão físico',
+		'hero.badge_no_app': 'Sem aplicação',
+		'hero.title_line1': 'O seu cartão de visita virtual.',
+		'hero.title_line2': 'Feito em África.',
+		'hero.cta': 'Criar o meu Hodi vCard',
+		'hero.retrieve_link': 'Já tenho um vCard, recuperar o meu acesso',
+		'hero.pitch': 'A Hodi oferece-lhe o seu cartão de visita virtual.<br>Os seus dados são armazenados de forma segura e nunca usados para fins comerciais.',
+
+		// --- Retrieve popup ---
+		'retrieve.title': 'Recuperar o meu Hodi vCard',
+		'retrieve.intro': 'Introduza o email associado ao seu Hodi vCard. Enviar-lhe-emos um link de utilização única para o aceder e editar.',
+		'retrieve.email_placeholder': 'seu@email.com',
+		'retrieve.send_btn': 'Enviar link de recuperação',
+
+		// --- Tabs admin ---
+		'tabs.my_info': 'As minhas informações',
+		'tabs.my_wallpapers': 'Os meus fundos de ecrã',
+		'tabs.my_signature': 'A minha assinatura de email',
+
+		// --- Form (mes-infos) ---
+		'form.intro': 'Os dados que introduz aqui são usados apenas para gerar o seu vCard. São armazenados de forma segura e nunca serão usados para fins comerciais.',
+
+		'form.username_label': 'Nome de utilizador Hodi vCard',
+		'form.username_placeholder': 'o-seu-nome-de-utilizador',
+		'form.check_btn': 'Verificar',
+		'form.email_label': 'Email',
+		'form.email_placeholder': 'seu@email.com',
+		'form.email_hint': 'Este email está associado à sua conta Hodi e não pode ser alterado.',
+		'form.first_name_label': 'Nome próprio',
+		'form.last_name_label': 'Apelido',
+		'form.organization_label': 'Organização',
+		'form.role_label': 'Função',
+
+		'form.section_contact': 'Dados de contacto',
+		'form.mobile_label': 'Telemóvel',
+		'form.whatsapp_checkbox': 'Este número também está disponível no WhatsApp',
+		'form.landline_label': 'Telefone fixo',
+		'form.address_label': 'Morada',
+		'form.address_placeholder': 'A sua morada postal',
+		'form.website_label': 'Website',
+		'form.booking_label': 'Marcar uma reunião',
+
+		'form.section_socials': 'Redes sociais',
+
+		'form.section_link': 'Link personalizado (opcional)',
+		'form.doc_label_label': 'Título do link',
+		'form.doc_label_placeholder': 'O meu portefólio, brochura, um artigo…',
+		'form.doc_url_label': 'URL',
+		'form.doc_url_placeholder': 'https://...',
+		'form.doc_hint': 'Um link que queira destacar no seu vCard: portefólio, brochura em PDF, artigo…',
+
+		'form.save_create': 'Criar o meu vCard',
+		'form.save_update': 'Guardar as minhas informações',
+		'form.delete': 'Eliminar o meu vCard permanentemente',
+
+		'form.placeholder_empty': 'Não fornecido',
+
+		// --- Slug check feedback ---
+		'slug.empty': 'Escreva um nome de utilizador antes de verificar.',
+		'slug.too_short': 'Demasiado curto: mínimo de 3 caracteres.',
+		'slug.checking': 'A verificar…',
+		'slug.available': '✓ "{slug}" está disponível!',
+		'slug.taken': '✗ "{slug}" já está em uso.',
+		'slug.error': 'Erro: {message}',
+
+		// --- Feedback messages (JS) ---
+		'feedback.no_vcard_yet': 'Ainda não tem um vCard. Preencha este formulário e clique em "Criar o meu vCard" no fim.',
+		'feedback.network_error': 'Erro de rede. Verifique a sua ligação e tente novamente.',
+		'feedback.no_vcard_to_delete': 'Não tem um vCard para eliminar.',
+		'feedback.deleted': 'vCard eliminado. Pode criar um novo acima.',
+		'feedback.saved': '✓ Alterações guardadas.<br>Link público: <a href="{url}">{url}</a>',
+		'feedback.email_already_used': 'Já existe um vCard para <strong>{email}</strong>. Para o editar, clique em "Editar" no fim desse vCard.',
+		'feedback.slug_taken': 'O endereço de vCard "{slug}" já está em uso. Escolha outro.',
+		'feedback.create_email_sent': '<strong>✓ Email de confirmação enviado!</strong><br>Acabámos de enviar um link para <strong>{email}</strong>.<br>Clique nele para <strong>finalizar a criação</strong> do seu vCard.<br><br><span style="opacity: 0.7;">Pode fechar esta janela. O link é válido durante 1 hora.</span>',
+		'feedback.finalizing': 'A finalizar a criação do seu vCard…',
+		'feedback.uploading_cover': 'A carregar a capa…',
+		'feedback.uploading_avatar': 'A carregar a foto de perfil…',
+		'feedback.created_redirecting': '✓ vCard criado! A redirecionar para o seu cartão público…',
+
+		// --- Validation errors ---
+		'error.first_name_required': 'O nome próprio é obrigatório.',
+		'error.last_name_required': 'O apelido é obrigatório.',
+		'error.email_required': 'O email é obrigatório.',
+		'error.email_invalid': 'O email não é válido.',
+		'error.mobile_required': 'O número de telemóvel é obrigatório.',
+		'error.username_required': 'O nome de utilizador Hodi vCard é obrigatório.',
+		'error.username_invalid': 'O nome de utilizador só pode conter letras minúsculas, algarismos e hífenes.',
+		'error.username_length': 'O nome de utilizador deve ter entre 3 e 50 caracteres.',
+		'error.email_missing_auth': 'O email do proprietário está em falta (problema de autenticação).',
+
+		// --- Modifier popup ---
+		'modify.title': 'Quer editar o seu vCard?',
+		'modify.subtitle': 'Este vCard é seu e quer atualizá-lo?',
+		'modify.description': 'Vamos enviar um link único de edição para o email associado a este vCard:',
+		'modify.cta': 'Enviar-me o link de edição',
+		'modify.close': 'Fechar',
+		'modify.sending': 'A enviar…',
+		'modify.sent_title': '✓ Link enviado',
+		'modify.sent_description': 'Foi enviado um link de edição para <strong>{email}</strong>.<br>É válido durante 1 hora. Verifique a sua caixa de entrada (e a pasta de spam).',
+		'modify.sent_footnote': 'Pode fechar esta janela. Ao clicar no link recebido por email, será autenticado automaticamente.',
+		'modify.error_no_email': 'Este vCard não tem email associado.',
+		'modify.error_network': 'Ocorreu um erro de rede. Verifique a sua ligação e tente novamente.',
+
+		// --- Public vCard actions ---
+		'public.visit_website': 'Visitar o meu website',
+		'public.book_appointment': 'Marcar uma reunião',
+		'public.save_contact': 'Guardar cartão de contacto',
+		'public.edit': '> Editar',
+
+		// --- Cropper popup ---
+		'cropper.title_avatar': 'Nova foto de perfil',
+		'cropper.title_cover': 'Nova imagem de capa',
+		'cropper.title_wallpaper': 'Novo fundo de ecrã',
+		'cropper.drag_or': 'Arraste a sua imagem para aqui ou…',
+		'cropper.browse': 'Procurar',
+		'cropper.limit': 'Máximo 2 MB, JPG ou PNG',
+		'cropper.save': 'Guardar imagem',
+		'cropper.new_image': 'Nova imagem',
+		'cropper.source_computer': 'O meu computador',
+		'cropper.source_library': 'Biblioteca de imagens',
+		'cropper.search_placeholder': 'Praia, floresta, cidade, abstrato…',
+		'cropper.credit': 'Fotos livres de direitos, crédito automático ao fotógrafo',
+
+		// --- Common ---
+		'common.retry': 'Tentar novamente',
+		'common.saving': 'A guardar…',
+		'common.error': 'Erro: {message}',
+		'modify.error_title': 'Não foi possível enviar o link',
+
+		// --- Public vCard (states + labels) ---
+		'public.contact_landline': 'Telefone fixo',
+		'public.contact_website': 'Website',
+		'public.empty_title': 'Endereço não especificado',
+		'public.empty_body': 'Esta página requer um parâmetro <code>?slug=xxx</code> no URL.',
+		'public.back_home': '← Voltar ao início',
+		'public.notfound_title': '404 - vCard não encontrado',
+		'public.notfound_body': 'Nenhum vCard corresponde ao endereço <strong>{slug}</strong>.',
+		'public.error_title': 'Ocorreu um erro',
+		'public.vcf_error': 'Erro ao gerar o cartão de contacto. Tente novamente.',
+
+		// --- Wallpapers (mes-fonds) ---
+		'wallpapers.intro': 'Crie e personalize fundos para o ecrã de bloqueio do seu smartphone:',
+		'wallpapers.need_vcard': 'Tem de criar primeiro o seu vCard.',
+		'wallpapers.add': 'Adicionar',
+		'wallpapers.download': 'Transferir',
+		'wallpapers.delete': 'Eliminar',
+		'wallpapers.delete_confirm': 'Eliminar este fundo de ecrã?',
+		'wallpapers.composing': 'A compor o fundo de ecrã…',
+		'wallpapers.limit_reached': 'Atingiu o limite de {max} fundos de ecrã.',
+		'wallpapers.create_error': 'Erro ao criar o fundo de ecrã: {message}',
+		'wallpapers.delete_error': 'Erro ao eliminar: {message}',
+
+		// --- Email signature ---
+		'signature.intro': 'Incorpore a sua assinatura de email com um link para o seu Hodi vCard:',
+		'signature.copy_btn': 'Copiar o código HTML da minha assinatura',
+		'signature.download_btn': 'Transferir como ficheiro HTML',
+		'signature.downloaded': '✓ Ficheiro HTML transferido.',
+		'signature.need_vcard': 'Tem de criar primeiro o seu vCard para gerar uma assinatura de email.',
+		'signature.add_contact': 'Adicionar aos meus contactos',
+		'signature.copied': '✓ Assinatura copiada. Cole-a no seu cliente de email (modo HTML).',
+		'signature.copied_btn': 'Copiado ✓',
+		'signature.copy_error': 'Não foi possível copiar: {message}',
+
+		// --- Image source (Unsplash) ---
+		'source.prompt': 'Escreva uma palavra-chave para pesquisar imagens livres de direitos no Unsplash.',
+		'source.searching': 'A pesquisar…',
+		'source.no_results': 'Sem resultados. Tente outra palavra-chave.',
+		'source.fetch_error': 'Não foi possível obter esta imagem: {message}',
+
+		// --- Retrieve feedback ---
+		'retrieve.email_required': 'Introduza o seu endereço de email.',
+		'retrieve.checking': 'A verificar…',
+		'retrieve.none': 'Nenhum vCard está associado a <strong>{email}</strong>.<br>Pode criar um com o botão "Criar o meu Hodi vCard" nesta página.',
+		'retrieve.sent': '✓ Acabámos de enviar um link de recuperação para <strong>{email}</strong>.<br>Clique no link do email para aceder ao seu vCard.',
+
+		// --- Form (extra runtime labels) ---
+		'form.tab_locked_title': 'Disponível após criar o seu vCard.',
+		'form.slug_locked_title': 'O nome de utilizador não pode ser alterado após a criação.',
+		'form.your_vcard_url': 'O URL do seu vCard:',
+		'form.preview': 'Pré-visualizar',
+		'form.checking': 'A verificar…',
+		'form.sending_email': 'A enviar email…',
+		'form.email_sent_btn': 'Email enviado ✓',
+		'form.finalizing_btn': 'A finalizar…',
+		'form.delete_confirm': 'Eliminar permanentemente o vCard "{slug}"?\n\nEsta ação é irreversível e quebra todos os links / códigos QR existentes.',
+		'feedback.generating_wallpaper': 'A gerar o seu fundo de ecrã Hodi…',
+		'feedback.create_conflict': 'Erro: já existe um vCard para este email ou nome de utilizador.',
+	},
+
+	// العربية (الفصحى الحديثة) — اللغة من اليمين إلى اليسار (RTL). تحتاج إلى مراجعة لغوية أصلية.
+	ar: {
+		// --- Header ---
+		'header.visit_hodi': 'زيارة Hodi.host',
+		'header.lang_label': 'اللغة',
+
+		// --- Meta ---
+		'meta.title': 'Hodi vCard - من Hodi، السحابة الأفريقية الموحّدة',
+		'meta.description': 'بطاقة عملك الرقمية، مستضافة على سحابة Hodi الأفريقية. مشفّرة وآمنة ولا تُستخدم تجاريًا أبدًا.',
+
+		// --- Footer ---
+		'footer.logo_label': 'Hodi - Host different.',
+		'footer.legal': 'إشعار قانوني',
+		'footer.privacy': 'سياسة الخصوصية',
+
+		// --- Home / Hero ---
+		'hero.badge_no_paper': 'بلا ورق',
+		'hero.badge_no_card': 'بلا بطاقة ماديّة',
+		'hero.badge_no_app': 'بلا تطبيق',
+		'hero.title_line1': 'بطاقة عملك الافتراضية.',
+		'hero.title_line2': 'صُنع في أفريقيا.',
+		'hero.cta': 'إنشاء بطاقة Hodi الخاصة بي',
+		'hero.retrieve_link': 'لديّ بطاقة vCard بالفعل، استعادة الوصول إليها',
+		'hero.pitch': 'تمنحك Hodi بطاقة عملك الرقمية.<br>تُخزَّن بياناتك بأمان، ولا تُستخدم أبدًا لأغراض تجارية.',
+
+		// --- Retrieve popup ---
+		'retrieve.title': 'استعادة بطاقة Hodi vCard الخاصة بي',
+		'retrieve.intro': 'أدخل البريد الإلكتروني المرتبط ببطاقة Hodi vCard الخاصة بك. سنرسل لك رابطًا لمرة واحدة للوصول إليها وتعديلها.',
+		'retrieve.email_placeholder': 'your@email.com',
+		'retrieve.send_btn': 'إرسال رابط الاستعادة',
+
+		// --- Tabs admin ---
+		'tabs.my_info': 'معلوماتي',
+		'tabs.my_wallpapers': 'خلفياتي',
+		'tabs.my_signature': 'توقيع بريدي الإلكتروني',
+
+		// --- Form (mes-infos) ---
+		'form.intro': 'البيانات التي تدخلها هنا تُستخدم فقط لإنشاء بطاقتك. تُخزَّن بأمان ولن تُستخدم أبدًا لأغراض تجارية.',
+
+		'form.username_label': 'اسم المستخدم في Hodi vCard',
+		'form.username_placeholder': 'your-username',
+		'form.check_btn': 'تحقّق',
+		'form.email_label': 'البريد الإلكتروني',
+		'form.email_placeholder': 'your@email.com',
+		'form.email_hint': 'هذا البريد الإلكتروني مرتبط بحسابك في Hodi ولا يمكن تغييره.',
+		'form.first_name_label': 'الاسم الأول',
+		'form.last_name_label': 'اسم العائلة',
+		'form.organization_label': 'المؤسسة',
+		'form.role_label': 'المنصب',
+
+		'form.section_contact': 'بيانات الاتصال',
+		'form.mobile_label': 'الهاتف المحمول',
+		'form.whatsapp_checkbox': 'هذا الرقم متاح أيضًا على WhatsApp',
+		'form.landline_label': 'الهاتف الثابت',
+		'form.address_label': 'العنوان',
+		'form.address_placeholder': 'عنوانك البريدي',
+		'form.website_label': 'الموقع الإلكتروني',
+		'form.booking_label': 'حجز موعد',
+
+		'form.section_socials': 'شبكات التواصل الاجتماعي',
+
+		'form.section_link': 'رابط مخصّص (اختياري)',
+		'form.doc_label_label': 'عنوان الرابط',
+		'form.doc_label_placeholder': 'ملف أعمالي، كتيّب، مقال…',
+		'form.doc_url_label': 'URL',
+		'form.doc_url_placeholder': 'https://...',
+		'form.doc_hint': 'رابط تريد إبرازه على بطاقتك: ملف أعمال، كتيّب PDF، مقال…',
+
+		'form.save_create': 'إنشاء بطاقتي',
+		'form.save_update': 'حفظ معلوماتي',
+		'form.delete': 'حذف بطاقتي نهائيًا',
+
+		'form.placeholder_empty': 'غير مُقدَّم',
+
+		// --- Slug check feedback ---
+		'slug.empty': 'اكتب اسم مستخدم قبل التحقّق.',
+		'slug.too_short': 'قصير جدًا: 3 أحرف على الأقل.',
+		'slug.checking': 'جارٍ التحقّق…',
+		'slug.available': '✓ "{slug}" متاح!',
+		'slug.taken': '✗ "{slug}" مُستخدَم بالفعل.',
+		'slug.error': 'خطأ: {message}',
+
+		// --- Feedback messages (JS) ---
+		'feedback.no_vcard_yet': 'ليس لديك بطاقة vCard بعد. املأ هذا النموذج واضغط "إنشاء بطاقتي" في الأسفل.',
+		'feedback.network_error': 'خطأ في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.',
+		'feedback.no_vcard_to_delete': 'ليس لديك بطاقة vCard لحذفها.',
+		'feedback.deleted': 'تم حذف البطاقة. يمكنك إنشاء واحدة جديدة في الأعلى.',
+		'feedback.saved': '✓ تم حفظ التغييرات.<br>الرابط العام: <a href="{url}">{url}</a>',
+		'feedback.email_already_used': 'توجد بطاقة vCard بالفعل لـ <strong>{email}</strong>. لتعديلها، اضغط "تعديل" في أسفل تلك البطاقة.',
+		'feedback.slug_taken': 'عنوان vCard "{slug}" مستخدم بالفعل. اختر عنوانًا آخر.',
+		'feedback.create_email_sent': '<strong>✓ تم إرسال بريد التأكيد!</strong><br>أُرسل رابط للتو إلى <strong>{email}</strong>.<br>اضغط عليه لـ<strong>إتمام إنشاء</strong> بطاقتك.<br><br><span style="opacity: 0.7;">يمكنك إغلاق هذه النافذة. الرابط صالح لمدة ساعة واحدة.</span>',
+		'feedback.finalizing': 'جارٍ إتمام إنشاء بطاقتك…',
+		'feedback.uploading_cover': 'جارٍ رفع صورة الغلاف…',
+		'feedback.uploading_avatar': 'جارٍ رفع صورة الملف الشخصي…',
+		'feedback.created_redirecting': '✓ تم إنشاء البطاقة! جارٍ التحويل إلى بطاقتك العامة…',
+
+		// --- Validation errors ---
+		'error.first_name_required': 'الاسم الأول مطلوب.',
+		'error.last_name_required': 'اسم العائلة مطلوب.',
+		'error.email_required': 'البريد الإلكتروني مطلوب.',
+		'error.email_invalid': 'البريد الإلكتروني غير صالح.',
+		'error.mobile_required': 'رقم الهاتف المحمول مطلوب.',
+		'error.username_required': 'اسم المستخدم في Hodi vCard مطلوب.',
+		'error.username_invalid': 'يمكن أن يحتوي اسم المستخدم على أحرف لاتينية صغيرة وأرقام وشرطات فقط.',
+		'error.username_length': 'يجب أن يكون اسم المستخدم بين 3 و50 حرفًا.',
+		'error.email_missing_auth': 'بريد المالك مفقود (مشكلة في المصادقة).',
+
+		// --- Modifier popup ---
+		'modify.title': 'تريد تعديل بطاقتك؟',
+		'modify.subtitle': 'هذه البطاقة لك وتريد تحديثها؟',
+		'modify.description': 'سنرسل رابط تعديل فريدًا إلى البريد الإلكتروني المرتبط بهذه البطاقة:',
+		'modify.cta': 'أرسل لي رابط التعديل',
+		'modify.close': 'إغلاق',
+		'modify.sending': 'جارٍ الإرسال…',
+		'modify.sent_title': '✓ تم إرسال الرابط',
+		'modify.sent_description': 'تم إرسال رابط تعديل إلى <strong>{email}</strong>.<br>صالح لمدة ساعة واحدة. تحقّق من بريدك الوارد (ومجلد الرسائل غير المرغوب فيها).',
+		'modify.sent_footnote': 'يمكنك إغلاق هذه النافذة. عند الضغط على الرابط في بريدك، سيتم تسجيل دخولك تلقائيًا.',
+		'modify.error_no_email': 'لا يوجد بريد إلكتروني مرتبط بهذه البطاقة.',
+		'modify.error_network': 'حدث خطأ في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.',
+
+		// --- Public vCard actions ---
+		'public.visit_website': 'زيارة موقعي الإلكتروني',
+		'public.book_appointment': 'حجز موعد',
+		'public.save_contact': 'حفظ بطاقة الاتصال',
+		'public.edit': '‹ تعديل',
+
+		// --- Cropper popup ---
+		'cropper.title_avatar': 'صورة ملف شخصي جديدة',
+		'cropper.title_cover': 'صورة غلاف جديدة',
+		'cropper.title_wallpaper': 'خلفية جوال جديدة',
+		'cropper.drag_or': 'اسحب صورتك إلى هنا أو…',
+		'cropper.browse': 'تصفّح',
+		'cropper.limit': 'بحد أقصى 2 ميغابايت، JPG أو PNG',
+		'cropper.save': 'حفظ الصورة',
+		'cropper.new_image': 'صورة جديدة',
+		'cropper.source_computer': 'جهازي',
+		'cropper.source_library': 'مكتبة الصور',
+		'cropper.search_placeholder': 'شاطئ، غابة، مدينة، تجريدي…',
+		'cropper.credit': 'صور خالية من حقوق الملكية، مع نسب تلقائي للمصوّر',
+
+		// --- Common ---
+		'common.retry': 'حاول مرة أخرى',
+		'common.saving': 'جارٍ الحفظ…',
+		'common.error': 'خطأ: {message}',
+		'modify.error_title': 'تعذّر إرسال الرابط',
+
+		// --- Public vCard (states + labels) ---
+		'public.contact_landline': 'الهاتف الثابت',
+		'public.contact_website': 'الموقع الإلكتروني',
+		'public.empty_title': 'العنوان غير محدد',
+		'public.empty_body': 'تتطلّب هذه الصفحة معاملًا <code>?slug=xxx</code> في الرابط.',
+		'public.back_home': '→ العودة إلى الرئيسية',
+		'public.notfound_title': '404 - البطاقة غير موجودة',
+		'public.notfound_body': 'لا توجد بطاقة تطابق العنوان <strong>{slug}</strong>.',
+		'public.error_title': 'حدث خطأ',
+		'public.vcf_error': 'خطأ في إنشاء بطاقة الاتصال. يُرجى المحاولة مرة أخرى.',
+
+		// --- Wallpapers (mes-fonds) ---
+		'wallpapers.intro': 'أنشئ وخصّص خلفيات شاشة القفل لهاتفك الذكي:',
+		'wallpapers.need_vcard': 'يجب إنشاء بطاقتك أولًا.',
+		'wallpapers.add': 'إضافة',
+		'wallpapers.download': 'تنزيل',
+		'wallpapers.delete': 'حذف',
+		'wallpapers.delete_confirm': 'حذف هذه الخلفية؟',
+		'wallpapers.composing': 'جارٍ تكوين الخلفية…',
+		'wallpapers.limit_reached': 'لقد وصلت إلى الحد الأقصى وهو {max} خلفيات.',
+		'wallpapers.create_error': 'خطأ في إنشاء الخلفية: {message}',
+		'wallpapers.delete_error': 'خطأ في الحذف: {message}',
+
+		// --- Email signature ---
+		'signature.intro': 'أدرج توقيع بريدك الإلكتروني مع رابط إلى بطاقة Hodi vCard:',
+		'signature.copy_btn': 'نسخ كود HTML لتوقيعي',
+		'signature.download_btn': 'تنزيل كملف HTML',
+		'signature.downloaded': '✓ تم تنزيل ملف HTML.',
+		'signature.need_vcard': 'يجب إنشاء بطاقتك أولًا لإنشاء توقيع بريد إلكتروني.',
+		'signature.add_contact': 'إضافة إلى جهات اتصالي',
+		'signature.copied': '✓ تم نسخ التوقيع. الصقه في برنامج بريدك الإلكتروني (وضع HTML).',
+		'signature.copied_btn': 'تم النسخ ✓',
+		'signature.copy_error': 'تعذّر النسخ: {message}',
+
+		// --- Image source (Unsplash) ---
+		'source.prompt': 'اكتب كلمة مفتاحية للبحث عن صور خالية من حقوق الملكية على Unsplash.',
+		'source.searching': 'جارٍ البحث…',
+		'source.no_results': 'لا توجد نتائج. جرّب كلمة مفتاحية أخرى.',
+		'source.fetch_error': 'تعذّر جلب هذه الصورة: {message}',
+
+		// --- Retrieve feedback ---
+		'retrieve.email_required': 'يُرجى إدخال عنوان بريدك الإلكتروني.',
+		'retrieve.checking': 'جارٍ التحقّق…',
+		'retrieve.none': 'لا توجد بطاقة vCard مرتبطة بـ <strong>{email}</strong>.<br>يمكنك إنشاء واحدة بزر "إنشاء بطاقة Hodi vCard الخاصة بي" في هذه الصفحة.',
+		'retrieve.sent': '✓ أُرسل رابط استعادة للتو إلى <strong>{email}</strong>.<br>اضغط على الرابط في البريد للوصول إلى بطاقتك.',
+
+		// --- Form (extra runtime labels) ---
+		'form.tab_locked_title': 'متاح بعد إنشاء بطاقتك.',
+		'form.slug_locked_title': 'لا يمكن تغيير اسم المستخدم بعد الإنشاء.',
+		'form.your_vcard_url': 'رابط بطاقتك:',
+		'form.preview': 'معاينة',
+		'form.checking': 'جارٍ التحقّق…',
+		'form.sending_email': 'جارٍ إرسال البريد…',
+		'form.email_sent_btn': 'تم إرسال البريد ✓',
+		'form.finalizing_btn': 'جارٍ الإتمام…',
+		'form.delete_confirm': 'حذف البطاقة "{slug}" نهائيًا؟\n\nهذا الإجراء لا رجعة فيه ويُبطل جميع الروابط / رموز QR الحالية.',
+		'feedback.generating_wallpaper': 'جارٍ إنشاء خلفية Hodi الخاصة بك…',
+		'feedback.create_conflict': 'خطأ: توجد بطاقة vCard بالفعل لهذا البريد الإلكتروني أو اسم المستخدم.',
+	},
 };
 
 /**
  * Détermine la langue initiale : choix utilisateur ou langue navigateur, fallback EN.
  */
+// Cookie de langue : lisible par le serveur (SSR + emails/erreurs) sur chaque
+// requête, contrairement au localStorage. 1 an, tout le site, SameSite=Lax.
+function setLangCookie(lang) {
+	try {
+		document.cookie = `${STORAGE_KEY}=${lang}; path=/; max-age=31536000; SameSite=Lax`;
+	} catch {}
+}
+function getLangCookie() {
+	try {
+		const m = document.cookie.match(new RegExp('(?:^|;\\s*)' + STORAGE_KEY + '=([a-z]{2})(?:;|$)'));
+		return m ? m[1] : null;
+	} catch {
+		return null;
+	}
+}
+
 function detectInitialLang() {
 	try {
 		const saved = localStorage.getItem(STORAGE_KEY);
 		if (saved && TRANSLATIONS[saved]) return saved;
 	} catch {}
+	const cookie = getLangCookie();
+	if (cookie && TRANSLATIONS[cookie]) return cookie;
 	const nav = (navigator.language || 'en').toLowerCase();
 	if (nav.startsWith('fr')) return 'fr';
 	if (nav.startsWith('sw')) return 'sw';
+	if (nav.startsWith('pt')) return 'pt';
+	if (nav.startsWith('ar')) return 'ar';
 	return 'en';
+}
+
+// Langues écrites de droite à gauche.
+const RTL_LANGS = ['ar'];
+
+/** Pose dir="rtl"/"ltr" sur <html> selon la langue. */
+function applyDir(lang) {
+	document.documentElement.setAttribute('dir', RTL_LANGS.includes(lang) ? 'rtl' : 'ltr');
 }
 
 let currentLang = detectInitialLang();
@@ -673,7 +1114,9 @@ export function setLang(lang) {
 	if (!TRANSLATIONS[lang]) return;
 	currentLang = lang;
 	try { localStorage.setItem(STORAGE_KEY, lang); } catch {}
+	setLangCookie(lang);
 	document.documentElement.setAttribute('lang', lang);
+	applyDir(lang);
 	applyTranslations();
 	$(document).trigger('lang:changed', [lang]);
 }
@@ -711,5 +1154,9 @@ export function applyTranslations() {
 // Au chargement du DOM, applique les traductions et set la lang sur <html>
 $(function () {
 	document.documentElement.setAttribute('lang', currentLang);
+	applyDir(currentLang);
+	// Synchronise le cookie avec la langue active (même auto-détectée) pour que
+	// le rendu serveur de la prochaine navigation soit déjà dans la bonne langue.
+	setLangCookie(currentLang);
 	applyTranslations();
 });

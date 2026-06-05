@@ -1,0 +1,150 @@
+/* ------------------------------------------------------------ *\
+	RTL — Arabic (dir="rtl")
+
+	Starter pass: flexbox rows and default text alignment already mirror
+	automatically under dir="rtl". This file only overrides the *explicit*
+	physical rules (text-align left/right, side margins/paddings, side
+	offsets) that don't auto-flip.
+
+	Intentionally untouched (direction-neutral):
+	- centering via `left: 50%; transform: translateX(-50%)`
+	- full-bleed overlays via `left: 0; right: 0`
+	- the croppie crop widget (functional, not text)
+
+	Needs a visual QA pass before launch.
+\* ------------------------------------------------------------ */
+
+[dir='rtl'] {
+
+	/* Form ---------------------------------------------------- */
+	.form {
+		padding: 0 3.1rem 0 2.9rem; // miroir de 0 2.9rem 0 3.1rem
+
+		@include breakpoint-down(mobile) {
+			padding: 0 1rem;
+		}
+
+		.form__label {
+			padding-right: 0;
+			padding-left: 1.5rem;
+		}
+
+		.field {
+			text-align: right; // garde l'alignement RTL, y compris sur mobile
+		}
+
+		// Champs au contenu intrinsèquement LTR (URL, email, téléphone,
+		// identifiant) : on force direction: ltr pour qu'ils s'affichent dans le
+		// bon ordre (« https://…/… » et non « …/https://… »).
+		// On n'utilise PAS `unicode-bidi: plaintext` : ça empêche le rendu du
+		// placeholder dans Firefox. Les champs texte (nom, organisation, fonction,
+		// adresse, libellé du lien) restent en RTL.
+		input[type='url'],
+		input[type='email'],
+		input[type='tel'],
+		input#url {
+			direction: ltr;
+		}
+	}
+
+	/* Champ de la signature email (contenu LTR) --------------- */
+	.form-email .field {
+		text-align: right;
+		direction: ltr;
+	}
+
+	/* Champ email du popup « récupérer » (contenu LTR) -------- */
+	.retrieve-field__input {
+		direction: ltr;
+	}
+
+	/* Checkbox : la case personnalisée passe à droite --------- */
+	.checkbox label {
+		padding: 0 4.4rem 0 2rem;
+
+		&:before {
+			left: auto;
+			right: 0;
+		}
+
+		&:after {
+			left: auto;
+			right: 0.5rem;
+		}
+
+		@include breakpoint-down(mobile) {
+			padding-right: 3.4rem;
+			padding-left: 0;
+		}
+	}
+
+	/* Boutons ------------------------------------------------- */
+	.btn--white {
+		text-align: right;
+	}
+
+	// Icône en tête de bouton (ex. « enregistrer le contact »)
+	.btn img {
+		margin-right: 0;
+		margin-left: 1rem;
+	}
+
+	/* Popups -------------------------------------------------- */
+	.popup__head {
+		padding: 0 1.4rem 0 4rem; // miroir
+
+		@include breakpoint-down(mobile) {
+			padding: 0 0 0 3rem;
+		}
+
+		.popup__close {
+			right: auto;
+			left: 1.5rem;
+
+			@include breakpoint-down(mobile) {
+				right: auto;
+				left: 0;
+			}
+		}
+
+		img + h4 {
+			margin-left: 0;
+			margin-right: 1.2rem;
+		}
+	}
+
+	.retrieve-field__icon {
+		margin-right: 0;
+		margin-left: 1.2rem;
+	}
+
+	/* Bouton d'édition au coin de la photo -------------------- */
+	.btn-edit {
+		right: auto;
+		left: 0.3rem;
+	}
+
+	/* Icône devant un titre d'info ---------------------------- */
+	.section-info h6 svg {
+		margin-right: 0;
+		margin-left: 1.2rem;
+	}
+
+	/* Réseaux sociaux de la carte publique -------------------- */
+	.card__socials li + li {
+		margin-left: 0;
+		margin-right: 0.9rem;
+	}
+
+	/* Reset du padding de liste (ul) -------------------------- */
+	.list-btns {
+		padding-left: initial;
+		padding-right: 0;
+	}
+
+	/* Sélecteur de langue : chevron à l'autre extrémité (gauche) */
+	.js-lang-switcher {
+		padding: 0 0.2rem 0 1.8rem; // miroir : place pour le chevron à gauche
+		background-position: left 0 center;
+	}
+}

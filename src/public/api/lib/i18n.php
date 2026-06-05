@@ -14,10 +14,26 @@
 
 declare(strict_types=1);
 
-const I18N_LANGS = ['en', 'fr', 'sw'];
+const I18N_LANGS = ['en', 'fr', 'sw', 'pt', 'ar'];
 const I18N_DEFAULT = 'en';
+const I18N_RTL = ['ar'];
+const LANG_COOKIE = 'hodi-vcard-lang';
 
-/** Langue de la requête courante (en-tête X-Lang), repli 'en'. */
+/** Langue choisie persistée dans le cookie (posé par le client), ou null. */
+function cookie_lang(): ?string
+{
+	$c = $_COOKIE[LANG_COOKIE] ?? null;
+	if (!is_string($c)) {
+		return null;
+	}
+	$c = strtolower(trim($c));
+	return in_array($c, I18N_LANGS, true) ? $c : null;
+}
+
+/**
+ * Langue de la requête courante : en-tête X-Lang (appels API) → cookie
+ * (navigations/SSR) → repli 'en'.
+ */
 function req_lang(): string
 {
 	static $lang = null;
@@ -25,8 +41,34 @@ function req_lang(): string
 		return $lang;
 	}
 	$l = strtolower(trim((string) ($_SERVER['HTTP_X_LANG'] ?? '')));
-	$lang = in_array($l, I18N_LANGS, true) ? $l : I18N_DEFAULT;
+	if (in_array($l, I18N_LANGS, true)) {
+		$lang = $l;
+		return $lang;
+	}
+	$lang = cookie_lang() ?? I18N_DEFAULT;
 	return $lang;
+}
+
+/** Sens d'écriture d'une langue ('rtl' pour l'arabe, sinon 'ltr'). */
+function lang_dir(string $lang): string
+{
+	return in_array($lang, I18N_RTL, true) ? 'rtl' : 'ltr';
+}
+
+/**
+ * Réécrit la première balise <html> d'un document SSR avec lang + dir corrects
+ * (déduits du cookie), afin que la page s'affiche dans la bonne langue/sens dès
+ * le premier rendu, sans attendre le JS. Préserve les autres attributs.
+ */
+function html_with_lang(string $html, ?string $lang = null): string
+{
+	$lang = $lang ?? cookie_lang() ?? I18N_DEFAULT;
+	$dir = lang_dir($lang);
+	$out = preg_replace_callback('/<html\b([^>]*)>/i', static function (array $m) use ($lang, $dir) {
+		$attrs = preg_replace('/\s+(lang|dir)="[^"]*"/i', '', $m[1]);
+		return '<html' . $attrs . ' lang="' . $lang . '" dir="' . $dir . '">';
+	}, $html, 1);
+	return $out ?? $html;
 }
 
 /**
@@ -184,6 +226,92 @@ function i18n_messages(): array
 			'email.body'     => 'Bofya kiungo kilicho hapa chini ili kufikia vCard yako ya Hodi. Kiungo hiki kinafanya kazi kwa saa 1 na ni cha matumizi ya mara moja.',
 			'email.cta'      => 'Fikia vCard yangu',
 			'email.foot'     => 'Ikiwa hukuomba hili, unaweza kupuuza barua pepe hii.',
+		],
+
+		'pt' => [
+			'err.method_not_allowed'    => 'Método não permitido.',
+			'err.same_origin'           => 'Origem não permitida.',
+			'err.json_invalid'          => 'Corpo do pedido JSON inválido.',
+			'err.db_failed'             => 'Não foi possível ligar à base de dados.',
+			'err.server'                => 'Erro interno do servidor.',
+			'err.route_unknown'         => 'Rota desconhecida: {route}',
+			'err.auth_required'         => 'Autenticação necessária.',
+			'err.not_authorized'        => 'Ação não permitida.',
+			'err.token_missing'         => 'Token em falta.',
+			'err.link_invalid'          => 'Link inválido ou expirado.',
+			'err.slug_missing'          => 'Endereço do vCard em falta.',
+			'err.email_or_slug'         => 'Email ou endereço do vCard é obrigatório.',
+			'err.email_invalid'         => 'O endereço de email não é válido.',
+			'err.vcard_no_email'        => 'Este vCard não tem email associado.',
+			'err.email_send_failed'     => 'Falha ao enviar o email: {message}',
+			'err.already_have_vcard'    => 'Já tem um vCard.',
+			'err.username_invalid'      => 'Nome de utilizador inválido (3-50 caracteres: letras minúsculas, algarismos, hífenes).',
+			'err.username_taken'        => 'Este nome de utilizador já está em uso.',
+			'err.name_required'         => 'O nome próprio e o apelido são obrigatórios.',
+			'err.vcard_not_found'       => 'vCard não encontrado.',
+			'err.no_vcard'              => 'Nenhum vCard.',
+			'err.image_type_invalid'    => 'Tipo de imagem inválido.',
+			'err.image_data_invalid'    => 'Imagem inválida (esperado data URL).',
+			'err.base64_failed'         => 'Falha ao descodificar base64.',
+			'err.image_too_large'       => 'Imagem demasiado grande.',
+			'err.image_not_valid'       => 'Ficheiro inválido (esperada imagem PNG/JPEG/WebP).',
+			'err.storage_mkdir'         => 'Não foi possível criar a pasta de armazenamento.',
+			'err.file_write'            => 'Não foi possível escrever o ficheiro.',
+			'err.storage_path_invalid'  => 'Caminho de armazenamento inválido.',
+			'err.image_url_path_required' => 'image_url e storage_path são obrigatórios.',
+			'err.wallpaper_not_found'   => 'Fundo de ecrã não encontrado.',
+			'err.unsplash_not_configured' => 'Biblioteca de imagens não configurada.',
+			'err.unsplash_error'        => 'O Unsplash devolveu um erro ({code}).',
+			'err.phpmailer_missing'     => 'PHPMailer em falta (execute `composer install` em api/).',
+			'err.mail_driver_unknown'   => 'Controlador de email desconhecido: {driver}',
+			'email.subject'  => 'O seu link de início de sessão Hodi vCard',
+			'email.greeting' => 'Olá,',
+			'email.body'     => 'Clique no link abaixo para aceder ao seu Hodi vCard. Este link é válido durante 1 hora e só pode ser usado uma vez.',
+			'email.cta'      => 'Aceder ao meu vCard',
+			'email.foot'     => 'Se não fez este pedido, pode ignorar este email com segurança.',
+		],
+
+		'ar' => [
+			'err.method_not_allowed'    => 'الطريقة غير مسموح بها.',
+			'err.same_origin'           => 'المصدر غير مسموح به.',
+			'err.json_invalid'          => 'بيانات طلب JSON غير صالحة.',
+			'err.db_failed'             => 'تعذّر الاتصال بقاعدة البيانات.',
+			'err.server'                => 'خطأ داخلي في الخادم.',
+			'err.route_unknown'         => 'مسار غير معروف: {route}',
+			'err.auth_required'         => 'المصادقة مطلوبة.',
+			'err.not_authorized'        => 'الإجراء غير مسموح به.',
+			'err.token_missing'         => 'الرمز مفقود.',
+			'err.link_invalid'          => 'الرابط غير صالح أو منتهي الصلاحية.',
+			'err.slug_missing'          => 'عنوان vCard مفقود.',
+			'err.email_or_slug'         => 'البريد الإلكتروني أو عنوان vCard مطلوب.',
+			'err.email_invalid'         => 'عنوان البريد الإلكتروني غير صالح.',
+			'err.vcard_no_email'        => 'لا يوجد بريد إلكتروني مرتبط بهذه البطاقة.',
+			'err.email_send_failed'     => 'فشل إرسال البريد الإلكتروني: {message}',
+			'err.already_have_vcard'    => 'لديك بطاقة vCard بالفعل.',
+			'err.username_invalid'      => 'اسم مستخدم غير صالح (3-50 حرفًا: أحرف لاتينية صغيرة، أرقام، شرطات).',
+			'err.username_taken'        => 'اسم المستخدم هذا مُستخدَم بالفعل.',
+			'err.name_required'         => 'الاسم الأول واسم العائلة مطلوبان.',
+			'err.vcard_not_found'       => 'البطاقة غير موجودة.',
+			'err.no_vcard'              => 'لا توجد بطاقة.',
+			'err.image_type_invalid'    => 'نوع الصورة غير صالح.',
+			'err.image_data_invalid'    => 'صورة غير صالحة (المتوقع data URL).',
+			'err.base64_failed'         => 'فشل فك ترميز base64.',
+			'err.image_too_large'       => 'الصورة كبيرة جدًا.',
+			'err.image_not_valid'       => 'ملف غير صالح (المتوقع صورة PNG/JPEG/WebP).',
+			'err.storage_mkdir'         => 'تعذّر إنشاء مجلد التخزين.',
+			'err.file_write'            => 'تعذّرت كتابة الملف.',
+			'err.storage_path_invalid'  => 'مسار تخزين غير صالح.',
+			'err.image_url_path_required' => 'الحقلان image_url و storage_path مطلوبان.',
+			'err.wallpaper_not_found'   => 'الخلفية غير موجودة.',
+			'err.unsplash_not_configured' => 'مكتبة الصور غير مُهيّأة.',
+			'err.unsplash_error'        => 'أعاد Unsplash خطأ ({code}).',
+			'err.phpmailer_missing'     => 'PHPMailer مفقود (شغّل `composer install` في api/).',
+			'err.mail_driver_unknown'   => 'مُشغّل البريد غير معروف: {driver}',
+			'email.subject'  => 'رابط تسجيل الدخول إلى Hodi vCard',
+			'email.greeting' => 'مرحبًا،',
+			'email.body'     => 'اضغط على الرابط أدناه للوصول إلى بطاقة Hodi vCard الخاصة بك. هذا الرابط صالح لمدة ساعة واحدة ولا يمكن استخدامه إلا مرة واحدة.',
+			'email.cta'      => 'الوصول إلى بطاقتي',
+			'email.foot'     => 'إذا لم تطلب هذا، يمكنك تجاهل هذا البريد الإلكتروني بأمان.',
 		],
 	];
 	return $M;

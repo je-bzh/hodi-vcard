@@ -12,6 +12,8 @@
  * Lib : https://github.com/jackocnr/intl-tel-input (v25)
  */
 
+import { getLang } from '/js/utils/i18n.js';
+
 // Map des instances par <input> (intl-tel-input retourne une instance par init)
 const instances = new WeakMap();
 
@@ -24,9 +26,16 @@ function loadIntlTelInput() {
 		libPromise = Promise.all([
 			import('intl-tel-input/intlTelInputWithUtils'),
 			import('intl-tel-input/styles'),
-		]).then(([mod]) => mod.default);
+			import('intl-tel-input/i18n'), // noms de pays traduits (ar/fr/pt/en…)
+		]).then(([mod, , i18n]) => ({ factory: mod.default, i18n }));
 	}
 	return libPromise;
+}
+
+// Locale intl-tel-input = langue de l'app (pas celle du navigateur). La lib ne
+// fournit pas de traduction sw → repli sur l'anglais.
+function localeStringsFor(i18n, lang) {
+	return i18n[lang] || i18n.en;
 }
 
 /**
@@ -39,11 +48,15 @@ function loadIntlTelInput() {
 export async function initIntlPhone(input, { defaultCountry = 'fr', numberType = 'MOBILE' } = {}) {
 	if (!input || instances.has(input)) return instances.get(input);
 
-	const intlTelInput = await loadIntlTelInput();
+	const { factory: intlTelInput, i18n } = await loadIntlTelInput();
 	if (instances.has(input)) return instances.get(input); // garde anti-course
 
 	const iti = intlTelInput(input, {
 		initialCountry: defaultCountry,
+		// Langue de l'app (pas du navigateur) pour : 1) les noms de pays (via
+		// Intl.DisplayNames) et 2) les libellés d'interface (recherche, aria…).
+		countryNameLocale: getLang(),
+		i18n: localeStringsFor(i18n, getLang()),
 		separateDialCode: true,            // affiche +33 à côté de l'input (pas concaténé)
 		nationalMode: true,                // l'utilisateur tape son numéro local (06...)
 		formatAsYouType: true,             // espacement automatique pendant la saisie

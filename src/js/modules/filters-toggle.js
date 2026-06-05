@@ -48,4 +48,10 @@ $('.js-filters a').on('click', function (e) {
 	filterText();
 });
 
-filterText();
+// Initial sync après le rendu i18n (i18n est importé avant ce module, donc ses
+// traductions sont déjà appliquées au DOM-ready), puis re-sync à chaque
+// changement de langue — le <span> du toggle mobile n'a pas de data-i18n.
+$(function () {
+	filterText();
+});
+$(document).on('lang:changed', filterText);
