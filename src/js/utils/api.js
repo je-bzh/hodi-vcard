@@ -13,6 +13,7 @@
  */
 
 import { appBase } from './urls.js';
+import { getLang } from './i18n.js';
 
 /**
  * Appel bas-niveau. Renvoie le JSON décodé, lève une Error (avec .status) si !ok.
@@ -67,7 +68,7 @@ export const api = {
 		},
 		/** Envoie un magic-link. Fournir { email } ou { slug }. */
 		requestLink: ({ email, slug, redirect } = {}) =>
-			call('auth/request-link', { method: 'POST', body: { email, slug, redirect } }),
+			call('auth/request-link', { method: 'POST', body: { email, slug, redirect, lang: getLang() } }),
 		logout: () =>
 			call('auth/logout', { method: 'POST' }).then((r) => {
 				sessionPromise = null; // invalide le cache de session

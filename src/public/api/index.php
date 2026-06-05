@@ -196,12 +196,15 @@ function handle_request_link(array $body): void
 	$user = find_or_create_user($email);
 	$link = issue_magic_link($user, $redirect);
 
+	// Langue de l'email = langue d'interface de l'utilisateur (transmise par le client).
+	$lang = isset($body['lang']) && is_string($body['lang']) ? strtolower($body['lang']) : 'fr';
+	if (!in_array($lang, ['fr', 'en', 'sw'], true)) {
+		$lang = 'fr';
+	}
+
 	try {
-		send_mail(
-			$email,
-			'Votre lien de connexion Hodi vCard',
-			magic_link_email_html($link)
-		);
+		$mail = magic_link_email($link, $lang);
+		send_mail($email, $mail['subject'], $mail['html']);
 	} catch (ApiError $e) {
 		throw new ApiError("Échec de l'envoi de l'email : " . $e->getMessage(), 502);
 	}
@@ -211,14 +214,47 @@ function handle_request_link(array $body): void
 	json_response(['ok' => true, 'masked_email' => mask_email($email)]);
 }
 
-function magic_link_email_html(string $link): string
+/**
+ * Construit l'email du magic-link dans la langue de l'utilisateur (fr/en/sw).
+ * Renvoie ['subject' => ..., 'html' => ...]. Repli sur le français.
+ *
+ * @return array{subject:string, html:string}
+ */
+function magic_link_email(string $link, string $lang): array
 {
 	$safe = htmlspecialchars($link, ENT_QUOTES, 'UTF-8');
-	return "<p>Bonjour,</p>"
-		. "<p>Cliquez sur le lien ci-dessous pour accéder à votre vCard Hodi. "
-		. "Ce lien est valable 1 heure et à usage unique.</p>"
-		. "<p><a href=\"{$safe}\">Accéder à ma vCard</a></p>"
-		. "<p style=\"color:#888;font-size:12px\">Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.</p>";
+
+	$t = [
+		'fr' => [
+			'subject'  => 'Votre lien de connexion Hodi vCard',
+			'greeting' => 'Bonjour,',
+			'body'     => 'Cliquez sur le lien ci-dessous pour accéder à votre vCard Hodi. Ce lien est valable 1 heure et à usage unique.',
+			'cta'      => 'Accéder à ma vCard',
+			'foot'     => "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.",
+		],
+		'en' => [
+			'subject'  => 'Your Hodi vCard sign-in link',
+			'greeting' => 'Hi,',
+			'body'     => 'Click the link below to access your Hodi vCard. This link is valid for 1 hour and can only be used once.',
+			'cta'      => 'Access my vCard',
+			'foot'     => "If you didn't request this, you can safely ignore this email.",
+		],
+		'sw' => [
+			'subject'  => 'Kiungo chako cha kuingia Hodi vCard',
+			'greeting' => 'Habari,',
+			'body'     => 'Bofya kiungo kilicho hapa chini ili kufikia vCard yako ya Hodi. Kiungo hiki kinafanya kazi kwa saa 1 na ni cha matumizi ya mara moja.',
+			'cta'      => 'Fikia vCard yangu',
+			'foot'     => 'Ikiwa hukuomba hili, unaweza kupuuza barua pepe hii.',
+		],
+	];
+	$m = $t[$lang] ?? $t['fr'];
+
+	$html = "<p>{$m['greeting']}</p>"
+		. "<p>{$m['body']}</p>"
+		. "<p><a href=\"{$safe}\">{$m['cta']}</a></p>"
+		. "<p style=\"color:#888;font-size:12px\">{$m['foot']}</p>";
+
+	return ['subject' => $m['subject'], 'html' => $html];
 }
 
 /**
