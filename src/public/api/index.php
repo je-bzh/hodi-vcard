@@ -44,7 +44,7 @@ try {
 		case 'auth/verify':
 			$token = query_param('token', '');
 			if ($token === '') {
-				throw new ApiError('Jeton manquant.', 400);
+				throw new ApiError(__('err.token_missing'), 400);
 			}
 			$redirect = consume_magic_link($token);
 			// Redirection navigateur vers la page demandée (session déjà posée).
@@ -61,7 +61,7 @@ try {
 		case 'vcard/public':
 			$slug = strtolower((string) query_param('slug', ''));
 			if ($slug === '') {
-				throw new ApiError('Slug manquant.', 400);
+				throw new ApiError(__('err.slug_missing'), 400);
 			}
 			$row = vcard_by_slug($slug);
 			json_response(['vcard' => $row ? vcard_public_view($row) : null]);
@@ -129,14 +129,14 @@ try {
 			handle_wallpapers_delete(read_json_body());
 
 		default:
-			throw new ApiError("Route inconnue : {$route}", 404);
+			throw new ApiError(__('err.route_unknown', ['route' => $route]), 404);
 	}
 } catch (ApiError $e) {
 	json_response(['error' => $e->getMessage()], $e->status);
 } catch (Throwable $e) {
 	// On ne fuite pas les détails internes au client.
 	error_log('[vcard-api] ' . $e->getMessage() . ' @ ' . $e->getFile() . ':' . $e->getLine());
-	json_response(['error' => 'Erreur serveur interne.'], 500);
+	json_response(['error' => __('err.server')], 500);
 }
 
 // ===========================================================================
@@ -146,7 +146,7 @@ try {
 function require_post(string $method): void
 {
 	if (strtoupper($method) !== 'POST') {
-		throw new ApiError('Méthode non autorisée.', 405);
+		throw new ApiError(__('err.method_not_allowed'), 405);
 	}
 }
 
@@ -161,7 +161,7 @@ function require_same_origin(): void
 	$src = $_SERVER['HTTP_ORIGIN'] ?? ($_SERVER['HTTP_REFERER'] ?? '');
 	$srcHost = $src !== '' ? (string) parse_url($src, PHP_URL_HOST) : '';
 	if ($host === '' || $srcHost === '' || strcasecmp($srcHost, $host) !== 0) {
-		throw new ApiError('Origine non autorisée.', 403);
+		throw new ApiError(__('err.same_origin'), 403);
 	}
 }
 
@@ -181,32 +181,32 @@ function handle_request_link(array $body): void
 	if (!empty($body['slug']) && is_string($body['slug'])) {
 		$row = vcard_by_slug(strtolower($body['slug']));
 		if (!$row) {
-			throw new ApiError("Cette vCard n'a pas d'email associé.", 404);
+			throw new ApiError(__('err.vcard_no_email'), 404);
 		}
 		$email = $row['owner_email'];
 	} elseif (!empty($body['email']) && is_string($body['email'])) {
 		$email = strtolower(trim($body['email']));
 		if (!is_valid_email($email)) {
-			throw new ApiError("L'adresse email saisie n'est pas valide.", 400);
+			throw new ApiError(__('err.email_invalid'), 400);
 		}
 	} else {
-		throw new ApiError('Email ou slug requis.', 400);
+		throw new ApiError(__('err.email_or_slug'), 400);
 	}
 
 	$user = find_or_create_user($email);
 	$link = issue_magic_link($user, $redirect);
 
 	// Langue de l'email = langue d'interface de l'utilisateur (transmise par le client).
-	$lang = isset($body['lang']) && is_string($body['lang']) ? strtolower($body['lang']) : 'fr';
-	if (!in_array($lang, ['fr', 'en', 'sw'], true)) {
-		$lang = 'fr';
+	$lang = isset($body['lang']) && is_string($body['lang']) ? strtolower($body['lang']) : I18N_DEFAULT;
+	if (!in_array($lang, I18N_LANGS, true)) {
+		$lang = I18N_DEFAULT;
 	}
 
 	try {
 		$mail = magic_link_email($link, $lang);
 		send_mail($email, $mail['subject'], $mail['html']);
 	} catch (ApiError $e) {
-		throw new ApiError("Échec de l'envoi de l'email : " . $e->getMessage(), 502);
+		throw new ApiError(__('err.email_send_failed', ['message' => $e->getMessage()]), 502);
 	}
 
 	// On ne renvoie qu'une version masquée de l'email (jamais l'email réel en clair
@@ -216,7 +216,7 @@ function handle_request_link(array $body): void
 
 /**
  * Construit l'email du magic-link dans la langue de l'utilisateur (fr/en/sw).
- * Renvoie ['subject' => ..., 'html' => ...]. Repli sur le français.
+ * Les chaînes viennent du catalogue i18n (lib/i18n.php). Repli sur 'en'.
  *
  * @return array{subject:string, html:string}
  */
@@ -224,37 +224,12 @@ function magic_link_email(string $link, string $lang): array
 {
 	$safe = htmlspecialchars($link, ENT_QUOTES, 'UTF-8');
 
-	$t = [
-		'fr' => [
-			'subject'  => 'Votre lien de connexion Hodi vCard',
-			'greeting' => 'Bonjour,',
-			'body'     => 'Cliquez sur le lien ci-dessous pour accéder à votre vCard Hodi. Ce lien est valable 1 heure et à usage unique.',
-			'cta'      => 'Accéder à ma vCard',
-			'foot'     => "Si vous n'êtes pas à l'origine de cette demande, ignorez cet email.",
-		],
-		'en' => [
-			'subject'  => 'Your Hodi vCard sign-in link',
-			'greeting' => 'Hi,',
-			'body'     => 'Click the link below to access your Hodi vCard. This link is valid for 1 hour and can only be used once.',
-			'cta'      => 'Access my vCard',
-			'foot'     => "If you didn't request this, you can safely ignore this email.",
-		],
-		'sw' => [
-			'subject'  => 'Kiungo chako cha kuingia Hodi vCard',
-			'greeting' => 'Habari,',
-			'body'     => 'Bofya kiungo kilicho hapa chini ili kufikia vCard yako ya Hodi. Kiungo hiki kinafanya kazi kwa saa 1 na ni cha matumizi ya mara moja.',
-			'cta'      => 'Fikia vCard yangu',
-			'foot'     => 'Ikiwa hukuomba hili, unaweza kupuuza barua pepe hii.',
-		],
-	];
-	$m = $t[$lang] ?? $t['fr'];
+	$html = '<p>' . __('email.greeting', [], $lang) . '</p>'
+		. '<p>' . __('email.body', [], $lang) . '</p>'
+		. "<p><a href=\"{$safe}\">" . __('email.cta', [], $lang) . '</a></p>'
+		. '<p style="color:#888;font-size:12px">' . __('email.foot', [], $lang) . '</p>';
 
-	$html = "<p>{$m['greeting']}</p>"
-		. "<p>{$m['body']}</p>"
-		. "<p><a href=\"{$safe}\">{$m['cta']}</a></p>"
-		. "<p style=\"color:#888;font-size:12px\">{$m['foot']}</p>";
-
-	return ['subject' => $m['subject'], 'html' => $html];
+	return ['subject' => __('email.subject', [], $lang), 'html' => $html];
 }
 
 /**
@@ -268,21 +243,21 @@ function handle_vcard_create(array $body): void
 	$user = require_auth();
 
 	if (vcard_by_user($user['id'])) {
-		throw new ApiError('Vous avez déjà une vCard.', 409);
+		throw new ApiError(__('err.already_have_vcard'), 409);
 	}
 
 	$slug = strtolower(trim((string) ($body['slug'] ?? '')));
 	if (!is_valid_slug($slug)) {
-		throw new ApiError('Username invalide (3-50 caractères, lettres minuscules, chiffres, tirets).', 422);
+		throw new ApiError(__('err.username_invalid'), 422);
 	}
 	// Réservé OU déjà utilisé → même erreur "déjà pris".
 	if (slug_is_reserved($slug) || db_one('SELECT 1 FROM vcards WHERE slug = ? LIMIT 1', [$slug])) {
-		throw new ApiError('Ce username est déjà pris.', 409);
+		throw new ApiError(__('err.username_taken'), 409);
 	}
 
 	$payload = build_vcard_payload($body);
 	if (!$payload['first_name'] || !$payload['last_name']) {
-		throw new ApiError('Prénom et nom sont requis.', 422);
+		throw new ApiError(__('err.name_required'), 422);
 	}
 
 	$id = uuid_v4();
@@ -321,10 +296,10 @@ function handle_vcard_update(array $body): void
 	$row = $id !== '' ? db_one('SELECT * FROM vcards WHERE id = ?', [$id]) : null;
 
 	if (!$row) {
-		throw new ApiError('vCard introuvable.', 404);
+		throw new ApiError(__('err.vcard_not_found'), 404);
 	}
 	if ($row['user_id'] !== $user['id']) {
-		throw new ApiError('Action non autorisée.', 403);
+		throw new ApiError(__('err.not_authorized'), 403);
 	}
 
 	$payload = build_vcard_payload($body);
@@ -367,10 +342,10 @@ function handle_vcard_delete(array $body): void
 	$row = $id !== '' ? db_one('SELECT * FROM vcards WHERE id = ?', [$id]) : null;
 
 	if (!$row) {
-		throw new ApiError('vCard introuvable.', 404);
+		throw new ApiError(__('err.vcard_not_found'), 404);
 	}
 	if ($row['user_id'] !== $user['id']) {
-		throw new ApiError('Action non autorisée.', 403);
+		throw new ApiError(__('err.not_authorized'), 403);
 	}
 
 	// Supprime les fichiers wallpapers connus.
@@ -405,21 +380,21 @@ function handle_upload(array $body): void
 
 	$kind = (string) ($body['kind'] ?? 'image');
 	if (!in_array($kind, ['avatar', 'cover', 'wallpaper'], true)) {
-		throw new ApiError('Type d\'image invalide.', 422);
+		throw new ApiError(__('err.image_type_invalid'), 422);
 	}
 
 	$dataUrl = (string) ($body['data_url'] ?? '');
 	if (!preg_match('#^data:image/(png|jpeg|jpg|webp);base64,#i', $dataUrl)) {
-		throw new ApiError('Image invalide (data URL attendu).', 422);
+		throw new ApiError(__('err.image_data_invalid'), 422);
 	}
 
 	$b64 = substr($dataUrl, strpos($dataUrl, ',') + 1);
 	$binary = base64_decode($b64, true);
 	if ($binary === false) {
-		throw new ApiError('Décodage base64 impossible.', 422);
+		throw new ApiError(__('err.base64_failed'), 422);
 	}
 	if (strlen($binary) > (int) $cfg['storage']['max_bytes']) {
-		throw new ApiError('Image trop volumineuse.', 413);
+		throw new ApiError(__('err.image_too_large'), 413);
 	}
 
 	// On ne se fie PAS au type annoncé : on vérifie que le contenu décodé est une
@@ -428,13 +403,13 @@ function handle_upload(array $body): void
 	$extByType = [IMAGETYPE_PNG => 'png', IMAGETYPE_JPEG => 'jpg', IMAGETYPE_WEBP => 'webp'];
 	$info = @getimagesizefromstring($binary);
 	if ($info === false || !isset($extByType[$info[2]])) {
-		throw new ApiError('Fichier non valide (image PNG/JPEG/WebP attendue).', 422);
+		throw new ApiError(__('err.image_not_valid'), 422);
 	}
 	$ext = $extByType[$info[2]];
 
 	$dir = rtrim($cfg['storage']['dir'], '/') . '/' . $user['id'];
 	if (!is_dir($dir) && !mkdir($dir, 0775, true) && !is_dir($dir)) {
-		throw new ApiError('Création du dossier de stockage impossible.', 500);
+		throw new ApiError(__('err.storage_mkdir'), 500);
 	}
 
 	$filename = $kind . '-' . time() . '-' . bin2hex(random_bytes(3)) . '.' . $ext;
@@ -442,7 +417,7 @@ function handle_upload(array $body): void
 	$fullPath = rtrim($cfg['storage']['dir'], '/') . '/' . $relPath;
 
 	if (file_put_contents($fullPath, $binary) === false) {
-		throw new ApiError('Écriture du fichier impossible.', 500);
+		throw new ApiError(__('err.file_write'), 500);
 	}
 
 	json_response(['url' => file_url($relPath), 'path' => $relPath], 201);
@@ -469,7 +444,7 @@ function handle_unsplash_search(array $config): void
 
 	$key = (string) ($config['unsplash']['access_key'] ?? '');
 	if ($key === '') {
-		throw new ApiError("Banque d'images non configurée.", 503);
+		throw new ApiError(__('err.unsplash_not_configured'), 503);
 	}
 
 	$query = trim((string) query_param('query', ''));
@@ -496,7 +471,7 @@ function handle_unsplash_search(array $config): void
 	curl_close($ch);
 
 	if ($body === false || $code < 200 || $code >= 300) {
-		throw new ApiError("Unsplash a renvoyé une erreur ({$code}).", 502);
+		throw new ApiError(__('err.unsplash_error', ['code' => $code]), 502);
 	}
 
 	$data = json_decode((string) $body, true);
@@ -541,17 +516,17 @@ function handle_wallpapers_create(array $body): void
 	$cfg = require __DIR__ . '/config.php';
 	$vcard = vcard_by_user($user['id']);
 	if (!$vcard) {
-		throw new ApiError('Aucune vCard.', 404);
+		throw new ApiError(__('err.no_vcard'), 404);
 	}
 
 	$imageUrl = clean_url((string) ($body['image_url'] ?? ''));
 	$storagePath = (string) ($body['storage_path'] ?? '');
 	if ($imageUrl === null || $storagePath === '') {
-		throw new ApiError('image_url et storage_path requis.', 422);
+		throw new ApiError(__('err.image_url_path_required'), 422);
 	}
 	// Le chemin doit appartenir au dossier de l'utilisateur.
 	if (strpos($storagePath, $user['id'] . '/') !== 0 || strpos($storagePath, '..') !== false) {
-		throw new ApiError('Chemin de stockage invalide.', 422);
+		throw new ApiError(__('err.storage_path_invalid'), 422);
 	}
 
 	$isDefault = !empty($body['is_default']);
@@ -585,7 +560,7 @@ function handle_wallpapers_delete(array $body): void
 	) : null;
 
 	if (!$row) {
-		throw new ApiError('Fond d\'écran introuvable.', 404);
+		throw new ApiError(__('err.wallpaper_not_found'), 404);
 	}
 
 	db_run('DELETE FROM wallpapers WHERE id = ?', [$id]);

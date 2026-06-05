@@ -28,7 +28,7 @@ async function call(route, { method = 'GET', body = null, query = null } = {}) {
 		if (qs.length) url += `?${qs.join('&')}`;
 	}
 
-	const opts = { method, credentials: 'same-origin', headers: {} };
+	const opts = { method, credentials: 'same-origin', headers: { 'X-Lang': getLang() } };
 	if (body != null) {
 		opts.headers['Content-Type'] = 'application/json';
 		opts.body = JSON.stringify(body);

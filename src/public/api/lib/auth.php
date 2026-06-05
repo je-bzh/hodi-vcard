@@ -68,7 +68,7 @@ function consume_magic_link(string $token): string
 	);
 
 	if (!$row || $row['used_at'] !== null || strtotime($row['expires_at']) < time()) {
-		throw new ApiError('Lien invalide ou expiré.', 400);
+		throw new ApiError(__('err.link_invalid'), 400);
 	}
 
 	db_run('UPDATE auth_tokens SET used_at = NOW() WHERE id = ?', [$row['id']]);
@@ -187,7 +187,7 @@ function require_auth(): array
 {
 	$user = current_user();
 	if (!$user) {
-		throw new ApiError('Authentification requise.', 401);
+		throw new ApiError(__('err.auth_required'), 401);
 	}
 	return $user;
 }

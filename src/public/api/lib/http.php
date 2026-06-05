@@ -5,6 +5,9 @@
 
 declare(strict_types=1);
 
+// i18n serveur — disponible partout (chaque point d'entrée requiert http.php en premier).
+require_once __DIR__ . '/i18n.php';
+
 /**
  * Exception métier portant un code HTTP (gérée proprement par le routeur).
  */
@@ -45,7 +48,7 @@ function read_json_body(): array
 	}
 	$data = json_decode($raw, true);
 	if (!is_array($data)) {
-		throw new ApiError('Corps de requête JSON invalide.', 400);
+		throw new ApiError(__('err.json_invalid'), 400);
 	}
 	return $data;
 }

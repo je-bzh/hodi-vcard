@@ -31,7 +31,7 @@ function send_mail(string $toEmail, string $subject, string $htmlBody): void
 
 	$autoload = __DIR__ . '/../vendor/autoload.php';
 	if (!is_file($autoload)) {
-		throw new ApiError('PHPMailer absent (lance `composer install` dans api/).', 500);
+		throw new ApiError(__('err.phpmailer_missing'), 500);
 	}
 	require_once $autoload;
 
@@ -65,7 +65,7 @@ function send_mail(string $toEmail, string $subject, string $htmlBody): void
 				$mailer->isMail();
 			}
 		} else {
-			throw new ApiError("Driver mail inconnu : {$mail['driver']}", 500);
+			throw new ApiError(__('err.mail_driver_unknown', ['driver' => $mail['driver']]), 500);
 		}
 
 		$mailer->setFrom($mail['from'], $mail['from_name']);
@@ -77,7 +77,7 @@ function send_mail(string $toEmail, string $subject, string $htmlBody): void
 
 		$mailer->send();
 	} catch (PHPMailerException $e) {
-		throw new ApiError("Échec de l'envoi de l'email : " . $mailer->ErrorInfo, 502);
+		throw new ApiError(__('err.email_send_failed', ['message' => $mailer->ErrorInfo]), 502);
 	}
 }
 

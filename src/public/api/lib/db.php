@@ -31,7 +31,7 @@ function db(): PDO
 			PDO::ATTR_EMULATE_PREPARES   => false,
 		]);
 	} catch (PDOException $e) {
-		throw new ApiError('Connexion à la base de données impossible.', 500);
+		throw new ApiError(__('err.db_failed'), 500);
 	}
 
 	return $pdo;
