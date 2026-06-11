@@ -516,14 +516,25 @@ async function finalizeCreate(pending) {
 		showFeedback('info', t('feedback.generating_wallpaper'));
 		await createDefaultHodiWallpaperFor({ slug: created.slug });
 
-		// Clean et redirection
+		// Clean : la vCard est créée, plus de pending.
 		localStorage.removeItem(PENDING_KEY);
-		showFeedback('success', t('feedback.created_redirecting'));
 
-		setTimeout(() => {
-			// Pretty URL en prod, query string en dev
-			window.location.replace(buildVcardUrl(created.slug));
-		}, 1200);
+		// Success message persistant avec 2 actions claires (pas d'auto-redirect — l'user
+		// reste sur /my-info pour continuer à éditer s'il veut, OU clique une des 2 CTA).
+		// Pretty URL en prod, query string en dev.
+		const publicUrl = buildVcardUrl(created.slug);
+		const successHtml = `
+			<div style="font-size:1.5rem;font-weight:600;margin-bottom:0.4rem">✓ ${t('feedback.created_done_title')}</div>
+			<div style="opacity:0.85;margin-bottom:1.2rem">${t('feedback.created_done_hint')}</div>
+			<div style="display:flex;flex-wrap:wrap;gap:0.8rem">
+				<a href="${escapeHtml(publicUrl)}" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;padding:0.9rem 1.4rem;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:8px;color:inherit;text-decoration:none;font-weight:500">👁 ${t('feedback.created_view_public')}</a>
+				<a href="my-wallpapers" style="display:inline-flex;align-items:center;padding:0.9rem 1.4rem;background:rgba(255,255,255,0.12);border:1px solid rgba(255,255,255,0.25);border-radius:8px;color:inherit;text-decoration:none;font-weight:500">📱 ${t('feedback.created_go_wallpapers')}</a>
+			</div>
+		`;
+		showFeedback('success', successHtml);
+
+		// Réactive le bouton save (mais en mode "Enregistrer" car la vCard existe maintenant)
+		$('.js-save-vcard').text(t('form.save_update')).prop('disabled', false).css('opacity', 1);
 	} catch (err) {
 		console.error('[vcard-form] finalizeCreate exception', err);
 		showFeedback('error', t('feedback.network_error'));

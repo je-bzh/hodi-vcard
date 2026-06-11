@@ -56,8 +56,13 @@ function issue_magic_link(array $user, string $redirect = 'my-info'): string
 }
 
 /**
- * Valide un jeton de magic-link (usage unique, non expiré), ouvre une session,
+ * Valide un jeton de magic-link (réutilisable tant que non expiré), ouvre une session,
  * pose le cookie, et renvoie la page de redirection.
+ *
+ * NOTE : le lien reste valide pour plusieurs ouvertures de session pendant son TTL
+ * (cf. config.app.token_ttl = 4h). On enregistre la 1re utilisation dans used_at
+ * pour l'audit, mais on n'invalide PAS le lien après usage. Trade-off : confort
+ * UX (l'user peut re-cliquer son email) vs exposition en cas de fuite du lien.
  */
 function consume_magic_link(string $token): string
 {
@@ -67,11 +72,16 @@ function consume_magic_link(string $token): string
 		[$hash]
 	);
 
-	if (!$row || $row['used_at'] !== null || strtotime($row['expires_at']) < time()) {
+	// Jeton inexistant OU expiré → refus. La consommation précédente n'invalide PAS.
+	if (!$row || strtotime($row['expires_at']) < time()) {
 		throw new ApiError(__('err.link_invalid'), 400);
 	}
 
-	db_run('UPDATE auth_tokens SET used_at = NOW() WHERE id = ?', [$row['id']]);
+	// Audit : enregistre la 1re utilisation (NULL → NOW), garde la 1re date sinon.
+	if ($row['used_at'] === null) {
+		db_run('UPDATE auth_tokens SET used_at = NOW() WHERE id = ?', [$row['id']]);
+	}
+
 	open_session($row['user_id']);
 
 	$redirect = $row['redirect'];
@@ -95,9 +105,10 @@ function open_session(string $userId): void
 	);
 
 	// GC opportuniste (à la connexion, opération rare) : purge les sessions expirées
-	// et les magic-links expirés/consommés pour éviter que les tables ne gonflent.
+	// et les magic-links expirés. Les liens déjà cliqués mais non expirés restent
+	// valides (réutilisables jusqu'à expires_at).
 	db_run('DELETE FROM sessions WHERE expires_at < NOW()');
-	db_run('DELETE FROM auth_tokens WHERE expires_at < NOW() OR used_at IS NOT NULL');
+	db_run('DELETE FROM auth_tokens WHERE expires_at < NOW()');
 
 	setcookie($cfg['app']['cookie_name'], $token, [
 		'expires'  => time() + $ttl,

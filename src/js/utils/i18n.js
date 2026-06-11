@@ -48,7 +48,7 @@ const TRANSLATIONS = {
 		// --- Retrieve popup ---
 		'retrieve.title': 'Recover my Hodi vCard',
 		'retrieve.intro':
-			"Enter the email associated with your Hodi vCard. We'll send you a single-use link to access and edit it.",
+			"Enter the email associated with your Hodi vCard. We'll send you an access link to view and edit it.",
 		'retrieve.email_placeholder': 'your@email.com',
 		'retrieve.send_btn': 'Send recovery link',
 
@@ -115,11 +115,15 @@ const TRANSLATIONS = {
 			'A vCard already exists for <strong>{email}</strong>. To edit it, click "Edit" at the bottom of that vCard.',
 		'feedback.slug_taken': 'The username "{slug}" is already taken. Choose another one.',
 		'feedback.create_email_sent':
-			'<strong>✓ Confirmation email sent!</strong><br>A link has just been sent to <strong>{email}</strong>.<br>Click it to <strong>finalize the creation</strong> of your vCard.<br><br><span style="opacity: 0.7;">You can close this window. The link is valid for 1 hour.</span>',
+			'<strong>✓ Confirmation email sent!</strong><br>A link has just been sent to <strong>{email}</strong>.<br>Click it to <strong>finalize the creation</strong> of your vCard.<br><br><span style="opacity: 0.7;">You can close this window. The link is valid for 4 hours.</span>',
 		'feedback.finalizing': 'Finalizing the creation of your vCard…',
 		'feedback.uploading_cover': 'Uploading cover…',
 		'feedback.uploading_avatar': 'Uploading profile picture…',
 		'feedback.created_redirecting': '✓ vCard created! Redirecting to your public card…',
+		'feedback.created_done_title': 'Your vCard is created!',
+		'feedback.created_done_hint': 'You can keep editing your information here, or:',
+		'feedback.created_view_public': 'View my public vCard',
+		'feedback.created_go_wallpapers': 'Create my wallpapers →',
 
 		// --- Validation errors ---
 		'error.first_name_required': 'First name is required.',
@@ -135,13 +139,13 @@ const TRANSLATIONS = {
 		// --- Modifier popup ---
 		'modify.title': 'Want to edit your vCard?',
 		'modify.subtitle': 'This vCard is yours and you want to update it?',
-		'modify.description': "We'll send a unique edit link to the email associated with this vCard:",
+		'modify.description': "We'll send an edit link to the email associated with this vCard:",
 		'modify.cta': 'Send me the edit link',
 		'modify.close': 'Close',
 		'modify.sending': 'Sending…',
 		'modify.sent_title': '✓ Link sent',
 		'modify.sent_description':
-			'An edit link has been sent to <strong>{email}</strong>.<br>It is valid for 1 hour. Check your inbox (and spam folder).',
+			'An edit link has been sent to <strong>{email}</strong>.<br>It is valid for 4 hours. Check your inbox (and spam folder).',
 		'modify.sent_footnote':
 			'You can close this window. When you click the link in your email, you will be signed in automatically.',
 		'modify.error_no_email': 'This vCard has no associated email.',
@@ -265,7 +269,7 @@ const TRANSLATIONS = {
 		// --- Retrieve popup ---
 		'retrieve.title': 'Retrouver ma vCard Hodi',
 		'retrieve.intro':
-			"Saisissez l'email associé à votre vCard Hodi. Vous recevrez un lien à usage unique pour y accéder et la modifier.",
+			"Saisissez l'email associé à votre vCard Hodi. Vous recevrez un lien d'accès pour la consulter et la modifier.",
 		'retrieve.email_placeholder': 'votre@email.com',
 		'retrieve.send_btn': 'Envoyer le lien de récupération',
 
@@ -332,11 +336,15 @@ const TRANSLATIONS = {
 			'Une vCard existe déjà pour <strong>{email}</strong>. Pour la modifier, cliquez sur « Modifier » en bas de cette vCard.',
 		'feedback.slug_taken': 'Le username « {slug} » est déjà pris. Choisissez-en un autre.',
 		'feedback.create_email_sent':
-			'<strong>✓ Email de confirmation envoyé !</strong><br>Un lien vient d’être envoyé à <strong>{email}</strong>.<br>Cliquez dessus pour <strong>finaliser la création</strong> de votre vCard.<br><br><span style="opacity: 0.7;">Vous pouvez fermer cette fenêtre. Le lien est valable 1 heure.</span>',
+			'<strong>✓ Email de confirmation envoyé !</strong><br>Un lien vient d’être envoyé à <strong>{email}</strong>.<br>Cliquez dessus pour <strong>finaliser la création</strong> de votre vCard.<br><br><span style="opacity: 0.7;">Vous pouvez fermer cette fenêtre. Le lien est valable 4 heures.</span>',
 		'feedback.finalizing': 'Finalisation de la création de votre vCard…',
 		'feedback.uploading_cover': 'Upload de la couverture…',
 		'feedback.uploading_avatar': 'Upload de la photo de profil…',
 		'feedback.created_redirecting': '✓ vCard créée ! Redirection vers votre carte publique…',
+		'feedback.created_done_title': 'Votre vCard est créée !',
+		'feedback.created_done_hint': 'Vous pouvez continuer à éditer vos informations ici, ou :',
+		'feedback.created_view_public': 'Voir ma vCard publique',
+		'feedback.created_go_wallpapers': 'Créer mes fonds d’écran →',
 
 		// --- Validation errors ---
 		'error.first_name_required': 'Le prénom est requis.',
@@ -353,13 +361,13 @@ const TRANSLATIONS = {
 		'modify.title': 'Vous souhaitez modifier votre vCard ?',
 		'modify.subtitle': 'Cette vCard est la vôtre et vous souhaitez y apporter des modifications ?',
 		'modify.description':
-			'Nous générons un lien unique de modification qui vous sera envoyé sur l’adresse email associée à cette vCard :',
-		'modify.cta': 'Recevoir le lien unique de modification',
+			'Nous envoyons un lien de modification à l’adresse email associée à cette vCard :',
+		'modify.cta': 'Recevoir le lien de modification',
 		'modify.close': 'Fermer',
 		'modify.sending': 'Envoi en cours…',
 		'modify.sent_title': '✓ Lien envoyé',
 		'modify.sent_description':
-			'Un lien de modification a été envoyé à <strong>{email}</strong>.<br>Il est valable 1 heure. Vérifiez votre boîte mail (et les spams).',
+			'Un lien de modification a été envoyé à <strong>{email}</strong>.<br>Il est valable 4 heures. Vérifiez votre boîte mail (et les spams).',
 		'modify.sent_footnote':
 			'Vous pouvez fermer cette fenêtre. En cliquant sur le lien reçu par email, vous serez connecté automatiquement.',
 		'modify.error_no_email': 'Cette vCard n’a pas d’email associé.',
@@ -550,7 +558,7 @@ const TRANSLATIONS = {
 			'vCard tayari ipo kwa <strong>{email}</strong>. Ili kuihariri, bofya "Hariri" chini ya vCard hiyo.',
 		'feedback.slug_taken': 'Anwani ya vCard "{slug}" tayari imechukuliwa. Chagua nyingine.',
 		'feedback.create_email_sent':
-			'<strong>✓ Barua pepe ya uthibitisho imetumwa!</strong><br>Kiungo kimetumwa hivi punde kwa <strong>{email}</strong>.<br>Bofya ili <strong>kukamilisha kuunda</strong> vCard yako.<br><br><span style="opacity: 0.7;">Unaweza kufunga dirisha hili. Kiungo kinafanya kazi kwa saa 1.</span>',
+			'<strong>✓ Barua pepe ya uthibitisho imetumwa!</strong><br>Kiungo kimetumwa hivi punde kwa <strong>{email}</strong>.<br>Bofya ili <strong>kukamilisha kuunda</strong> vCard yako.<br><br><span style="opacity: 0.7;">Unaweza kufunga dirisha hili. Kiungo kinafanya kazi kwa saa 4.</span>',
 		'feedback.finalizing': 'Inakamilisha kuunda vCard yako…',
 		'feedback.uploading_cover': 'Inapakia jalada…',
 		'feedback.uploading_avatar': 'Inapakia picha ya wasifu…',
@@ -576,7 +584,7 @@ const TRANSLATIONS = {
 		'modify.sending': 'Inatuma…',
 		'modify.sent_title': '✓ Kiungo kimetumwa',
 		'modify.sent_description':
-			'Kiungo cha kuhariri kimetumwa kwa <strong>{email}</strong>.<br>Kinafanya kazi kwa saa 1. Angalia kikasha chako (na folda ya Spam).',
+			'Kiungo cha kuhariri kimetumwa kwa <strong>{email}</strong>.<br>Kinafanya kazi kwa saa 4. Angalia kikasha chako (na folda ya Spam).',
 		'modify.sent_footnote':
 			'Unaweza kufunga dirisha hili. Ukibofya kiungo kwenye barua pepe yako, utaingia kiotomatiki.',
 		'modify.error_no_email': 'vCard hii haina barua pepe inayohusishwa.',
@@ -768,7 +776,7 @@ const TRANSLATIONS = {
 			'Já existe um vCard para <strong>{email}</strong>. Para o editar, clique em "Editar" no fim desse vCard.',
 		'feedback.slug_taken': 'O endereço de vCard "{slug}" já está em uso. Escolha outro.',
 		'feedback.create_email_sent':
-			'<strong>✓ Email de confirmação enviado!</strong><br>Acabámos de enviar um link para <strong>{email}</strong>.<br>Clique nele para <strong>finalizar a criação</strong> do seu vCard.<br><br><span style="opacity: 0.7;">Pode fechar esta janela. O link é válido durante 1 hora.</span>',
+			'<strong>✓ Email de confirmação enviado!</strong><br>Acabámos de enviar um link para <strong>{email}</strong>.<br>Clique nele para <strong>finalizar a criação</strong> do seu vCard.<br><br><span style="opacity: 0.7;">Pode fechar esta janela. O link é válido durante 4 horas.</span>',
 		'feedback.finalizing': 'A finalizar a criação do seu vCard…',
 		'feedback.uploading_cover': 'A carregar a capa…',
 		'feedback.uploading_avatar': 'A carregar a foto de perfil…',
@@ -794,7 +802,7 @@ const TRANSLATIONS = {
 		'modify.sending': 'A enviar…',
 		'modify.sent_title': '✓ Link enviado',
 		'modify.sent_description':
-			'Foi enviado um link de edição para <strong>{email}</strong>.<br>É válido durante 1 hora. Verifique a sua caixa de entrada (e a pasta de spam).',
+			'Foi enviado um link de edição para <strong>{email}</strong>.<br>É válido durante 4 horas. Verifique a sua caixa de entrada (e a pasta de spam).',
 		'modify.sent_footnote':
 			'Pode fechar esta janela. Ao clicar no link recebido por email, será autenticado automaticamente.',
 		'modify.error_no_email': 'Este vCard não tem email associado.',
@@ -984,7 +992,7 @@ const TRANSLATIONS = {
 			'توجد بطاقة vCard بالفعل لـ <strong>{email}</strong>. لتعديلها، اضغط "تعديل" في أسفل تلك البطاقة.',
 		'feedback.slug_taken': 'عنوان vCard "{slug}" مستخدم بالفعل. اختر عنوانًا آخر.',
 		'feedback.create_email_sent':
-			'<strong>✓ تم إرسال بريد التأكيد!</strong><br>أُرسل رابط للتو إلى <strong>{email}</strong>.<br>اضغط عليه لـ<strong>إتمام إنشاء</strong> بطاقتك.<br><br><span style="opacity: 0.7;">يمكنك إغلاق هذه النافذة. الرابط صالح لمدة ساعة واحدة.</span>',
+			'<strong>✓ تم إرسال بريد التأكيد!</strong><br>أُرسل رابط للتو إلى <strong>{email}</strong>.<br>اضغط عليه لـ<strong>إتمام إنشاء</strong> بطاقتك.<br><br><span style="opacity: 0.7;">يمكنك إغلاق هذه النافذة. الرابط صالح لمدة 4 ساعات.</span>',
 		'feedback.finalizing': 'جارٍ إتمام إنشاء بطاقتك…',
 		'feedback.uploading_cover': 'جارٍ رفع صورة الغلاف…',
 		'feedback.uploading_avatar': 'جارٍ رفع صورة الملف الشخصي…',
@@ -1010,7 +1018,7 @@ const TRANSLATIONS = {
 		'modify.sending': 'جارٍ الإرسال…',
 		'modify.sent_title': '✓ تم إرسال الرابط',
 		'modify.sent_description':
-			'تم إرسال رابط تعديل إلى <strong>{email}</strong>.<br>صالح لمدة ساعة واحدة. تحقّق من بريدك الوارد (ومجلد الرسائل غير المرغوب فيها).',
+			'تم إرسال رابط تعديل إلى <strong>{email}</strong>.<br>صالح لمدة 4 ساعات. تحقّق من بريدك الوارد (ومجلد الرسائل غير المرغوب فيها).',
 		'modify.sent_footnote': 'يمكنك إغلاق هذه النافذة. عند الضغط على الرابط في بريدك، سيتم تسجيل دخولك تلقائيًا.',
 		'modify.error_no_email': 'لا يوجد بريد إلكتروني مرتبط بهذه البطاقة.',
 		'modify.error_network': 'حدث خطأ في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.',

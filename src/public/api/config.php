@@ -64,7 +64,7 @@ return (static function (): array {
 			// URL de base publique de l'app (sert à construire les magic-links).
 			// Détectée automatiquement si vide.
 			'base_url'        => getenv('VCARD_BASE_URL') ?: '',
-			'token_ttl'       => 3600,            // durée de vie d'un magic-link (s)
+			'token_ttl'       => 4 * 60 * 60,     // 4h — magic-link réutilisable tant qu'il n'a pas expiré
 			'session_ttl'     => 60 * 60 * 24 * 30, // durée de vie d'une session (30 j)
 			'cookie_name'     => 'hodi_vcard_session',
 			'cookie_secure'   => true,            // local servi en https (vhost SSL)
