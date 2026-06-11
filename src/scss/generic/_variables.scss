@@ -9,6 +9,15 @@
 	--lh-base: 1.2;
 	--ff-base: 'Inter', Helvetica, Arial, sans-serif;
 	--ff-monrope: 'Manrope', Helvetica, Arial, sans-serif;
+
+	// Polices DS Hodi (refonte 2026) — alignées sur HODI-DESIGN-SYSTEM.md §3
+	--f-display: 'Plus Jakarta Sans', Helvetica, Arial, sans-serif; // titres / headlines (700–800)
+	--f-mono: 'JetBrains Mono', ui-monospace, Menlo, monospace; // eyebrows / capsules UPPERCASE
+
+	// Dégradés DS Hodi — 269deg, arc complet bleu→indigo→violet→magenta→coral→orange
+	--grad-brand: linear-gradient(269deg, #4390cd 0%, #4c63ab 18%, #764d98 36%, #be4b93 56%, #e95853 78%, #eb6947 100%);
+	--grad-sunset: linear-gradient(269deg, #764d98 0%, #be4b93 35%, #e95853 70%, #eb6947 100%);
+
 	--c-base: #000;
 	--c-white: #fff;
 	--t-duration: 0.3s;

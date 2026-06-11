@@ -38,15 +38,17 @@ const TRANSLATIONS = {
 		'hero.badge_no_paper': 'No paper',
 		'hero.badge_no_card': 'No physical card',
 		'hero.badge_no_app': 'No app',
-		'hero.title_line1': 'Your virtual business card.',
-		'hero.title_line2': 'Made in Africa.',
-		'hero.cta': 'Create my Hodi vCard',
+		'hero.title_line1': 'The digital business card.',
+		'hero.title_line2': 'Free.',
+		'hero.cta': 'I create my Hodi vCard',
 		'hero.retrieve_link': 'I already have a vCard, recover my access',
-		'hero.pitch': 'Hodi offers you your virtual business card.<br>Your data is securely stored, and never used for commercial purposes.',
+		'hero.pitch':
+			'Hodi offers you your personal virtual business card.<br>Your data is securely stored and never used for commercial purposes.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'Recover my Hodi vCard',
-		'retrieve.intro': "Enter the email associated with your Hodi vCard. We'll send you a single-use link to access and edit it.",
+		'retrieve.intro':
+			"Enter the email associated with your Hodi vCard. We'll send you a single-use link to access and edit it.",
 		'retrieve.email_placeholder': 'your@email.com',
 		'retrieve.send_btn': 'Send recovery link',
 
@@ -56,7 +58,8 @@ const TRANSLATIONS = {
 		'tabs.my_signature': 'My email signature',
 
 		// --- Form (mes-infos) ---
-		'form.intro': "The data you enter here is only used to generate your vCard. It is stored securely and will never be used for commercial purposes.",
+		'form.intro':
+			'The data you enter here is only used to generate your vCard. It is stored securely and will never be used for commercial purposes.',
 
 		'form.username_label': 'Hodi vCard username',
 		'form.username_placeholder': 'your-username',
@@ -102,14 +105,17 @@ const TRANSLATIONS = {
 		'slug.error': 'Error: {message}',
 
 		// --- Feedback messages (JS) ---
-		'feedback.no_vcard_yet': "You don't have a vCard yet. Fill in this form and click \"Create my vCard\" at the bottom.",
+		'feedback.no_vcard_yet':
+			'You don\'t have a vCard yet. Fill in this form and click "Create my vCard" at the bottom.',
 		'feedback.network_error': 'Network error. Check your connection and try again.',
 		'feedback.no_vcard_to_delete': "You don't have a vCard to delete.",
 		'feedback.deleted': 'vCard deleted. You can create a new one above.',
 		'feedback.saved': '✓ Changes saved.<br>Public link: <a href="{url}">{url}</a>',
-		'feedback.email_already_used': 'A vCard already exists for <strong>{email}</strong>. To edit it, click "Edit" at the bottom of that vCard.',
+		'feedback.email_already_used':
+			'A vCard already exists for <strong>{email}</strong>. To edit it, click "Edit" at the bottom of that vCard.',
 		'feedback.slug_taken': 'The username "{slug}" is already taken. Choose another one.',
-		'feedback.create_email_sent': '<strong>✓ Confirmation email sent!</strong><br>A link has just been sent to <strong>{email}</strong>.<br>Click it to <strong>finalize the creation</strong> of your vCard.<br><br><span style="opacity: 0.7;">You can close this window. The link is valid for 1 hour.</span>',
+		'feedback.create_email_sent':
+			'<strong>✓ Confirmation email sent!</strong><br>A link has just been sent to <strong>{email}</strong>.<br>Click it to <strong>finalize the creation</strong> of your vCard.<br><br><span style="opacity: 0.7;">You can close this window. The link is valid for 1 hour.</span>',
 		'feedback.finalizing': 'Finalizing the creation of your vCard…',
 		'feedback.uploading_cover': 'Uploading cover…',
 		'feedback.uploading_avatar': 'Uploading profile picture…',
@@ -134,9 +140,11 @@ const TRANSLATIONS = {
 		'modify.close': 'Close',
 		'modify.sending': 'Sending…',
 		'modify.sent_title': '✓ Link sent',
-		'modify.sent_description': 'An edit link has been sent to <strong>{email}</strong>.<br>It is valid for 1 hour. Check your inbox (and spam folder).',
-		'modify.sent_footnote': 'You can close this window. When you click the link in your email, you will be signed in automatically.',
-		'modify.error_no_email': "This vCard has no associated email.",
+		'modify.sent_description':
+			'An edit link has been sent to <strong>{email}</strong>.<br>It is valid for 1 hour. Check your inbox (and spam folder).',
+		'modify.sent_footnote':
+			'You can close this window. When you click the link in your email, you will be signed in automatically.',
+		'modify.error_no_email': 'This vCard has no associated email.',
 		'modify.error_network': 'A network error occurred. Check your connection and try again.',
 
 		// --- Public vCard actions ---
@@ -208,8 +216,10 @@ const TRANSLATIONS = {
 		// --- Retrieve feedback ---
 		'retrieve.email_required': 'Please enter your email address.',
 		'retrieve.checking': 'Checking…',
-		'retrieve.none': 'No vCard is associated with <strong>{email}</strong>.<br>You can create one with the "Create my Hodi vCard" button on this page.',
-		'retrieve.sent': "✓ A recovery link has just been sent to <strong>{email}</strong>.<br>Click the link in the email to access your vCard.",
+		'retrieve.none':
+			'No vCard is associated with <strong>{email}</strong>.<br>You can create one with the "Create my Hodi vCard" button on this page.',
+		'retrieve.sent':
+			'✓ A recovery link has just been sent to <strong>{email}</strong>.<br>Click the link in the email to access your vCard.',
 
 		// --- Form (extra runtime labels) ---
 		'form.tab_locked_title': 'Available after creating your vCard.',
@@ -220,7 +230,8 @@ const TRANSLATIONS = {
 		'form.sending_email': 'Sending email…',
 		'form.email_sent_btn': 'Email sent ✓',
 		'form.finalizing_btn': 'Finalizing…',
-		'form.delete_confirm': 'Permanently delete the vCard "{slug}"?\n\nThis action is irreversible and breaks all existing links / QR codes.',
+		'form.delete_confirm':
+			'Permanently delete the vCard "{slug}"?\n\nThis action is irreversible and breaks all existing links / QR codes.',
 		'feedback.generating_wallpaper': 'Generating your Hodi wallpaper…',
 		'feedback.create_conflict': 'Error: a vCard already exists for this email or username.',
 	},
@@ -232,7 +243,8 @@ const TRANSLATIONS = {
 
 		// --- Meta ---
 		'meta.title': 'Hodi vCard - By Hodi, le cloud unifié africain',
-		'meta.description': 'Votre carte de visite virtuelle, conçue en Afrique. Chiffrée, sécurisée, jamais exploitée commercialement.',
+		'meta.description':
+			'Votre carte de visite virtuelle, conçue en Afrique. Chiffrée, sécurisée, jamais exploitée commercialement.',
 
 		// --- Footer ---
 		'footer.logo_label': 'Hodi - Host different.',
@@ -243,15 +255,17 @@ const TRANSLATIONS = {
 		'hero.badge_no_paper': 'Pas de papier',
 		'hero.badge_no_card': 'Pas de carte',
 		'hero.badge_no_app': 'Pas d’appli',
-		'hero.title_line1': 'Votre carte de visite virtuelle.',
-		'hero.title_line2': 'Conçue en Afrique.',
-		'hero.cta': 'Créer ma vCard Hodi',
+		'hero.title_line1': 'La carte de visite digitale.',
+		'hero.title_line2': 'Gratuite.',
+		'hero.cta': 'Je crée ma vCard Hodi',
 		'hero.retrieve_link': "J'ai déjà une vCard, retrouver mon accès",
-		'hero.pitch': 'Hodi vous offre votre carte de visite virtuelle.<br>Vos données sont stockées de manière sécurisée et ne sont jamais exploitées commercialement.',
+		'hero.pitch':
+			'Hodi vous offre votre carte de visite virtuelle et personnelle.<br>Vos données sont stockées de manière sécurisée et ne sont pas exploitées commercialement.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'Retrouver ma vCard Hodi',
-		'retrieve.intro': "Saisissez l'email associé à votre vCard Hodi. Vous recevrez un lien à usage unique pour y accéder et la modifier.",
+		'retrieve.intro':
+			"Saisissez l'email associé à votre vCard Hodi. Vous recevrez un lien à usage unique pour y accéder et la modifier.",
 		'retrieve.email_placeholder': 'votre@email.com',
 		'retrieve.send_btn': 'Envoyer le lien de récupération',
 
@@ -261,7 +275,8 @@ const TRANSLATIONS = {
 		'tabs.my_signature': 'Ma signature mail',
 
 		// --- Form (mes-infos) ---
-		'form.intro': "Les données saisies ici servent uniquement à générer votre vCard. Elles sont stockées de manière sécurisée et ne seront jamais exploitées à des fins commerciales.",
+		'form.intro':
+			'Les données saisies ici servent uniquement à générer votre vCard. Elles sont stockées de manière sécurisée et ne seront jamais exploitées à des fins commerciales.',
 
 		'form.username_label': 'Username Hodi vCard',
 		'form.username_placeholder': 'votre-username',
@@ -307,14 +322,17 @@ const TRANSLATIONS = {
 		'slug.error': 'Erreur : {message}',
 
 		// --- Feedback messages (JS) ---
-		'feedback.no_vcard_yet': "Vous n’avez pas encore de vCard. Remplissez ce formulaire et cliquez sur « Créer ma vCard » en bas.",
+		'feedback.no_vcard_yet':
+			'Vous n’avez pas encore de vCard. Remplissez ce formulaire et cliquez sur « Créer ma vCard » en bas.',
 		'feedback.network_error': 'Erreur réseau. Vérifiez votre connexion et réessayez.',
-		'feedback.no_vcard_to_delete': "Vous n’avez pas de vCard à supprimer.",
+		'feedback.no_vcard_to_delete': 'Vous n’avez pas de vCard à supprimer.',
 		'feedback.deleted': 'vCard supprimée. Vous pouvez en créer une nouvelle ci-dessus.',
 		'feedback.saved': '✓ Modifications enregistrées.<br>Lien public : <a href="{url}">{url}</a>',
-		'feedback.email_already_used': 'Une vCard existe déjà pour <strong>{email}</strong>. Pour la modifier, cliquez sur « Modifier » en bas de cette vCard.',
+		'feedback.email_already_used':
+			'Une vCard existe déjà pour <strong>{email}</strong>. Pour la modifier, cliquez sur « Modifier » en bas de cette vCard.',
 		'feedback.slug_taken': 'Le username « {slug} » est déjà pris. Choisissez-en un autre.',
-		'feedback.create_email_sent': '<strong>✓ Email de confirmation envoyé !</strong><br>Un lien vient d’être envoyé à <strong>{email}</strong>.<br>Cliquez dessus pour <strong>finaliser la création</strong> de votre vCard.<br><br><span style="opacity: 0.7;">Vous pouvez fermer cette fenêtre. Le lien est valable 1 heure.</span>',
+		'feedback.create_email_sent':
+			'<strong>✓ Email de confirmation envoyé !</strong><br>Un lien vient d’être envoyé à <strong>{email}</strong>.<br>Cliquez dessus pour <strong>finaliser la création</strong> de votre vCard.<br><br><span style="opacity: 0.7;">Vous pouvez fermer cette fenêtre. Le lien est valable 1 heure.</span>',
 		'feedback.finalizing': 'Finalisation de la création de votre vCard…',
 		'feedback.uploading_cover': 'Upload de la couverture…',
 		'feedback.uploading_avatar': 'Upload de la photo de profil…',
@@ -329,19 +347,22 @@ const TRANSLATIONS = {
 		'error.username_required': 'Le username Hodi vCard est requis.',
 		'error.username_invalid': 'Le username ne peut contenir que des lettres minuscules, chiffres et tirets.',
 		'error.username_length': 'Le username doit faire entre 3 et 50 caractères.',
-		'error.email_missing_auth': "L’email du propriétaire est manquant (problème d’auth).",
+		'error.email_missing_auth': 'L’email du propriétaire est manquant (problème d’auth).',
 
 		// --- Modifier popup ---
 		'modify.title': 'Vous souhaitez modifier votre vCard ?',
 		'modify.subtitle': 'Cette vCard est la vôtre et vous souhaitez y apporter des modifications ?',
-		'modify.description': 'Nous générons un lien unique de modification qui vous sera envoyé sur l’adresse email associée à cette vCard :',
+		'modify.description':
+			'Nous générons un lien unique de modification qui vous sera envoyé sur l’adresse email associée à cette vCard :',
 		'modify.cta': 'Recevoir le lien unique de modification',
 		'modify.close': 'Fermer',
 		'modify.sending': 'Envoi en cours…',
 		'modify.sent_title': '✓ Lien envoyé',
-		'modify.sent_description': 'Un lien de modification a été envoyé à <strong>{email}</strong>.<br>Il est valable 1 heure. Vérifiez votre boîte mail (et les spams).',
-		'modify.sent_footnote': 'Vous pouvez fermer cette fenêtre. En cliquant sur le lien reçu par email, vous serez connecté automatiquement.',
-		'modify.error_no_email': "Cette vCard n’a pas d’email associé.",
+		'modify.sent_description':
+			'Un lien de modification a été envoyé à <strong>{email}</strong>.<br>Il est valable 1 heure. Vérifiez votre boîte mail (et les spams).',
+		'modify.sent_footnote':
+			'Vous pouvez fermer cette fenêtre. En cliquant sur le lien reçu par email, vous serez connecté automatiquement.',
+		'modify.error_no_email': 'Cette vCard n’a pas d’email associé.',
 		'modify.error_network': 'Une erreur réseau est survenue. Vérifiez votre connexion et réessayez.',
 
 		// --- Public vCard actions ---
@@ -413,8 +434,10 @@ const TRANSLATIONS = {
 		// --- Retrieve feedback ---
 		'retrieve.email_required': 'Veuillez saisir votre adresse email.',
 		'retrieve.checking': 'Vérification…',
-		'retrieve.none': 'Aucune vCard n’est associée à <strong>{email}</strong>.<br>Vous pouvez en créer une depuis le bouton « Créer ma vCard Hodi » sur cette page.',
-		'retrieve.sent': '✓ Un lien de récupération vient d’être envoyé à <strong>{email}</strong>.<br>Cliquez sur le lien dans l’email pour accéder à votre vCard.',
+		'retrieve.none':
+			'Aucune vCard n’est associée à <strong>{email}</strong>.<br>Vous pouvez en créer une depuis le bouton « Créer ma vCard Hodi » sur cette page.',
+		'retrieve.sent':
+			'✓ Un lien de récupération vient d’être envoyé à <strong>{email}</strong>.<br>Cliquez sur le lien dans l’email pour accéder à votre vCard.',
 
 		// --- Form (extra runtime labels) ---
 		'form.tab_locked_title': 'Disponible après la création de votre vCard.',
@@ -425,7 +448,8 @@ const TRANSLATIONS = {
 		'form.sending_email': 'Envoi de l’email…',
 		'form.email_sent_btn': 'Email envoyé ✓',
 		'form.finalizing_btn': 'Finalisation…',
-		'form.delete_confirm': 'Confirmer la suppression définitive de la vCard « {slug} » ?\n\nCette action est irréversible et casse tous les liens / QR codes existants.',
+		'form.delete_confirm':
+			'Confirmer la suppression définitive de la vCard « {slug} » ?\n\nCette action est irréversible et casse tous les liens / QR codes existants.',
 		'feedback.generating_wallpaper': 'Génération de votre fond d’écran Hodi…',
 		'feedback.create_conflict': 'Erreur : une vCard existe déjà pour cet email ou ce username.',
 	},
@@ -438,7 +462,8 @@ const TRANSLATIONS = {
 
 		// --- Meta ---
 		'meta.title': 'Hodi vCard - Kutoka Hodi, wingu la Afrika lililounganishwa',
-		'meta.description': 'Kadi yako ya mawasiliano ya kidijitali, iliyotengenezwa Afrika. Imesimbwa, salama, haitumiwi kamwe kibiashara.',
+		'meta.description':
+			'Kadi yako ya mawasiliano ya kidijitali, iliyotengenezwa Afrika. Imesimbwa, salama, haitumiwi kamwe kibiashara.',
 
 		// --- Footer ---
 		'footer.logo_label': 'Hodi - Host different.',
@@ -453,11 +478,13 @@ const TRANSLATIONS = {
 		'hero.title_line2': 'Imetengenezwa Afrika.',
 		'hero.cta': 'Tengeneza vCard yangu ya Hodi',
 		'hero.retrieve_link': 'Tayari nina vCard, nirejeshee ufikiaji',
-		'hero.pitch': 'Hodi inakupa kadi yako ya mawasiliano ya kidijitali.<br>Data yako huhifadhiwa kwa usalama, na haitumiwi kamwe kwa madhumuni ya kibiashara.',
+		'hero.pitch':
+			'Hodi inakupa kadi yako ya mawasiliano ya kidijitali.<br>Data yako huhifadhiwa kwa usalama, na haitumiwi kamwe kwa madhumuni ya kibiashara.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'Rejesha vCard yangu ya Hodi',
-		'retrieve.intro': 'Weka barua pepe inayohusishwa na vCard yako ya Hodi. Tutakutumia kiungo cha matumizi ya mara moja ili kuifikia na kuihariri.',
+		'retrieve.intro':
+			'Weka barua pepe inayohusishwa na vCard yako ya Hodi. Tutakutumia kiungo cha matumizi ya mara moja ili kuifikia na kuihariri.',
 		'retrieve.email_placeholder': 'barua@pepe.com',
 		'retrieve.send_btn': 'Tuma kiungo cha urejeshaji',
 
@@ -467,7 +494,8 @@ const TRANSLATIONS = {
 		'tabs.my_signature': 'Sahihi yangu ya barua pepe',
 
 		// --- Form (mes-infos) ---
-		'form.intro': 'Data unayoweka hapa hutumika tu kutengeneza vCard yako. Huhifadhiwa kwa usalama na haitatumiwa kamwe kwa madhumuni ya kibiashara.',
+		'form.intro':
+			'Data unayoweka hapa hutumika tu kutengeneza vCard yako. Huhifadhiwa kwa usalama na haitatumiwa kamwe kwa madhumuni ya kibiashara.',
 
 		'form.username_label': 'Anwani ya Hodi vCard',
 		'form.username_placeholder': 'jina-lako',
@@ -518,9 +546,11 @@ const TRANSLATIONS = {
 		'feedback.no_vcard_to_delete': 'Huna vCard ya kufuta.',
 		'feedback.deleted': 'vCard imefutwa. Unaweza kutengeneza mpya hapo juu.',
 		'feedback.saved': '✓ Mabadiliko yamehifadhiwa.<br>Kiungo cha umma: <a href="{url}">{url}</a>',
-		'feedback.email_already_used': 'vCard tayari ipo kwa <strong>{email}</strong>. Ili kuihariri, bofya "Hariri" chini ya vCard hiyo.',
+		'feedback.email_already_used':
+			'vCard tayari ipo kwa <strong>{email}</strong>. Ili kuihariri, bofya "Hariri" chini ya vCard hiyo.',
 		'feedback.slug_taken': 'Anwani ya vCard "{slug}" tayari imechukuliwa. Chagua nyingine.',
-		'feedback.create_email_sent': '<strong>✓ Barua pepe ya uthibitisho imetumwa!</strong><br>Kiungo kimetumwa hivi punde kwa <strong>{email}</strong>.<br>Bofya ili <strong>kukamilisha kuunda</strong> vCard yako.<br><br><span style="opacity: 0.7;">Unaweza kufunga dirisha hili. Kiungo kinafanya kazi kwa saa 1.</span>',
+		'feedback.create_email_sent':
+			'<strong>✓ Barua pepe ya uthibitisho imetumwa!</strong><br>Kiungo kimetumwa hivi punde kwa <strong>{email}</strong>.<br>Bofya ili <strong>kukamilisha kuunda</strong> vCard yako.<br><br><span style="opacity: 0.7;">Unaweza kufunga dirisha hili. Kiungo kinafanya kazi kwa saa 1.</span>',
 		'feedback.finalizing': 'Inakamilisha kuunda vCard yako…',
 		'feedback.uploading_cover': 'Inapakia jalada…',
 		'feedback.uploading_avatar': 'Inapakia picha ya wasifu…',
@@ -545,8 +575,10 @@ const TRANSLATIONS = {
 		'modify.close': 'Funga',
 		'modify.sending': 'Inatuma…',
 		'modify.sent_title': '✓ Kiungo kimetumwa',
-		'modify.sent_description': 'Kiungo cha kuhariri kimetumwa kwa <strong>{email}</strong>.<br>Kinafanya kazi kwa saa 1. Angalia kikasha chako (na folda ya Spam).',
-		'modify.sent_footnote': 'Unaweza kufunga dirisha hili. Ukibofya kiungo kwenye barua pepe yako, utaingia kiotomatiki.',
+		'modify.sent_description':
+			'Kiungo cha kuhariri kimetumwa kwa <strong>{email}</strong>.<br>Kinafanya kazi kwa saa 1. Angalia kikasha chako (na folda ya Spam).',
+		'modify.sent_footnote':
+			'Unaweza kufunga dirisha hili. Ukibofya kiungo kwenye barua pepe yako, utaingia kiotomatiki.',
 		'modify.error_no_email': 'vCard hii haina barua pepe inayohusishwa.',
 		'modify.error_network': 'Hitilafu ya mtandao imetokea. Angalia muunganisho wako na ujaribu tena.',
 
@@ -619,8 +651,10 @@ const TRANSLATIONS = {
 		// --- Retrieve feedback ---
 		'retrieve.email_required': 'Tafadhali weka anwani yako ya barua pepe.',
 		'retrieve.checking': 'Inakagua…',
-		'retrieve.none': 'Hakuna vCard inayohusishwa na <strong>{email}</strong>.<br>Unaweza kutengeneza moja kwa kitufe cha "Tengeneza vCard yangu ya Hodi" kwenye ukurasa huu.',
-		'retrieve.sent': '✓ Kiungo cha urejeshaji kimetumwa hivi punde kwa <strong>{email}</strong>.<br>Bofya kiungo kwenye barua pepe ili kufikia vCard yako.',
+		'retrieve.none':
+			'Hakuna vCard inayohusishwa na <strong>{email}</strong>.<br>Unaweza kutengeneza moja kwa kitufe cha "Tengeneza vCard yangu ya Hodi" kwenye ukurasa huu.',
+		'retrieve.sent':
+			'✓ Kiungo cha urejeshaji kimetumwa hivi punde kwa <strong>{email}</strong>.<br>Bofya kiungo kwenye barua pepe ili kufikia vCard yako.',
 
 		// --- Form (extra runtime labels) ---
 		'form.tab_locked_title': 'Inapatikana baada ya kutengeneza vCard yako.',
@@ -631,7 +665,8 @@ const TRANSLATIONS = {
 		'form.sending_email': 'Inatuma barua pepe…',
 		'form.email_sent_btn': 'Barua pepe imetumwa ✓',
 		'form.finalizing_btn': 'Inakamilisha…',
-		'form.delete_confirm': 'Futa kabisa vCard "{slug}"?\n\nKitendo hiki hakiwezi kutenduliwa na kitaharibu viungo / misimbo ya QR yote iliyopo.',
+		'form.delete_confirm':
+			'Futa kabisa vCard "{slug}"?\n\nKitendo hiki hakiwezi kutenduliwa na kitaharibu viungo / misimbo ya QR yote iliyopo.',
 		'feedback.generating_wallpaper': 'Inatengeneza mandhari yako ya Hodi…',
 		'feedback.create_conflict': 'Hitilafu: vCard tayari ipo kwa barua pepe au anwani hii ya vCard.',
 	},
@@ -644,7 +679,8 @@ const TRANSLATIONS = {
 
 		// --- Meta ---
 		'meta.title': 'Hodi vCard - Pela Hodi, a nuvem africana unificada',
-		'meta.description': 'O seu cartão de visita virtual, feito em África. Encriptado, seguro, nunca usado comercialmente.',
+		'meta.description':
+			'O seu cartão de visita virtual, feito em África. Encriptado, seguro, nunca usado comercialmente.',
 
 		// --- Footer ---
 		'footer.logo_label': 'Hodi - Host different.',
@@ -659,11 +695,13 @@ const TRANSLATIONS = {
 		'hero.title_line2': 'Feito em África.',
 		'hero.cta': 'Criar o meu Hodi vCard',
 		'hero.retrieve_link': 'Já tenho um vCard, recuperar o meu acesso',
-		'hero.pitch': 'A Hodi oferece-lhe o seu cartão de visita virtual.<br>Os seus dados são armazenados de forma segura e nunca usados para fins comerciais.',
+		'hero.pitch':
+			'A Hodi oferece-lhe o seu cartão de visita virtual.<br>Os seus dados são armazenados de forma segura e nunca usados para fins comerciais.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'Recuperar o meu Hodi vCard',
-		'retrieve.intro': 'Introduza o email associado ao seu Hodi vCard. Enviar-lhe-emos um link de utilização única para o aceder e editar.',
+		'retrieve.intro':
+			'Introduza o email associado ao seu Hodi vCard. Enviar-lhe-emos um link de utilização única para o aceder e editar.',
 		'retrieve.email_placeholder': 'seu@email.com',
 		'retrieve.send_btn': 'Enviar link de recuperação',
 
@@ -673,7 +711,8 @@ const TRANSLATIONS = {
 		'tabs.my_signature': 'A minha assinatura de email',
 
 		// --- Form (mes-infos) ---
-		'form.intro': 'Os dados que introduz aqui são usados apenas para gerar o seu vCard. São armazenados de forma segura e nunca serão usados para fins comerciais.',
+		'form.intro':
+			'Os dados que introduz aqui são usados apenas para gerar o seu vCard. São armazenados de forma segura e nunca serão usados para fins comerciais.',
 
 		'form.username_label': 'Nome de utilizador Hodi vCard',
 		'form.username_placeholder': 'o-seu-nome-de-utilizador',
@@ -719,14 +758,17 @@ const TRANSLATIONS = {
 		'slug.error': 'Erro: {message}',
 
 		// --- Feedback messages (JS) ---
-		'feedback.no_vcard_yet': 'Ainda não tem um vCard. Preencha este formulário e clique em "Criar o meu vCard" no fim.',
+		'feedback.no_vcard_yet':
+			'Ainda não tem um vCard. Preencha este formulário e clique em "Criar o meu vCard" no fim.',
 		'feedback.network_error': 'Erro de rede. Verifique a sua ligação e tente novamente.',
 		'feedback.no_vcard_to_delete': 'Não tem um vCard para eliminar.',
 		'feedback.deleted': 'vCard eliminado. Pode criar um novo acima.',
 		'feedback.saved': '✓ Alterações guardadas.<br>Link público: <a href="{url}">{url}</a>',
-		'feedback.email_already_used': 'Já existe um vCard para <strong>{email}</strong>. Para o editar, clique em "Editar" no fim desse vCard.',
+		'feedback.email_already_used':
+			'Já existe um vCard para <strong>{email}</strong>. Para o editar, clique em "Editar" no fim desse vCard.',
 		'feedback.slug_taken': 'O endereço de vCard "{slug}" já está em uso. Escolha outro.',
-		'feedback.create_email_sent': '<strong>✓ Email de confirmação enviado!</strong><br>Acabámos de enviar um link para <strong>{email}</strong>.<br>Clique nele para <strong>finalizar a criação</strong> do seu vCard.<br><br><span style="opacity: 0.7;">Pode fechar esta janela. O link é válido durante 1 hora.</span>',
+		'feedback.create_email_sent':
+			'<strong>✓ Email de confirmação enviado!</strong><br>Acabámos de enviar um link para <strong>{email}</strong>.<br>Clique nele para <strong>finalizar a criação</strong> do seu vCard.<br><br><span style="opacity: 0.7;">Pode fechar esta janela. O link é válido durante 1 hora.</span>',
 		'feedback.finalizing': 'A finalizar a criação do seu vCard…',
 		'feedback.uploading_cover': 'A carregar a capa…',
 		'feedback.uploading_avatar': 'A carregar a foto de perfil…',
@@ -751,8 +793,10 @@ const TRANSLATIONS = {
 		'modify.close': 'Fechar',
 		'modify.sending': 'A enviar…',
 		'modify.sent_title': '✓ Link enviado',
-		'modify.sent_description': 'Foi enviado um link de edição para <strong>{email}</strong>.<br>É válido durante 1 hora. Verifique a sua caixa de entrada (e a pasta de spam).',
-		'modify.sent_footnote': 'Pode fechar esta janela. Ao clicar no link recebido por email, será autenticado automaticamente.',
+		'modify.sent_description':
+			'Foi enviado um link de edição para <strong>{email}</strong>.<br>É válido durante 1 hora. Verifique a sua caixa de entrada (e a pasta de spam).',
+		'modify.sent_footnote':
+			'Pode fechar esta janela. Ao clicar no link recebido por email, será autenticado automaticamente.',
 		'modify.error_no_email': 'Este vCard não tem email associado.',
 		'modify.error_network': 'Ocorreu um erro de rede. Verifique a sua ligação e tente novamente.',
 
@@ -825,8 +869,10 @@ const TRANSLATIONS = {
 		// --- Retrieve feedback ---
 		'retrieve.email_required': 'Introduza o seu endereço de email.',
 		'retrieve.checking': 'A verificar…',
-		'retrieve.none': 'Nenhum vCard está associado a <strong>{email}</strong>.<br>Pode criar um com o botão "Criar o meu Hodi vCard" nesta página.',
-		'retrieve.sent': '✓ Acabámos de enviar um link de recuperação para <strong>{email}</strong>.<br>Clique no link do email para aceder ao seu vCard.',
+		'retrieve.none':
+			'Nenhum vCard está associado a <strong>{email}</strong>.<br>Pode criar um com o botão "Criar o meu Hodi vCard" nesta página.',
+		'retrieve.sent':
+			'✓ Acabámos de enviar um link de recuperação para <strong>{email}</strong>.<br>Clique no link do email para aceder ao seu vCard.',
 
 		// --- Form (extra runtime labels) ---
 		'form.tab_locked_title': 'Disponível após criar o seu vCard.',
@@ -837,7 +883,8 @@ const TRANSLATIONS = {
 		'form.sending_email': 'A enviar email…',
 		'form.email_sent_btn': 'Email enviado ✓',
 		'form.finalizing_btn': 'A finalizar…',
-		'form.delete_confirm': 'Eliminar permanentemente o vCard "{slug}"?\n\nEsta ação é irreversível e quebra todos os links / códigos QR existentes.',
+		'form.delete_confirm':
+			'Eliminar permanentemente o vCard "{slug}"?\n\nEsta ação é irreversível e quebra todos os links / códigos QR existentes.',
 		'feedback.generating_wallpaper': 'A gerar o seu fundo de ecrã Hodi…',
 		'feedback.create_conflict': 'Erro: já existe um vCard para este email ou nome de utilizador.',
 	},
@@ -869,7 +916,8 @@ const TRANSLATIONS = {
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'استعادة بطاقة Hodi vCard الخاصة بي',
-		'retrieve.intro': 'أدخل البريد الإلكتروني المرتبط ببطاقة Hodi vCard الخاصة بك. سنرسل لك رابطًا لمرة واحدة للوصول إليها وتعديلها.',
+		'retrieve.intro':
+			'أدخل البريد الإلكتروني المرتبط ببطاقة Hodi vCard الخاصة بك. سنرسل لك رابطًا لمرة واحدة للوصول إليها وتعديلها.',
 		'retrieve.email_placeholder': 'your@email.com',
 		'retrieve.send_btn': 'إرسال رابط الاستعادة',
 
@@ -879,7 +927,8 @@ const TRANSLATIONS = {
 		'tabs.my_signature': 'توقيع بريدي الإلكتروني',
 
 		// --- Form (mes-infos) ---
-		'form.intro': 'البيانات التي تدخلها هنا تُستخدم فقط لإنشاء بطاقتك. تُخزَّن بأمان ولن تُستخدم أبدًا لأغراض تجارية.',
+		'form.intro':
+			'البيانات التي تدخلها هنا تُستخدم فقط لإنشاء بطاقتك. تُخزَّن بأمان ولن تُستخدم أبدًا لأغراض تجارية.',
 
 		'form.username_label': 'اسم المستخدم في Hodi vCard',
 		'form.username_placeholder': 'your-username',
@@ -930,9 +979,11 @@ const TRANSLATIONS = {
 		'feedback.no_vcard_to_delete': 'ليس لديك بطاقة vCard لحذفها.',
 		'feedback.deleted': 'تم حذف البطاقة. يمكنك إنشاء واحدة جديدة في الأعلى.',
 		'feedback.saved': '✓ تم حفظ التغييرات.<br>الرابط العام: <a href="{url}">{url}</a>',
-		'feedback.email_already_used': 'توجد بطاقة vCard بالفعل لـ <strong>{email}</strong>. لتعديلها، اضغط "تعديل" في أسفل تلك البطاقة.',
+		'feedback.email_already_used':
+			'توجد بطاقة vCard بالفعل لـ <strong>{email}</strong>. لتعديلها، اضغط "تعديل" في أسفل تلك البطاقة.',
 		'feedback.slug_taken': 'عنوان vCard "{slug}" مستخدم بالفعل. اختر عنوانًا آخر.',
-		'feedback.create_email_sent': '<strong>✓ تم إرسال بريد التأكيد!</strong><br>أُرسل رابط للتو إلى <strong>{email}</strong>.<br>اضغط عليه لـ<strong>إتمام إنشاء</strong> بطاقتك.<br><br><span style="opacity: 0.7;">يمكنك إغلاق هذه النافذة. الرابط صالح لمدة ساعة واحدة.</span>',
+		'feedback.create_email_sent':
+			'<strong>✓ تم إرسال بريد التأكيد!</strong><br>أُرسل رابط للتو إلى <strong>{email}</strong>.<br>اضغط عليه لـ<strong>إتمام إنشاء</strong> بطاقتك.<br><br><span style="opacity: 0.7;">يمكنك إغلاق هذه النافذة. الرابط صالح لمدة ساعة واحدة.</span>',
 		'feedback.finalizing': 'جارٍ إتمام إنشاء بطاقتك…',
 		'feedback.uploading_cover': 'جارٍ رفع صورة الغلاف…',
 		'feedback.uploading_avatar': 'جارٍ رفع صورة الملف الشخصي…',
@@ -957,7 +1008,8 @@ const TRANSLATIONS = {
 		'modify.close': 'إغلاق',
 		'modify.sending': 'جارٍ الإرسال…',
 		'modify.sent_title': '✓ تم إرسال الرابط',
-		'modify.sent_description': 'تم إرسال رابط تعديل إلى <strong>{email}</strong>.<br>صالح لمدة ساعة واحدة. تحقّق من بريدك الوارد (ومجلد الرسائل غير المرغوب فيها).',
+		'modify.sent_description':
+			'تم إرسال رابط تعديل إلى <strong>{email}</strong>.<br>صالح لمدة ساعة واحدة. تحقّق من بريدك الوارد (ومجلد الرسائل غير المرغوب فيها).',
 		'modify.sent_footnote': 'يمكنك إغلاق هذه النافذة. عند الضغط على الرابط في بريدك، سيتم تسجيل دخولك تلقائيًا.',
 		'modify.error_no_email': 'لا يوجد بريد إلكتروني مرتبط بهذه البطاقة.',
 		'modify.error_network': 'حدث خطأ في الشبكة. تحقّق من اتصالك وحاول مرة أخرى.',
@@ -1031,8 +1083,10 @@ const TRANSLATIONS = {
 		// --- Retrieve feedback ---
 		'retrieve.email_required': 'يُرجى إدخال عنوان بريدك الإلكتروني.',
 		'retrieve.checking': 'جارٍ التحقّق…',
-		'retrieve.none': 'لا توجد بطاقة vCard مرتبطة بـ <strong>{email}</strong>.<br>يمكنك إنشاء واحدة بزر "إنشاء بطاقة Hodi vCard الخاصة بي" في هذه الصفحة.',
-		'retrieve.sent': '✓ أُرسل رابط استعادة للتو إلى <strong>{email}</strong>.<br>اضغط على الرابط في البريد للوصول إلى بطاقتك.',
+		'retrieve.none':
+			'لا توجد بطاقة vCard مرتبطة بـ <strong>{email}</strong>.<br>يمكنك إنشاء واحدة بزر "إنشاء بطاقة Hodi vCard الخاصة بي" في هذه الصفحة.',
+		'retrieve.sent':
+			'✓ أُرسل رابط استعادة للتو إلى <strong>{email}</strong>.<br>اضغط على الرابط في البريد للوصول إلى بطاقتك.',
 
 		// --- Form (extra runtime labels) ---
 		'form.tab_locked_title': 'متاح بعد إنشاء بطاقتك.',
@@ -1043,7 +1097,8 @@ const TRANSLATIONS = {
 		'form.sending_email': 'جارٍ إرسال البريد…',
 		'form.email_sent_btn': 'تم إرسال البريد ✓',
 		'form.finalizing_btn': 'جارٍ الإتمام…',
-		'form.delete_confirm': 'حذف البطاقة "{slug}" نهائيًا؟\n\nهذا الإجراء لا رجعة فيه ويُبطل جميع الروابط / رموز QR الحالية.',
+		'form.delete_confirm':
+			'حذف البطاقة "{slug}" نهائيًا؟\n\nهذا الإجراء لا رجعة فيه ويُبطل جميع الروابط / رموز QR الحالية.',
 		'feedback.generating_wallpaper': 'جارٍ إنشاء خلفية Hodi الخاصة بك…',
 		'feedback.create_conflict': 'خطأ: توجد بطاقة vCard بالفعل لهذا البريد الإلكتروني أو اسم المستخدم.',
 	},
@@ -1113,7 +1168,9 @@ export function t(key, params) {
 export function setLang(lang) {
 	if (!TRANSLATIONS[lang]) return;
 	currentLang = lang;
-	try { localStorage.setItem(STORAGE_KEY, lang); } catch {}
+	try {
+		localStorage.setItem(STORAGE_KEY, lang);
+	} catch {}
 	setLangCookie(lang);
 	document.documentElement.setAttribute('lang', lang);
 	applyDir(lang);
@@ -1130,23 +1187,23 @@ export function getLang() {
  * data-i18n / data-i18n-html / data-i18n-placeholder / data-i18n-aria-label.
  */
 export function applyTranslations() {
-	document.querySelectorAll('[data-i18n]').forEach(el => {
+	document.querySelectorAll('[data-i18n]').forEach((el) => {
 		el.textContent = t(el.getAttribute('data-i18n'));
 	});
-	document.querySelectorAll('[data-i18n-html]').forEach(el => {
+	document.querySelectorAll('[data-i18n-html]').forEach((el) => {
 		el.innerHTML = t(el.getAttribute('data-i18n-html'));
 	});
-	document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
+	document.querySelectorAll('[data-i18n-placeholder]').forEach((el) => {
 		el.setAttribute('placeholder', t(el.getAttribute('data-i18n-placeholder')));
 	});
-	document.querySelectorAll('[data-i18n-aria-label]').forEach(el => {
+	document.querySelectorAll('[data-i18n-aria-label]').forEach((el) => {
 		el.setAttribute('aria-label', t(el.getAttribute('data-i18n-aria-label')));
 	});
-	document.querySelectorAll('[data-i18n-title]').forEach(el => {
+	document.querySelectorAll('[data-i18n-title]').forEach((el) => {
 		el.setAttribute('title', t(el.getAttribute('data-i18n-title')));
 	});
 	// data-i18n-content : pour <meta content="..."> (description, og:title, etc.)
-	document.querySelectorAll('[data-i18n-content]').forEach(el => {
+	document.querySelectorAll('[data-i18n-content]').forEach((el) => {
 		el.setAttribute('content', t(el.getAttribute('data-i18n-content')));
 	});
 }

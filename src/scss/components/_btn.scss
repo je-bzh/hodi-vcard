@@ -54,18 +54,15 @@
 	}
 }
 
+// CTA principal — DS §6 : fond --grad-brand, texte blanc
+// Radius 12px (DS §5 "blocs / cartes de mise en avant") plutôt que pilule
 .btn--gradient {
-	background: linear-gradient(
-		90deg,
-		#8b3fbf 0%,
-		#c93b9c 35%,
-		#ec4899 55%,
-		#f97316 100%
-	);
-	border-radius: 6rem;
+	background: var(--grad-brand);
+	border-radius: 1.2rem; // 12px — soft corner, plus discret que la pilule
+	font-family: var(--f-display); // Plus Jakarta Sans (DS §3)
+	font-weight: 700; // Bold
 	font-size: 1.5rem;
-	font-family: var(--ff-monrope);
-	font-weight: 700;
+	color: var(--c-white);
 	min-width: 20.5rem;
 
 	@include breakpoint-down(mobile) {

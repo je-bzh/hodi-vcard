@@ -37,16 +37,16 @@
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
-		border: 1px solid #C44B95;
+		border: 1px solid #c44b95;
 		border-radius: 6px;
-		height: 2.6rem;          // capsule = 26px
-		padding: 0 1.4rem;        // horizontal seulement, hauteur figée
-		font-family: 'Inter', Helvetica, Arial, sans-serif;
-		font-size: 1.4rem;        // 14px
-		font-weight: 500;          // Medium
-		letter-spacing: 0.02em;    // approche resserrée (~0.3px à 14px)
+		height: 2.6rem; // capsule = 26px
+		padding: 0 1.4rem; // horizontal seulement, hauteur figée
+		font-family: var(--f-mono); // JetBrains Mono (DS §3 — eyebrows/capsules UPPERCASE)
+		font-size: 1.3rem; // un poil + petit, le mono est large
+		font-weight: 500; // Medium
+		letter-spacing: -0.01em; // resserré comme le DS
 		text-transform: uppercase;
-		color: #C44B95;
+		color: #c44b95;
 		line-height: 1;
 
 		@include breakpoint-down(mobile) {
@@ -58,8 +58,9 @@
 
 	/* ----- Accroche ----- */
 	.hero__title {
+		font-family: var(--f-display); // Plus Jakarta Sans (DS §3 — titres/headlines)
 		font-size: clamp(3rem, 6vw, 5.4rem);
-		font-weight: 800;
+		font-weight: 800; // ExtraBold/Heavy — bien marqué
 		line-height: 1.05;
 		letter-spacing: -0.02em;
 		color: var(--c-white);
@@ -72,45 +73,57 @@
 		}
 	}
 
-	/* ----- Image polaroid : COPIE STRICTE de la CSS de l'intégrateur ----- */
+	/* ----- Polaroid INVERSÉ : vidéo droite devant + carte navy inclinée derrière ----- */
 	.hero__image {
 		max-width: 31.4rem;
-		margin: 0 auto 6.2rem;
+		margin: 0 auto 5.2rem; // -10px pour remonter le CTA (était 6.2rem)
 		position: relative;
 		text-align: center;
 
 		@include breakpoint-down(mobile) {
 			max-width: 24.4rem;
-			margin-bottom: 5.1rem;
+			margin-bottom: 4.1rem; // -10px aussi (était 5.1rem)
 		}
 
+		// Back card : INCLINÉE -8°, navy sombre (couleur identité Hodi)
+		// Même taille que la vidéo → effet polaroid avec coins qui dépassent
 		&:before {
 			content: '';
 			position: absolute;
-			top: 2.1rem;
+			top: 1rem;
 			left: 50%;
-			transform: translateX(-50%);
-			width: 86%;
-			height: 92%;
+			transform: translateX(-50%) rotate(-8deg);
+			transform-origin: center;
+			width: 271px;
+			height: 348px;
 			border-radius: 8px;
 			background-color: #291b3a;
+			z-index: 0;
+
+			@include breakpoint-down(mobile) {
+				width: 244px;
+				height: 313.4px; // 244 × 348/271
+			}
 		}
 
 		img,
 		video {
 			position: relative;
 			border-radius: 8px;
+			z-index: 1;
 		}
 
-		// Vidéo inclinée à -8° → effet polaroid avec la back card aubergine droite derrière
+		// Front : vidéo DROITE (plus de rotation) — passe au premier plan
 		video {
 			margin: 1rem auto 1.8rem;
 			width: 271px;
 			aspect-ratio: 271/348;
 			object-fit: cover;
 			overflow: hidden;
-			transform: rotate(-8deg);
-			transform-origin: center;
+
+			@include breakpoint-down(mobile) {
+				width: 244px;
+			}
 		}
 	}
 
@@ -183,7 +196,7 @@
 	.pitch {
 		font-size: 1.6rem;
 		line-height: 1.55;
-		max-width: 128rem;       // bien plus large pour 3 lignes (était 96rem)
+		max-width: 128rem; // bien plus large pour 3 lignes (était 96rem)
 		margin: 0 auto;
 		color: rgba(255, 255, 255, 0.75);
 		letter-spacing: -0.005em;
