@@ -474,12 +474,12 @@ const TRANSLATIONS = {
 		'hero.badge_no_paper': 'Hakuna karatasi',
 		'hero.badge_no_card': 'Hakuna kadi halisi',
 		'hero.badge_no_app': 'Hakuna programu',
-		'hero.title_line1': 'Kadi yako ya mawasiliano ya kidijitali.',
-		'hero.title_line2': 'Imetengenezwa Afrika.',
-		'hero.cta': 'Tengeneza vCard yangu ya Hodi',
+		'hero.title_line1': 'Kadi ya mawasiliano ya kidijitali.',
+		'hero.title_line2': 'Bure.',
+		'hero.cta': 'Ninatengeneza vCard yangu ya Hodi',
 		'hero.retrieve_link': 'Tayari nina vCard, nirejeshee ufikiaji',
 		'hero.pitch':
-			'Hodi inakupa kadi yako ya mawasiliano ya kidijitali.<br>Data yako huhifadhiwa kwa usalama, na haitumiwi kamwe kwa madhumuni ya kibiashara.',
+			'Hodi inakupa kadi yako binafsi ya mawasiliano ya kidijitali.<br>Data yako huhifadhiwa kwa usalama, na haitumiwi kamwe kwa madhumuni ya kibiashara.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'Rejesha vCard yangu ya Hodi',
@@ -691,12 +691,12 @@ const TRANSLATIONS = {
 		'hero.badge_no_paper': 'Sem papel',
 		'hero.badge_no_card': 'Sem cartão físico',
 		'hero.badge_no_app': 'Sem aplicação',
-		'hero.title_line1': 'O seu cartão de visita virtual.',
-		'hero.title_line2': 'Feito em África.',
-		'hero.cta': 'Criar o meu Hodi vCard',
+		'hero.title_line1': 'O cartão de visita digital.',
+		'hero.title_line2': 'Grátis.',
+		'hero.cta': 'Eu crio o meu Hodi vCard',
 		'hero.retrieve_link': 'Já tenho um vCard, recuperar o meu acesso',
 		'hero.pitch':
-			'A Hodi oferece-lhe o seu cartão de visita virtual.<br>Os seus dados são armazenados de forma segura e nunca usados para fins comerciais.',
+			'A Hodi oferece-lhe o seu cartão de visita virtual e pessoal.<br>Os seus dados são armazenados de forma segura e nunca usados para fins comerciais.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'Recuperar o meu Hodi vCard',
@@ -908,11 +908,12 @@ const TRANSLATIONS = {
 		'hero.badge_no_paper': 'بلا ورق',
 		'hero.badge_no_card': 'بلا بطاقة ماديّة',
 		'hero.badge_no_app': 'بلا تطبيق',
-		'hero.title_line1': 'بطاقة عملك الافتراضية.',
-		'hero.title_line2': 'صُنع في أفريقيا.',
-		'hero.cta': 'إنشاء بطاقة Hodi الخاصة بي',
+		'hero.title_line1': 'بطاقة العمل الرقمية.',
+		'hero.title_line2': 'مجانية.',
+		'hero.cta': 'أنشئ بطاقة Hodi الخاصة بي',
 		'hero.retrieve_link': 'لديّ بطاقة vCard بالفعل، استعادة الوصول إليها',
-		'hero.pitch': 'تمنحك Hodi بطاقة عملك الرقمية.<br>تُخزَّن بياناتك بأمان، ولا تُستخدم أبدًا لأغراض تجارية.',
+		'hero.pitch':
+			'تمنحك Hodi بطاقة عملك الرقمية الشخصية.<br>تُخزَّن بياناتك بأمان، ولا تُستخدم أبدًا لأغراض تجارية.',
 
 		// --- Retrieve popup ---
 		'retrieve.title': 'استعادة بطاقة Hodi vCard الخاصة بي',
