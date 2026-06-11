@@ -531,9 +531,35 @@ function handle_wallpapers_create(array $body): void
 
 	$isDefault = !empty($body['is_default']);
 
-	$count = (int) db_one('SELECT COUNT(*) AS c FROM wallpapers WHERE vcard_id = ?', [$vcard['id']])['c'];
-	if ($count >= (int) $cfg['app']['max_wallpapers']) {
-		throw new ApiError('WALLPAPERS_LIMIT', 409);
+	// --- Default Hodi : idempotent (un seul par vcard) ----------------------
+	// Si un default existe déjà, on le renvoie au lieu d'en créer un doublon.
+	// Empêche les ré-insertions répétées par loadAndRender / vcard-form si
+	// la 1re tentative a foiré ou si plusieurs pages mes-fonds tournent en
+	// parallèle.
+	if ($isDefault) {
+		$existing = db_one(
+			'SELECT id, vcard_id, image_url, storage_path, is_default, created_at
+			   FROM wallpapers WHERE vcard_id = ? AND is_default = 1 LIMIT 1',
+			[$vcard['id']]
+		);
+		if ($existing) {
+			$existing['is_default'] = (bool) $existing['is_default'];
+			json_response(['wallpaper' => $existing], 200);
+		}
+	}
+
+	// --- Limite : ne compte QUE les wallpapers personnels (is_default = 0). --
+	// Le default Hodi est verrouillé, ne compte pas dans la limite utilisateur.
+	// max_wallpapers = 3 (config) → l'user peut avoir 2 perso + 1 default.
+	if (!$isDefault) {
+		$count = (int) db_one(
+			'SELECT COUNT(*) AS c FROM wallpapers WHERE vcard_id = ? AND is_default = 0',
+			[$vcard['id']]
+		)['c'];
+		$maxPersonal = max(0, (int) $cfg['app']['max_wallpapers'] - 1);
+		if ($count >= $maxPersonal) {
+			throw new ApiError('WALLPAPERS_LIMIT', 409);
+		}
 	}
 
 	$id = uuid_v4();
