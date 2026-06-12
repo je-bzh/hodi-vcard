@@ -179,9 +179,16 @@ function enterCreateMode({ emailLocked, defaultEmail }) {
 	$('.js-delete-vcard').hide();
 	enableSecondaryTabs(false);
 
-	// En mode CREATE, on ne pré-remplit NI le username NI l'email.
-	// L'utilisateur saisit ses propres infos. Les placeholders guident.
-	$('input[name="email"]').val('').prop('readonly', false);
+	// Username : jamais pré-rempli en CREATE (les placeholders guident).
+	// Email : deux cas distincts.
+	//   - Authentifié sans vCard (emailLocked) → l'email est déjà l'identité du
+	//     compte : on le pré-remplit ET on le verrouille (immuable).
+	//   - Anonyme → champ libre et vide, l'utilisateur saisit le sien.
+	if (emailLocked) {
+		setEmailField({ value: defaultEmail || '', locked: true });
+	} else {
+		setEmailField({ value: '', locked: false });
+	}
 	updateSlugPreview();
 
 	// Bandeau de réassurance visible (RGPD + sécurité)
@@ -189,6 +196,21 @@ function enterCreateMode({ emailLocked, defaultEmail }) {
 
 	// La vCard n'existe pas encore → rien à prévisualiser
 	$('.js-vcard-link-row').prop('hidden', true);
+}
+
+/**
+ * Pose l'état du champ email de façon cohérente.
+ *   - Un champ verrouillé est TOUJOURS pré-rempli (jamais vide+readonly) : un
+ *     champ vide et non-éditable est déroutant et, sur iOS Safari, déclenche le
+ *     bandeau AutoFill par-dessus alors qu'on ne peut rien y taper.
+ *   - autocomplete="off" quand verrouillé pour calmer ce nag, "email" sinon.
+ */
+function setEmailField({ value = '', locked }) {
+	$('input[name="email"]')
+		.val(value)
+		.prop('readonly', !!locked)
+		.attr('autocomplete', locked ? 'off' : 'email')
+		.toggleClass('is-locked', !!locked);
 }
 
 function populateFormFromPending(pending) {
@@ -260,8 +282,9 @@ function populateForm(vcard) {
 	// Slug verrouillé après création
 	$('input[name="url"]').prop('readonly', true)
 		.attr('title', t('form.slug_locked_title'));
-	// Email aussi readonly en édition
-	$('input[name="email"]').prop('readonly', true);
+	// Email aussi readonly en édition (identité du compte, immuable) : on le
+	// re-pose via le helper pour garantir valeur + verrou + autocomplete cohérents.
+	setEmailField({ value: vcard.owner_email || '', locked: true });
 	// Bouton "Vérifier" inutile en édition
 	$('.js-check-slug').hide();
 
@@ -464,6 +487,11 @@ async function finalizeCreate(pending) {
 	hideFeedback();
 	showFeedback('info', t('feedback.finalizing'));
 
+	// L'email = identité du compte (déjà confirmée par le magic-link) : on l'affiche
+	// verrouillé et pré-rempli. Sans ça, le champ reste vide + readonly hérité du
+	// HTML — impossible d'y taper, ce qui faisait croire à un bug (cf. iOS Safari).
+	if (currentUser?.email) setEmailField({ value: currentUser.email, locked: true });
+
 	// Extraire les images en attente avant d'envoyer le payload (sinon l'API rejette)
 	const pendingCoverDataUrl = pending._pending_cover_data_url;
 	const pendingAvatarDataUrl = pending._pending_avatar_data_url;
@@ -566,7 +594,7 @@ async function onDelete(e) {
 	clearForm();
 	resetImages();
 	$('input[name="url"]').prop('readonly', false);
-	$('input[name="email"]').prop('readonly', false);
+	setEmailField({ value: '', locked: false });
 	$('.js-check-slug').show();
 	$('.js-delete-vcard').hide();
 	enableSecondaryTabs(false);
