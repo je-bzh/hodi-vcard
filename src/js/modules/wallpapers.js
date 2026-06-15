@@ -116,7 +116,13 @@ function renderTile(wallpaper) {
 				<img src="${escapeAttr(wallpaper.image_url)}" alt="Wallpaper" class="js-crop-image">
 				<ul class="tile__actions">
 					<li>
-						<a href="${escapeAttr(wallpaper.image_url)}" download="hodi-wallpaper-${shortId}.png" target="_blank" rel="noopener" aria-label="${t('wallpapers.download')}">
+						<a href="${escapeAttr(wallpaper.image_url)}"
+						   class="js-download-wallpaper"
+						   data-filename="hodi-wallpaper-${shortId}.png"
+						   download="hodi-wallpaper-${shortId}.png"
+						   target="_blank"
+						   rel="noopener"
+						   aria-label="${t('wallpapers.download')}">
 							<img src="${assetUrl('public/assets/images/svg/ico-upload-1.svg')}" alt="${t('wallpapers.download')}">
 						</a>
 					</li>
@@ -125,6 +131,52 @@ function renderTile(wallpaper) {
 			</div>
 		</div>
 	`;
+}
+
+/**
+ * Télécharge / partage un wallpaper avec la meilleure UX possible selon le device.
+ *
+ * - iOS / Android moderne (Web Share API + files) → ouvre la share sheet native
+ *   qui propose "Enregistrer dans Photos" → l'image arrive direct dans Camera Roll
+ *   (utilisable comme fond d'écran verrouillé sans passer par Fichiers).
+ * - Desktop / vieux navigateurs → fallback sur le téléchargement HTML standard
+ *   (l'attribut download="..." du <a> fait le boulot).
+ */
+async function shareOrDownloadWallpaper($link) {
+	const url = $link.attr('href');
+	const filename = $link.attr('data-filename') || 'hodi-wallpaper.png';
+
+	// 1) Tentative : Web Share API avec fichier (iOS Safari 15+, Chrome Android, ...)
+	if (typeof navigator !== 'undefined' && navigator.canShare && navigator.share) {
+		try {
+			const res = await fetch(url, { cache: 'no-store' });
+			if (!res.ok) throw new Error('fetch failed');
+			const blob = await res.blob();
+			const file = new File([blob], filename, { type: blob.type || 'image/png' });
+
+			if (navigator.canShare({ files: [file] })) {
+				await navigator.share({
+					files: [file],
+					title: 'Hodi vCard wallpaper',
+				});
+				return; // OK : l'user a accès à "Enregistrer dans Photos" dans la share sheet
+			}
+		} catch (err) {
+			// AbortError = l'user a fermé la share sheet → ne pas fallback (sinon double action)
+			if (err && err.name === 'AbortError') return;
+			console.warn('[wallpapers] Web Share failed, fallback to download', err);
+		}
+	}
+
+	// 2) Fallback : navigation vers l'URL avec l'attribut download (PC, vieux iOS, etc.)
+	const tmp = document.createElement('a');
+	tmp.href = url;
+	tmp.download = filename;
+	tmp.target = '_blank';
+	tmp.rel = 'noopener';
+	document.body.appendChild(tmp);
+	tmp.click();
+	document.body.removeChild(tmp);
 }
 
 function renderAddTile() {
@@ -481,6 +533,17 @@ function bindTileActions() {
 
 		await loadAndRender();
 		bindCropResultHook();
+	});
+
+	// Téléchargement/partage : passe par Web Share API sur mobile (iOS surtout)
+	// pour offrir "Enregistrer dans Photos" → fond d'écran utilisable direct.
+	$('.js-download-wallpaper').off('click').on('click', async function (e) {
+		// On ne preventDefault QUE si on va passer par Web Share, sinon on laisse
+		// le download natif HTML faire son boulot.
+		const canShare = typeof navigator !== 'undefined' && navigator.canShare && navigator.share;
+		if (!canShare) return; // laisse le <a download> standard agir
+		e.preventDefault();
+		await shareOrDownloadWallpaper($(this));
 	});
 }
 
