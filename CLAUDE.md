@@ -9,9 +9,10 @@ Cartes de visite numériques Hodi. En ligne : **https://www.hodi.live/vcard/**
 Front **Vite** (HTML + partials Handlebars, SCSS via `sass-embedded`, JS vanilla)
 API **PHP 8.1** dans `src/public/api/` · **MySQL/MariaDB** · mailer **PHPMailer**.
 
-> **Supabase a été abandonné.** Le dossier `supabase/migrations/`, les variables
-> `VITE_SUPABASE_URL` / `VITE_SUPABASE_PUBLISHABLE_KEY` et la section Supabase de
-> `DEPLOY.md` sont des **résidus morts** : ne pas s'en servir, ne pas s'y fier.
+> **Supabase a été abandonné** au profit d'une API PHP + MySQL. Les résidus (dossier
+> `supabase/migrations/`, section Supabase de `DEPLOY.md`) ont été supprimés.
+> Il subsiste des commentaires historiques dans le code (« remplace l'ancien client
+> Supabase ») — ils documentent la migration, ils sont volontaires.
 > La base de vérité pour le local, c'est `SETUP-LOCAL.md`.
 
 ---
@@ -69,12 +70,25 @@ Ne jamais y travailler, ne jamais la merger dans `main`.
 
 ---
 
-## Remotes
+## Remotes — ⚠️ il y en a DEUX, à garder synchronisés
 
-- `origin` → `buddy@eu.buddy.works:hodi/hodi---vcard` (cible de `deploy.sh`)
-- `github` → `git@github.com:je-bzh/hodi-vcard.git`
+| Remote | URL | Rôle |
+| --- | --- | --- |
+| `github` | `git@github.com:je-bzh/hodi-vcard.git` | **Upstream de `main`** — un simple `git push` va là |
+| `origin` | `buddy@eu.buddy.works:hodi/hodi---vcard` | Cible de **`deploy.sh`** (branche `deploy`) |
 
 Branche de travail : `main`.
+
+**Le piège :** `git push` tout court ne pousse que sur **github**. Buddy (`origin`) reste en
+arrière — c'est arrivé, il avait 5 commits de retard sur `main`. Or c'est depuis Buddy qu'on
+déploie. Résultat : le code source y était périmé.
+
+**Règle : après un commit, pousser sur les deux.**
+
+```bash
+git push                # → github (upstream)
+git push origin main    # → Buddy
+```
 
 ---
 
@@ -87,17 +101,15 @@ Branche de travail : `main`.
 
 ---
 
-## Variables d'environnement
+## Secrets et variables d'environnement
 
-Les `VITE_*` sont **injectées au moment du build** (baked-in) : modifier le `.env` **avant**
-de builder, jamais après.
+**Le front n'a plus aucune clé.** Le `.env` (racine, gitignored) est optionnel : aucune
+variable `VITE_*` n'est requise pour builder. Seul `VITE_PLAUSIBLE_ID` peut y figurer
+(analytics, optionnel — et le tracking ne s'active que sur l'hôte de prod).
 
-Vivantes : `VITE_PLAUSIBLE_ID`, `VITE_UNSPLASH_ACCESS_KEY`.
-Mortes (résidus Supabase) : `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`.
+Tous les secrets vivent **côté serveur**, dans `src/public/api/config.local.php`
+(gitignored) : accès MySQL, mailer, stockage des uploads, et la **clé Unsplash**
+(`unsplash.access_key`, ou variable d'env serveur `VCARD_UNSPLASH_KEY`).
 
----
-
-## À nettoyer (dette connue)
-
-- [ ] Supprimer `supabase/migrations/` et les variables `VITE_SUPABASE_*`.
-- [ ] Réécrire `DEPLOY.md` : sa section Supabase est périmée (le déploiement lui-même y est juste).
+⚠️ Ne jamais remettre une clé dans une variable `VITE_*` : elle finirait **dans le bundle
+public**, lisible par n'importe qui. C'est précisément ce que la migration a corrigé.
