@@ -3,7 +3,7 @@
 ## Une fois pour toutes : initialiser Git
 
 ```bash
-cd "/Users/jerome/Desktop/CLAUDE AT WORK/hodi-vcard"
+cd "/Users/jerome/Desktop/Hodi/hodi-vcard"
 git init -b main
 git add -A
 git commit -m "Initial commit: Hodi vCard ready for prod"
@@ -17,7 +17,7 @@ git commit -m "Initial commit: Hodi vCard ready for prod"
 ### 1. Build local
 
 ```bash
-cd "/Users/jerome/Desktop/CLAUDE AT WORK/hodi-vcard"
+cd "/Users/jerome/Desktop/Hodi/hodi-vcard"
 
 # (Optionnel mais propre) Vide le dossier build de la fois d'avant
 rm -rf build
